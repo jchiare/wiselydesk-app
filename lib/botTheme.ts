@@ -61,10 +61,16 @@ const AMBOSS_BOT_SETTINGS: BotSettings = {
   default: false,
 };
 
-export default function getBotTheme(account: string): BotSettings {
-  if (account === "amboss") {
-    return AMBOSS_BOT_SETTINGS;
-  }
+const accountSettings: Record<string, BotSettings> = {
+  amboss: AMBOSS_BOT_SETTINGS,
+};
 
-  return BASE_BOT_SETTINGS;
+export default function getBotTheme(account: string): BotSettings {
+  return accountSettings[account] ?? BASE_BOT_SETTINGS;
 }
+
+export const joinDefinedClassNames = (
+  settings: Record<string, string | undefined>,
+) => {
+  return Object.values(settings).filter(Boolean).join(" ");
+};

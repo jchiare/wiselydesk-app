@@ -1,11 +1,16 @@
-type Params = {
-  account: string;
+import Chat, { type SearchParams } from "@/components/chat";
+
+type ChatPageProps = {
+  params: {
+    account: string;
+  };
+  searchParams: SearchParams;
 };
 
-export default function Page({ params }: { params: Params }) {
+export default function Page({ params, searchParams }: ChatPageProps) {
   return (
     <main className="h-full w-full antialiased">
-      <h1>chat page {params.account}</h1>
+      <Chat account={params.account} searchParams={searchParams} />
     </main>
   );
 }
