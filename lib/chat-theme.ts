@@ -16,7 +16,7 @@ type InputSetting = {
   textColour: string;
 };
 
-type BotSettings = {
+export type ChatThemeSettings = {
   baseSettings: BaseSettings;
   assistantMessageSetting: MessageSetting;
   userMessageSetting: MessageSetting;
@@ -24,7 +24,7 @@ type BotSettings = {
   default: boolean;
 };
 
-const BASE_BOT_SETTINGS: BotSettings = {
+const BASE_CHAT_SETTINGS: ChatThemeSettings = {
   baseSettings: {
     bgColour: "bg-[#343541]",
   },
@@ -42,7 +42,7 @@ const BASE_BOT_SETTINGS: BotSettings = {
   default: true,
 };
 
-const AMBOSS_BOT_SETTINGS: BotSettings = {
+const AMBOSS_BOT_SETTINGS: ChatThemeSettings = {
   baseSettings: {
     bgColour: "bg-[#F8FAFC]",
     text: "text-black",
@@ -61,15 +61,15 @@ const AMBOSS_BOT_SETTINGS: BotSettings = {
   default: false,
 };
 
-const accountSettings: Record<string, BotSettings> = {
+const accountSettings: Record<string, ChatThemeSettings> = {
   amboss: AMBOSS_BOT_SETTINGS,
 };
 
-export default function getBotTheme(account: string): BotSettings {
-  return accountSettings[account] ?? BASE_BOT_SETTINGS;
+export default function getChatTheme(account: string): ChatThemeSettings {
+  return accountSettings[account] ?? BASE_CHAT_SETTINGS;
 }
 
-export const joinDefinedClassNames = (
+export const combineClassNames = (
   settings: Record<string, string | undefined>,
 ) => {
   return Object.values(settings).filter(Boolean).join(" ");

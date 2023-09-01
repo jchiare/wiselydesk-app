@@ -1,4 +1,5 @@
-import getBotTheme, { joinDefinedClassNames } from "@/lib/botTheme";
+import getChatTheme, { combineClassNames } from "@/lib/chat-theme";
+import AgentMessage from "@/components/agent/agent-message";
 
 export type SearchParams = {
   german_source?: string;
@@ -15,7 +16,7 @@ type ChatProps = {
 export default function Chat({
   account,
   searchParams,
-}: ChatProps): JSX.Element | null {
+}: ChatProps): JSX.Element {
   const {
     german_source: germanSource,
     create_support_ticket: createSupportTicket,
@@ -23,14 +24,14 @@ export default function Chat({
     model,
   } = searchParams;
 
-  const botTheme = getBotTheme(account);
+  const chatTheme = getChatTheme(account);
   return (
     <div
-      className={`relative flex h-screen flex-col items-center overflow-scroll ${joinDefinedClassNames(
-        botTheme.baseSettings,
+      className={`relative flex h-screen flex-col items-center overflow-scroll ${combineClassNames(
+        chatTheme.baseSettings,
       )}  flex-shrink-0 font-medium`}
     >
-      hey
+      <AgentMessage chatTheme={chatTheme} />
     </div>
   );
 }
