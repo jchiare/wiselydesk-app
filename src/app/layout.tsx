@@ -13,7 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="text-clip font-bold underline">{children}</body>
+      <body className="h-full text-[90%] sm:text-[100%]">{children}</body>
     </html>
   );
 }
