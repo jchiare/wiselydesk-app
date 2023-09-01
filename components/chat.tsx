@@ -1,5 +1,5 @@
 import getChatTheme, { combineClassNames } from "@/lib/chat-theme";
-import AgentMessage from "@/components/agent/agent-message";
+import AgentDiv from "@/components/agent/agent-div";
 
 export type SearchParams = {
   german_source?: string;
@@ -26,12 +26,14 @@ export default function Chat({
 
   const chatTheme = getChatTheme(account);
   return (
-    <div
-      className={`relative flex h-screen flex-col items-center overflow-scroll ${combineClassNames(
-        chatTheme.baseSettings,
-      )}  flex-shrink-0 font-medium`}
-    >
-      <AgentMessage chatTheme={chatTheme} />
-    </div>
+    <>
+      <div
+        className={`relative flex h-screen flex-col items-center overflow-scroll ${combineClassNames(
+          chatTheme.baseSettings,
+        )}  flex-shrink-0 font-medium`}
+      >
+        <AgentDiv chatTheme={chatTheme} />
+      </div>
+    </>
   );
 }

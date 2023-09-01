@@ -5,9 +5,10 @@ type AgentMessageProps = {
   chatTheme: ChatThemeSettings;
 };
 
-export default function agentMessage({
+export default function AgentDiv({
   chatTheme,
 }: AgentMessageProps): JSX.Element {
+  const shouldDisplayBlinkingCursor = true;
   return (
     <div
       className={`w-full border-b ${combineClassNames(
@@ -16,26 +17,29 @@ export default function agentMessage({
     >
       <div className="m-auto flex gap-4 p-2 sm:p-4 md:max-w-2xl md:gap-6 md:py-6 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
         <AgentIcon chatTheme={chatTheme} />
-        hello
-        {/* <div className="relative flex w-full flex-col gap-1 sm:w-[calc(100%-50px)] md:gap-3 lg:w-[calc(100%-115px)]">
+
+        <div className="relative flex w-full flex-col gap-1 sm:w-[calc(100%-50px)] md:gap-3 lg:w-[calc(100%-115px)]">
           <div className="flex flex-grow flex-col gap-3">
             <div className="flex min-h-[20px] flex-col items-start gap-4 whitespace-pre-wrap ">
               <div className="prose prose-invert w-full break-words ">
                 <p
                   className={`${
-                    assistantMessageSettings.text
+                    chatTheme.assistantMessageSetting.text
                   } text-[90%] sm:text-[100%] ${
                     shouldDisplayBlinkingCursor &&
                     `!last:after:mt-1 last:after:animate-assistant-message  last:after:bg-white last:after:text-white last:after:content-['▋']`
                   }`}
-                  dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
-                ></p>
-                <SupportTicketSystem
+
+                  // dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
+                >
+                  hello
+                </p>
+                {/* <SupportTicketSystem
                   shouldDisplay={shouldDisplaySupportTicket}
                   apiBaseUrl={apiBaseUrl}
                   conversationId={conversationId}
-                />
-                {shouldDisplaySource && (
+                /> */}
+                {/* {shouldDisplaySource && (
                   <div className=" ml-auto mt-6 w-fit rounded-lg bg-slate-600 p-4 text-[0.8rem] leading-5 sm:text-sm">
                     <p style={{ marginTop: "0.25em", marginBottom: "0.25em" }}>
                       {germanSource !== null ? "Quellen:" : "Sources:"}
@@ -57,11 +61,11 @@ export default function agentMessage({
                         );
                       })}
                   </div>
-                )}
+                )} */}
               </div>
             </div>
           </div>
-          {isLastMessage ? (
+          {/* {isLastMessage ? (
             <div className="hidden justify-between sm:flex">
               <div className="visible mt-2 flex justify-center gap-3 self-end text-gray-400 md:gap-4 lg:absolute lg:right-0 lg:top-0 lg:mt-0 lg:translate-x-full lg:gap-1 lg:self-center lg:pl-2">
                 <button
@@ -162,8 +166,8 @@ export default function agentMessage({
                 </div>
               </div>
             </>
-          )}
-        </div> */}
+          )} */}
+        </div>
       </div>
     </div>
   );
