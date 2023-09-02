@@ -1,14 +1,23 @@
 import { combineClassNames, type ChatThemeSettings } from "@/lib/chat-theme";
-import AgentIcon from "@/components/agent/agent-icon";
+import AgentIcon from "@/components/agent/icon";
+import AgentMessage from "@/components/agent/message";
+import SupportTicketModal from "@/components/support-ticket-modal";
 
 type AgentMessageProps = {
   chatTheme: ChatThemeSettings;
+  text: string;
 };
+
+// const shouldDisplaySupportTicket =
+//   foundSupportTicketRegex &&
+//   assistantResponseFinished &&
+//   isLastMessage &&
+//   createSupportTicket;
 
 export default function AgentDiv({
   chatTheme,
+  text,
 }: AgentMessageProps): JSX.Element {
-  const shouldDisplayBlinkingCursor = true;
   return (
     <div
       className={`w-full border-b ${combineClassNames(
@@ -22,18 +31,12 @@ export default function AgentDiv({
           <div className="flex flex-grow flex-col gap-3">
             <div className="flex min-h-[20px] flex-col items-start gap-4 whitespace-pre-wrap ">
               <div className="prose prose-invert w-full break-words ">
-                <p
-                  className={`${
-                    chatTheme.assistantMessageSetting.text
-                  } text-[90%] sm:text-[100%] ${
-                    shouldDisplayBlinkingCursor &&
-                    `!last:after:mt-1 last:after:animate-assistant-message  last:after:bg-white last:after:text-white last:after:content-['▋']`
-                  }`}
-
-                  // dangerouslySetInnerHTML={{ __html: sanitizedHTML }}
-                >
-                  hello
-                </p>
+                <AgentMessage
+                  chatTheme={chatTheme}
+                  blinkCursor={true}
+                  text={text}
+                />
+                {/* <SupportTicketModal /> */}
                 {/* <SupportTicketSystem
                   shouldDisplay={shouldDisplaySupportTicket}
                   apiBaseUrl={apiBaseUrl}
@@ -64,6 +67,7 @@ export default function AgentDiv({
                 )} */}
               </div>
             </div>
+            A
           </div>
           {/* {isLastMessage ? (
             <div className="hidden justify-between sm:flex">

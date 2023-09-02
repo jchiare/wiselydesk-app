@@ -1,5 +1,5 @@
 import getChatTheme, { combineClassNames } from "@/lib/chat-theme";
-import AgentDiv from "@/components/agent/agent-div";
+import Agent from "@/components/agent";
 
 export type SearchParams = {
   german_source?: string;
@@ -32,7 +32,7 @@ export default function Chat({
           chatTheme.baseSettings,
         )}  flex-shrink-0 font-medium`}
       >
-        <AgentDiv chatTheme={chatTheme} />
+        <Agent chatTheme={chatTheme} text={"hello"} />
       </div>
     </>
   );
