@@ -5,22 +5,17 @@ function formatSentTime(time: string | undefined): string | undefined {
 }
 
 export default function User({
-  sentTime,
   text,
-  chatTheme,
+  chatTheme
 }: {
-  sentTime: string | undefined;
   text: string;
   chatTheme: ChatThemeSettings;
 }): JSX.Element {
-  const formattedTime = formatSentTime(sentTime);
-
   return (
     <div
       className={`w-full border-b border-gray-900/50 ${combineClassNames(
-        chatTheme.userMessageSetting,
-      )}`}
-    >
+        chatTheme.userMessageSetting
+      )}`}>
       <div className="m-auto flex gap-4 p-2 sm:p-4 md:max-w-2xl md:gap-6 md:py-6 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
         <div className="relative hidden w-[30px] flex-col items-end sm:flex">
           <span className="m-0 inline-block h-auto w-auto max-w-full overflow-hidden border-0 bg-none p-0 opacity-100">

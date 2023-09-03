@@ -22,7 +22,7 @@ export const useChatSubmit = ({
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [input, setInput] = useState<string>("");
   const [assistantResponseFinished, setAssistantResponseFinished] =
-    useState<boolean>(false);
+    useState<boolean>(true);
   const [assistantStreamingResponse, setAssistantStreamingResponse] =
     useState<string>("");
   const [sources, setSources] = useState<string[]>([]);
@@ -34,7 +34,6 @@ export const useChatSubmit = ({
       ...messages,
       new ChatMessage({
         sender: "user",
-        sentTime: ChatMessage.createSentTimeField(),
         text: input
       })
     ] as ChatMessage[];
