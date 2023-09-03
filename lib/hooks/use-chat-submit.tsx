@@ -30,6 +30,7 @@ export const useChatSubmit = ({
   const [conversationId, setConversationId] = useState<string | undefined>();
 
   async function onSubmit() {
+    console.log("on submit clicked");
     const updatedMessages = [
       ...messages,
       new ChatMessage({

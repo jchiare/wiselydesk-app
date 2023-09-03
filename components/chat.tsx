@@ -58,12 +58,18 @@ export default function Chat({
         chatTheme={chatTheme}
         text={welcomeReply(account, locale)}
         locale={locale}
+        key={0}
       />
       {messages.map((message, index) => {
         return message.sender === "user" ? (
-          <User chatTheme={chatTheme} text={message.text} />
+          <User chatTheme={chatTheme} text={message.text} key={index} />
         ) : (
-          <Agent chatTheme={chatTheme} text={message.text} locale={locale} />
+          <Agent
+            chatTheme={chatTheme}
+            text={message.text}
+            locale={locale}
+            key={index}
+          />
         );
       })}
       <Input
