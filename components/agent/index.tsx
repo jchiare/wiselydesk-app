@@ -6,6 +6,7 @@ import SupportTicketModal from "@/components/support-ticket-modal";
 type AgentMessageProps = {
   chatTheme: ChatThemeSettings;
   text: string;
+  locale: string;
 };
 
 // const shouldDisplaySupportTicket =
@@ -68,7 +69,6 @@ export default function AgentDiv({
                 )} */}
               </div>
             </div>
-            A
           </div>
           {/* {isLastMessage ? (
             <div className="hidden justify-between sm:flex">

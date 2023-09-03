@@ -15,7 +15,11 @@ export default function Page({ params, searchParams }: ChatPageProps) {
       className={`relative flex h-screen w-full flex-col items-center overflow-scroll antialiased ${combineClassNames(
         chatTheme.baseSettings
       )} flex-shrink-0 font-medium`}>
-      <Chat chatTheme={chatTheme} searchParams={searchParams} />
+      <Chat
+        chatTheme={chatTheme}
+        searchParams={searchParams}
+        account={params.account}
+      />
     </main>
   );
 }
