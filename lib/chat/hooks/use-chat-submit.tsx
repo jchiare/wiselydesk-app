@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import ChatMessage from "@/lib/chat-message";
-import { transformChatMessageToOpenAi } from "@/lib/openai-chat-message";
+import ChatMessage from "@/lib/chat/chat-message";
+import { transformChatMessageToOpenAi } from "@/lib/chat/openai-chat-message";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
-import { URL } from "@/lib/constants";
+import { URL } from "@/lib/shared/constants";
 
 type UseChatSubmitParams = {
   initialMessages: ChatMessage[];
@@ -144,7 +144,6 @@ export const useChatSubmit = ({
     input,
     setInput,
     aiResponseDone,
-    assistantStreamingResponse,
     onSubmit,
     sources,
     latestMessageId,

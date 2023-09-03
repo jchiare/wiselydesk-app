@@ -1,4 +1,7 @@
-import { combineClassNames, type ChatThemeSettings } from "@/lib/chat-theme";
+import {
+  combineClassNames,
+  type ChatThemeSettings
+} from "@/lib/chat/chat-theme";
 
 function formatSentTime(time: string | undefined): string | undefined {
   return time?.charAt(0) === "0" ? time.slice(1) : time;

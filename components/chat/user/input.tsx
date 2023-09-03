@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
-import type { ChatThemeSettings } from "@/lib/chat-theme";
-import { TEXT } from "@/i18n";
+import type { ChatThemeSettings } from "@/lib/chat/chat-theme";
+import { TEXT } from "@/i18n/chat";
 
 export default function Input({
   onSubmit,

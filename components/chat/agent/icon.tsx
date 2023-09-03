@@ -1,8 +1,8 @@
 import Image from "next/image";
-import { type ChatThemeSettings } from "@/lib/chat-theme";
+import { type ChatThemeSettings } from "@/lib/chat/chat-theme";
 
 export default function AgentIcon({
-  chatTheme,
+  chatTheme
 }: {
   chatTheme: ChatThemeSettings;
 }): JSX.Element {
@@ -22,8 +22,7 @@ export default function AgentIcon({
             viewBox="0 0 100 100"
             strokeWidth="1.5"
             fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+            xmlns="http://www.w3.org/2000/svg">
             <rect x="0" y="0" width="100" height="100" fill="white" />
             <path
               d="M10,10 L30,90 L50,50 L70,90 L90,10"

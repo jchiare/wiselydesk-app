@@ -1,6 +1,6 @@
 "use client";
-import { type ChatThemeSettings } from "@/lib/chat-theme";
-import { URL } from "@/lib/constants";
+import { type ChatThemeSettings } from "@/lib/chat/chat-theme";
+import { URL } from "@/lib/shared/constants";
 import { useState } from "react";
 
 type FeedbackProps = {

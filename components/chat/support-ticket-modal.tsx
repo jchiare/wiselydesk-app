@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { URL } from "@/lib/constants";
+import { URL } from "@/lib/shared/constants";
 
 type SupportTicketModalProps = {
   conversationId: string | undefined;

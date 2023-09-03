@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TEXT } from "@/i18n";
+import { TEXT } from "@/i18n/chat";
 import React from "react";
 
 const ZENDESK_SOURCE_ARTICLE_REGEX = "/[0-9]+-(.+)-?$";

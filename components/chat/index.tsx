@@ -1,12 +1,15 @@
 "use client";
-import { combineClassNames, type ChatThemeSettings } from "@/lib/chat-theme";
-import { welcomeReply } from "@/lib/services/welcome-reply";
-import Agent from "@/components/agent";
-import User from "@/components/user";
-import { useChatSubmit } from "@/lib/hooks/use-chat-submit";
-import { useScrollToBottom } from "@/lib/hooks/use-scroll-to-bottom";
-import Input from "@/components/user/input";
-import CancelResponse from "@/components/cancel-response";
+import {
+  combineClassNames,
+  type ChatThemeSettings
+} from "@/lib/chat/chat-theme";
+import { welcomeReply } from "@/lib/chat/services/welcome-reply";
+import Agent from "@/components/chat/agent";
+import User from "@/components/chat/user";
+import { useChatSubmit } from "@/lib/chat/hooks/use-chat-submit";
+import { useScrollToBottom } from "@/lib/chat/hooks/use-scroll-to-bottom";
+import Input from "@/components/chat/user/input";
+import CancelResponse from "@/components/chat/cancel-response";
 
 export type SearchParams = {
   german_source?: string;
@@ -39,7 +42,6 @@ export default function Chat({
     input,
     setInput,
     aiResponseDone,
-    assistantStreamingResponse,
     onSubmit,
     sources,
     latestMessageId,

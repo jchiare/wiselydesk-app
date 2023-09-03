@@ -1,4 +1,4 @@
-import { TEXT } from "@/i18n";
+import { TEXT } from "@/i18n/chat";
 
 type CancelResponseProps = {
   aiResponseDone: boolean;

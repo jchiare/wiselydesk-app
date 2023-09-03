@@ -1,5 +1,5 @@
 import Chat, { type SearchParams } from "@/components/chat";
-import getChatTheme from "@/lib/chat-theme";
+import getChatTheme from "@/lib/chat/chat-theme";
 
 type ChatPageProps = {
   params: {
