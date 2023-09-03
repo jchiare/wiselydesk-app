@@ -1,5 +1,3 @@
-import * as DOMPurify from "dompurify";
-
 // removes the HTML text <button create> </button create>
 // from the message
 export function removeSupportButton(text: string): [string, boolean] {
@@ -29,26 +27,9 @@ function formatMarkdownLinks(text: string): string {
   return text;
 }
 
-// Add target="_blank" and rel="noopener noreferrer" to all links
-function enhanceLinks() {
-  DOMPurify.addHook(
-    "afterSanitizeAttributes",
-    function (node: {
-      tagName: string;
-      setAttribute: (arg0: string, arg1: string) => void;
-    }) {
-      if (node.tagName === "A") {
-        node.setAttribute("target", "_blank");
-        node.setAttribute("rel", "noopener noreferrer");
-      }
-    },
-  );
-}
-
 export default function renderMessage(text: string) {
-  enhanceLinks();
   removeSupportButton(text);
   text = formatMarkdownLinks(text);
 
-  return DOMPurify.sanitize(text);
+  return text;
 }

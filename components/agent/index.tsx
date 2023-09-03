@@ -16,14 +16,15 @@ type AgentMessageProps = {
 
 export default function AgentDiv({
   chatTheme,
-  text,
+  text
 }: AgentMessageProps): JSX.Element {
   return (
     <div
-      className={`w-full border-b ${combineClassNames(
-        chatTheme.assistantMessageSetting,
-      )}`}
-    >
+      className={`w-full border-b ${
+        chatTheme.assistantMessageSetting.bgColour +
+        " " +
+        chatTheme.assistantMessageSetting.text
+      }`}>
       <div className="m-auto flex gap-4 p-2 sm:p-4 md:max-w-2xl md:gap-6 md:py-6 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
         <AgentIcon chatTheme={chatTheme} />
 
