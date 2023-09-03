@@ -3,24 +3,24 @@ import renderMessage from "@/lib/services/render-message";
 
 type AgentMessageProps = {
   chatTheme: ChatThemeSettings;
-  blinkCursor: boolean;
+  streamingInProgress: boolean | undefined;
   text: string;
 };
 
 export default function AgentMessage({
   chatTheme,
-  blinkCursor,
-  text,
+  streamingInProgress,
+  text
 }: AgentMessageProps): JSX.Element {
+  console.log("steraming: ", streamingInProgress);
   return (
     <p
       className={`${
         chatTheme.assistantMessageSetting.text
       } text-[90%] sm:text-[100%] ${
-        blinkCursor &&
+        streamingInProgress &&
         `!last:after:mt-1 last:after:animate-assistant-message  last:after:bg-white last:after:text-white last:after:content-['▋']`
       }`}
-      dangerouslySetInnerHTML={{ __html: renderMessage(text) }}
-    ></p>
+      dangerouslySetInnerHTML={{ __html: renderMessage(text) }}></p>
   );
 }

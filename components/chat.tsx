@@ -68,6 +68,7 @@ export default function Chat({
         text={welcomeReply(account, locale)}
         locale={locale}
         key={0}
+        streamingInProgress={false}
       />
       {messages.map((message, index) => {
         return message.sender === "user" ? (
@@ -80,7 +81,7 @@ export default function Chat({
             sources={sources}
             key={index}
             account={account}
-            streamingInProgress={assistantResponseFinished}
+            streamingInProgress={!assistantResponseFinished}
           />
         );
       })}
