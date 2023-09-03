@@ -5,6 +5,7 @@ import Sources from "@/components/agent/sources";
 import SupportTicketModal from "@/components/support-ticket-modal";
 import AiWarning from "@/components/ai-warning";
 import Feedback from "@/components/agent/feedback";
+import { removeSupportButton } from "@/lib/services/render-message";
 
 type AgentMessageProps = {
   chatTheme: ChatThemeSettings;
@@ -15,13 +16,9 @@ type AgentMessageProps = {
   aiResponseDone: boolean;
   isLastMessage: boolean;
   latestMessageId?: number | null | undefined;
+  conversationId?: string;
+  createSupportTicket?: boolean;
 };
-
-// const shouldDisplaySupportTicket =
-//   foundSupportTicketRegex &&
-//   aiResponseDone &&
-//   isLastMessage &&
-//   createSupportTicket;
 
 export default function AgentDiv({
   chatTheme,
@@ -31,8 +28,14 @@ export default function AgentDiv({
   account,
   aiResponseDone,
   isLastMessage,
-  latestMessageId
+  latestMessageId,
+  conversationId,
+  createSupportTicket
 }: AgentMessageProps): JSX.Element {
+  const [_, buttonCreateHtml] = removeSupportButton(text);
+
+  const displaySupportModal =
+    buttonCreateHtml && aiResponseDone && isLastMessage && createSupportTicket;
   return (
     <div
       className={`w-full border-b ${
@@ -53,12 +56,10 @@ export default function AgentDiv({
                   text={text}
                   isLastMessage={isLastMessage}
                 />
-                {/* <SupportTicketModal /> */}
-                {/* <SupportTicketSystem
-                  shouldDisplay={shouldDisplaySupportTicket}
-                  apiBaseUrl={apiBaseUrl}
-                  conversationId={conversationId}
-                /> */}
+                {displaySupportModal && (
+                  <SupportTicketModal conversationId={conversationId} />
+                )}
+
                 <Sources
                   sources={sources}
                   account={account}

@@ -28,7 +28,7 @@ function formatMarkdownLinks(text: string): string {
 }
 
 export default function renderMessage(text: string) {
-  removeSupportButton(text);
+  [text] = removeSupportButton(text);
   text = formatMarkdownLinks(text);
 
   return text;

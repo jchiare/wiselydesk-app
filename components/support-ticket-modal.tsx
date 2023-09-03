@@ -1,16 +1,13 @@
 "use client";
 import React, { useState } from "react";
+import { URL } from "@/lib/constants";
 
 type SupportTicketModalProps = {
-  shouldDisplay: boolean;
-  apiBaseUrl: string | null | undefined;
   conversationId: string | undefined;
 };
 
 export default function SupportTicketModal({
-  shouldDisplay,
-  apiBaseUrl,
-  conversationId,
+  conversationId
 }: SupportTicketModalProps): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -21,14 +18,14 @@ export default function SupportTicketModal({
     setIsModalOpen(true);
     if (conversationId) {
       if (!summary) {
-        fetch(`${apiBaseUrl}/api/conversation/${conversationId}/summarization`)
+        fetch(`${URL}/api/conversation/${conversationId}/summarization`)
           .then((res) => res.json())
           .then((data) => {
             setSummary(data["summary"]);
           });
       }
       if (!transcript) {
-        fetch(`${apiBaseUrl}/api/conversation/${conversationId}/transcribe`)
+        fetch(`${URL}/api/conversation/${conversationId}/transcribe`)
           .then((res) => res.json())
           .then((data) => {
             setTranscript(data["transcription"]);
@@ -47,16 +44,16 @@ export default function SupportTicketModal({
     const formData = {
       email,
       summary,
-      transcript,
+      transcript
     };
 
     try {
-      const response = await fetch(`${apiBaseUrl}/api/submitSupportTicket`, {
+      const response = await fetch(`${URL}/api/submitSupportTicket`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json"
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formData)
       });
 
       if (response.ok) {
@@ -79,8 +76,7 @@ export default function SupportTicketModal({
     <div className="relative">
       <button
         onClick={handleClick}
-        className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-      >
+        className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
         Create Support Ticket
       </button>
 
@@ -88,8 +84,7 @@ export default function SupportTicketModal({
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
             className="absolute inset-0 bg-black opacity-70"
-            onClick={closeModal}
-          ></div>
+            onClick={closeModal}></div>
 
           <div className="relative z-10 flex h-5/6 w-1/2 flex-col rounded bg-white p-7 text-gray-800 shadow-lg">
             <h2 className="my-1 text-center text-xl text-black">
@@ -131,8 +126,7 @@ export default function SupportTicketModal({
 
             <button
               onClick={submitButton}
-              className="float-right mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
-            >
+              className="float-right mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
               Submit
             </button>
           </div>
