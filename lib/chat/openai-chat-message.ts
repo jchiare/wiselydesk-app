@@ -1,4 +1,4 @@
-import ChatMessage from "@/lib/chat-message";
+import ChatMessage from "@/lib/chat/chat-message";
 
 type Role = "user" | "assistant";
 
