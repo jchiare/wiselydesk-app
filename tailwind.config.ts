@@ -5,7 +5,8 @@ const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/chat/**/*.{js,ts,jsx,tsx,mdx}"
+    "./components/chat/**/*.{js,ts,jsx,tsx,mdx}",
+    "./lib/chat/**/*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {
     extend: {
