@@ -85,6 +85,7 @@ export default function Chat({
             account={account}
             aiResponseDone={aiResponseDone}
             isLastMessage={isLastMessage}
+            latestMessageId={latestMessageId}
           />
         );
       })}

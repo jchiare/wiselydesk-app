@@ -65,7 +65,6 @@ export const useChatSubmit = ({
       async onopen() {
         console.log("Opened SSE connection");
         if (aiResponseDone) {
-          console.log("setting aiResponseDone to false on open");
           setAiResponseDone(false);
         }
       },
