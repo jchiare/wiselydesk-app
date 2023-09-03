@@ -15,6 +15,10 @@ export const TEXT = {
     aiWarning: {
       en: "Answer",
       de: "Antwort"
+    },
+    cancelButton: {
+      en: "Cancel Answer",
+      de: "Antwort stornieren"
     }
   }
 };

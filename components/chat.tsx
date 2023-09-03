@@ -6,6 +6,7 @@ import User from "@/components/user";
 import { useChatSubmit } from "@/lib/hooks/use-chat-submit";
 import { useScrollToBottom } from "@/lib/hooks/use-scroll-to-bottom";
 import Input from "@/components/user/input";
+import CancelResponse from "@/components/cancel-response";
 
 export type SearchParams = {
   german_source?: string;
@@ -42,7 +43,8 @@ export default function Chat({
     onSubmit,
     sources,
     latestMessageId,
-    conversationId
+    conversationId,
+    setAiResponseDone
   } = useChatSubmit({
     initialMessages: [],
     clientApiKey,
@@ -87,16 +89,23 @@ export default function Chat({
         );
       })}
       <div ref={messagesEndRef} />
-
-      <Input
-        chatTheme={chatTheme}
-        account={account}
-        locale={locale}
-        onSubmit={onSubmit}
-        setInput={setInput}
-        input={input}
-        aiResponseDone={aiResponseDone}
-      />
+      <div className="absolute bottom-0 left-0 flex w-full justify-center">
+        <CancelResponse
+          aiResponseDone={aiResponseDone}
+          setAiResponseDone={setAiResponseDone}
+          locale={locale}
+          account={account}
+        />
+        <Input
+          chatTheme={chatTheme}
+          account={account}
+          locale={locale}
+          onSubmit={onSubmit}
+          setInput={setInput}
+          input={input}
+          aiResponseDone={aiResponseDone}
+        />
+      </div>
     </main>
   );
 }

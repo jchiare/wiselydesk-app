@@ -149,6 +149,7 @@ export const useChatSubmit = ({
     onSubmit,
     sources,
     latestMessageId,
-    conversationId
+    conversationId,
+    setAiResponseDone
   };
 };
