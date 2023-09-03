@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChatMessage from "@/lib/chat-message";
 import { transformChatMessageToOpenAi } from "@/lib/openai-chat-message";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
@@ -118,6 +118,22 @@ export const useChatSubmit = ({
       throw new Error(e);
     });
   }
+
+  useEffect(() => {
+    if (assistantResponseFinished === true) {
+      return;
+    }
+
+    // stream the assistant answer
+    if (messages.length > 0 && assistantStreamingResponse) {
+      const lastAssistantAnswer = messages.slice(-1)[0];
+      lastAssistantAnswer.text = assistantStreamingResponse;
+      setMessages([
+        ...messages.slice(0, messages.length - 1),
+        lastAssistantAnswer
+      ]);
+    }
+  }, [assistantStreamingResponse]);
 
   function clearStreamingResponse() {
     setAssistantStreamingResponse("");
