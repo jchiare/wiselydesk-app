@@ -39,7 +39,7 @@ export default function Chat({
     messages,
     input,
     setInput,
-    assistantResponseFinished,
+    aiResponseDone,
     assistantStreamingResponse,
     onSubmit,
     sources,
@@ -68,9 +68,11 @@ export default function Chat({
         text={welcomeReply(account, locale)}
         locale={locale}
         key={0}
-        streamingInProgress={false}
+        aiResponseDone={false}
+        isLastMessage={false}
       />
       {messages.map((message, index) => {
+        const isLastMessage = messages.length === index + 1;
         return message.sender === "user" ? (
           <User chatTheme={chatTheme} text={message.text} key={index} />
         ) : (
@@ -78,10 +80,11 @@ export default function Chat({
             chatTheme={chatTheme}
             text={message.text}
             locale={locale}
-            sources={sources}
+            sources={isLastMessage ? sources : undefined} // only show sources on last message
             key={index}
             account={account}
-            streamingInProgress={!assistantResponseFinished}
+            aiResponseDone={aiResponseDone}
+            isLastMessage={isLastMessage}
           />
         );
       })}
@@ -94,7 +97,7 @@ export default function Chat({
         onSubmit={onSubmit}
         setInput={setInput}
         input={input}
-        assistantResponseFinished={assistantResponseFinished}
+        aiResponseDone={aiResponseDone}
       />
     </main>
   );

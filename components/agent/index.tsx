@@ -11,12 +11,13 @@ type AgentMessageProps = {
   locale: string;
   sources?: string[];
   account?: string;
-  streamingInProgress?: boolean;
+  aiResponseDone: boolean;
+  isLastMessage: boolean;
 };
 
 // const shouldDisplaySupportTicket =
 //   foundSupportTicketRegex &&
-//   assistantResponseFinished &&
+//   aiResponseDone &&
 //   isLastMessage &&
 //   createSupportTicket;
 
@@ -26,7 +27,8 @@ export default function AgentDiv({
   sources,
   locale,
   account,
-  streamingInProgress
+  aiResponseDone,
+  isLastMessage
 }: AgentMessageProps): JSX.Element {
   return (
     <div
@@ -44,8 +46,9 @@ export default function AgentDiv({
               <div className="prose prose-invert w-full break-words ">
                 <AgentMessage
                   chatTheme={chatTheme}
-                  streamingInProgress={streamingInProgress}
+                  aiResponseDone={aiResponseDone}
                   text={text}
+                  isLastMessage={isLastMessage}
                 />
                 {/* <SupportTicketModal /> */}
                 {/* <SupportTicketSystem
@@ -57,7 +60,7 @@ export default function AgentDiv({
                   sources={sources}
                   account={account}
                   locale={locale}
-                  streamingInProgress={streamingInProgress}
+                  aiResponseDone={aiResponseDone}
                 />
               </div>
             </div>

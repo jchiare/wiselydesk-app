@@ -7,7 +7,7 @@ export default function Input({
   setInput,
   input,
   chatTheme,
-  assistantResponseFinished,
+  aiResponseDone,
   account,
   locale
 }: {
@@ -15,7 +15,7 @@ export default function Input({
   setInput: (input: string) => void;
   input: string;
   chatTheme: ChatThemeSettings;
-  assistantResponseFinished: boolean;
+  aiResponseDone: boolean;
   account: string;
   locale: string;
 }) {
@@ -65,7 +65,7 @@ export default function Input({
           <div className="relative flex h-full flex-1 md:flex-col">
             <div
               className={`relative flex w-full flex-grow flex-col rounded-md border border-gray-900/50 bg-gray-700 py-[10px] text-white shadow-[0_0_15px_rgba(0,0,0,0.10)] md:p-4 ${
-                !assistantResponseFinished && "cursor-not-allowed"
+                !aiResponseDone && "cursor-not-allowed"
               }`}>
               <textarea
                 id="userQuestion"
@@ -75,13 +75,13 @@ export default function Input({
                 // @ts-expect-error way too much typing
                 placeholder={TEXT[account]["inputPlaceholder"][locale]}
                 rows={1}
-                disabled={!assistantResponseFinished}
+                disabled={!aiResponseDone}
                 onChange={(e) => setInput(e.target.value)}
                 className={`h-[24px] max-h-[200px] w-full resize-none border-0 bg-transparent p-0 pl-2 pr-7 ring-0 focus:outline-none focus:ring-0 focus-visible:ring-0 disabled:cursor-not-allowed md:pl-0`}></textarea>
               <button
                 className={`absolute bottom-1.5 right-1 rounded-md p-1 text-gray-500 hover:bg-gray-900 hover:text-gray-400 disabled:cursor-not-allowed disabled:hover:bg-transparent md:bottom-4 md:right-2`}
                 onClick={(e) => handleSubmit(e)}
-                disabled={!assistantResponseFinished}
+                disabled={!aiResponseDone}
                 type="submit">
                 <svg
                   stroke="currentColor"

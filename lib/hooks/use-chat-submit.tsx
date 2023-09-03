@@ -21,8 +21,7 @@ export const useChatSubmit = ({
 }: UseChatSubmitParams) => {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [input, setInput] = useState<string>("");
-  const [assistantResponseFinished, setAssistantResponseFinished] =
-    useState<boolean>(true);
+  const [aiResponseDone, setAiResponseDone] = useState<boolean>(true);
   const [assistantStreamingResponse, setAssistantStreamingResponse] =
     useState<string>("");
   const [sources, setSources] = useState<string[]>([]);
@@ -30,7 +29,6 @@ export const useChatSubmit = ({
   const [conversationId, setConversationId] = useState<string | undefined>();
 
   async function onSubmit() {
-    console.log("on submit clicked");
     const updatedMessages = [
       ...messages,
       new ChatMessage({
@@ -43,7 +41,7 @@ export const useChatSubmit = ({
       ...updatedMessages,
       new ChatMessage({ sender: "assistant", text: "" })
     ]);
-    setAssistantResponseFinished(false);
+    setAiResponseDone(false);
     setInput("");
     const preparedMessages = transformChatMessageToOpenAi(updatedMessages);
 
@@ -66,8 +64,9 @@ export const useChatSubmit = ({
       signal: controller.signal,
       async onopen() {
         console.log("Opened SSE connection");
-        if (assistantResponseFinished) {
-          setAssistantResponseFinished(false);
+        if (aiResponseDone) {
+          console.log("setting aiResponseDone to false on open");
+          setAiResponseDone(false);
         }
       },
       openWhenHidden: true,
@@ -120,7 +119,7 @@ export const useChatSubmit = ({
   }
 
   useEffect(() => {
-    if (assistantResponseFinished === true) {
+    if (aiResponseDone === true) {
       return;
     }
 
@@ -137,13 +136,13 @@ export const useChatSubmit = ({
 
   function clearStreamingResponse() {
     setAssistantStreamingResponse("");
-    setAssistantResponseFinished(true);
+    setAiResponseDone(true);
   }
   return {
     messages,
     input,
     setInput,
-    assistantResponseFinished,
+    aiResponseDone,
     assistantStreamingResponse,
     onSubmit,
     sources,
