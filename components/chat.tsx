@@ -5,10 +5,12 @@ import Agent from "@/components/agent";
 import User from "@/components/user";
 import { useState } from "react";
 import ChatMessage from "@/lib/chat-message";
+import { useChatSubmit } from "@/lib/hooks/use-chat-submit";
+import Input from "@/components/user/input";
 
 export type SearchParams = {
   german_source?: string;
-  create_support_ticket?: string;
+  create_support_ticket?: boolean;
   client_api_key: string;
   model?: string;
   locale: string;
@@ -26,15 +28,29 @@ export default function Chat({
   account
 }: ChatProps): JSX.Element {
   const {
-    german_source: germanSource,
-    create_support_ticket: createSupportTicket,
+    locale = "en",
+    create_support_ticket: createSupportTicket = false,
     client_api_key: clientApiKey,
-    model
+    model = "gpt-4"
   } = searchParams;
 
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-
-  const locale = searchParams.locale ?? "en";
+  const {
+    messages,
+    input,
+    setInput,
+    assistantResponseFinished,
+    assistantStreamingResponse,
+    onSubmit,
+    sources,
+    latestMessageId,
+    conversationId
+  } = useChatSubmit({
+    initialMessages: [],
+    clientApiKey,
+    createSupportTicket,
+    model,
+    account
+  });
 
   return (
     <>
@@ -51,6 +67,15 @@ export default function Chat({
           <Agent chatTheme={chatTheme} text={"hello"} locale={locale} />
         );
       })}
+      <Input
+        chatTheme={chatTheme}
+        account={account}
+        locale={locale}
+        onSubmit={onSubmit}
+        setInput={setInput}
+        input={input}
+        assistantResponseFinished={assistantResponseFinished}
+      />
     </>
   );
 }

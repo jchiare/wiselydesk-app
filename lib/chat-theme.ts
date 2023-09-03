@@ -11,7 +11,7 @@ type MessageSetting = {
   icon?: string;
 };
 
-type InputSetting = {
+export type InputSetting = {
   bgColour: string;
   textColour: string;
 };
@@ -26,43 +26,43 @@ export type ChatThemeSettings = {
 
 const BASE_CHAT_SETTINGS: ChatThemeSettings = {
   baseSettings: {
-    bgColour: "bg-[#343541]",
+    bgColour: "bg-[#343541]"
   },
   assistantMessageSetting: {
     bgColour: "bg-[#444654]",
     border: "border-gray-900/50",
     text: "text-gray-100",
-    feedbackColour: "text-gray-400",
+    feedbackColour: "text-gray-400"
   },
   userMessageSetting: {
     bgColour: "bg-[#343541]",
-    text: "text-gray-100",
+    text: "text-gray-100"
   },
   inputSetting: { bgColour: "bg-[#343541]", textColour: "text-black" },
-  default: true,
+  default: true
 };
 
 const AMBOSS_BOT_SETTINGS: ChatThemeSettings = {
   baseSettings: {
     bgColour: "bg-[#F8FAFC]",
-    text: "text-black",
+    text: "text-black"
   },
   assistantMessageSetting: {
     bgColour: "bg-[#a3d8e7ff]",
     text: "text-black",
     feedbackColour: "text-black",
-    icon: "/amboss.png",
+    icon: "/amboss.png"
   },
   userMessageSetting: {
     bgColour: "bg-[#F8FAFC]",
-    text: "text-black",
+    text: "text-black"
   },
   inputSetting: { bgColour: "bg-[#F8FAFC]", textColour: "text-black" },
-  default: false,
+  default: false
 };
 
 const accountSettings: Record<string, ChatThemeSettings> = {
-  amboss: AMBOSS_BOT_SETTINGS,
+  amboss: AMBOSS_BOT_SETTINGS
 };
 
 export default function getChatTheme(account: string): ChatThemeSettings {
@@ -70,7 +70,7 @@ export default function getChatTheme(account: string): ChatThemeSettings {
 }
 
 export const combineClassNames = (
-  settings: Record<string, string | undefined>,
+  settings: Record<string, string | undefined>
 ) => {
   return Object.values(settings).filter(Boolean).join(" ");
 };
