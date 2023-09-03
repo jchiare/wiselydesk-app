@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { TEXT } from "@/i18n/chat";
+import getText from "@/i18n/chat";
 import React from "react";
 
 const ZENDESK_SOURCE_ARTICLE_REGEX = "/[0-9]+-(.+)-?$";
@@ -60,7 +60,7 @@ export default function Sources({
     <div className=" ml-auto mt-6 w-fit rounded-lg bg-slate-600 p-4 text-[0.8rem] leading-5 sm:text-sm">
       <p style={{ marginTop: "0.25em", marginBottom: "0.25em" }}>
         {/* @ts-expect-error ... types be crazy */}
-        {TEXT[account]["sources"][locale]}
+        {getText(account)["sources"][locale]}
       </p>
       {sources.map((source, index) => {
         return (

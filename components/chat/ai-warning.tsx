@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { TEXT } from "@/i18n/chat";
+import getText from "@/i18n/chat";
 
 type AiWarningProps = {
   locale: string;
@@ -26,8 +26,7 @@ export default function AiWarning({ locale, account }: AiWarningProps) {
               d="M6.181 11.1H7.9L6.142 4.9H4.213L2.46 11.1h1.564l.297-1.362h1.572l.288 1.362zM5.077 6.296h.082l.49 2.307h-1.08l.508-2.307zm7.635 4.804V9.832h-1.306V6.167h1.306V4.899H8.527v1.268h1.307v3.665H8.527V11.1h4.185z"
               fill="#fff"></path>
           </svg>
-          {/* @ts-expect-error ... types man */}
-          <span>{TEXT[account]["aiWarning"][locale]}</span>
+          <span>{getText(account)["aiWarning"][locale]}</span>
         </div>
         <div
           onMouseEnter={() => setShowTooltip(true)}
@@ -47,8 +46,7 @@ export default function AiWarning({ locale, account }: AiWarningProps) {
           </svg>
           {showTooltip && (
             <div className="absolute bottom-10 left-0 mt-6 rounded bg-white px-2 py-1 text-xs font-semibold text-gray-700 shadow-md">
-              {/* @ts-expect-error ... types man */}
-              {TEXT[account]["aiWarningExplanation"][locale]}
+              {getText(account)["aiWarningExplanation"][locale]}
             </div>
           )}
         </div>

@@ -1,4 +1,4 @@
-import { TEXT } from "@/i18n/chat";
+import getText from "@/i18n/chat";
 
 type CancelResponseProps = {
   aiResponseDone: boolean;
@@ -24,8 +24,7 @@ export default function CancelResponse({
       <button
         className="absolute z-[1] mt-[-90px] w-fit rounded bg-[#282934] p-3 text-white md:mt-[-120px]"
         onClick={handleCancelClick}>
-        {/* @ts-expect-error  */}
-        {TEXT[account]["cancelButton"][locale]}
+        {getText(account)["cancelButton"][locale]}
       </button>
     </div>
   );

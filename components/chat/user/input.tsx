@@ -1,6 +1,6 @@
 import { useRef, useEffect } from "react";
 import type { ChatThemeSettings } from "@/lib/chat/chat-theme";
-import { TEXT } from "@/i18n/chat";
+import getText from "@/i18n/chat";
 
 export default function Input({
   onSubmit,
@@ -72,8 +72,7 @@ export default function Input({
                 tabIndex={1}
                 value={input}
                 ref={textAreaRef}
-                // @ts-expect-error way too much typing
-                placeholder={TEXT[account]["inputPlaceholder"][locale]}
+                placeholder={getText(account)["inputPlaceholder"][locale]}
                 rows={1}
                 disabled={!aiResponseDone}
                 onChange={(e) => setInput(e.target.value)}
