@@ -59,31 +59,30 @@ export default function Chat({
   });
 
   return (
-    <>
-      <main
-        className={`relative flex h-screen w-full flex-col items-center overflow-scroll antialiased ${combineClassNames(
-          chatTheme.baseSettings
-        )} flex-shrink-0 font-medium`}>
-        <Agent
-          chatTheme={chatTheme}
-          text={welcomeReply(account, locale)}
-          locale={locale}
-          key={0}
-        />
-        {messages.map((message, index) => {
-          return message.sender === "user" ? (
-            <User chatTheme={chatTheme} text={message.text} key={index} />
-          ) : (
-            <Agent
-              chatTheme={chatTheme}
-              text={message.text}
-              locale={locale}
-              key={index}
-            />
-          );
-        })}
-        <div ref={messagesEndRef} />
-      </main>
+    <main
+      className={`flex h-[calc(100vh-100px)] w-full flex-col items-center overflow-scroll antialiased ${combineClassNames(
+        chatTheme.baseSettings
+      )} flex-shrink-0 font-medium`}>
+      <Agent
+        chatTheme={chatTheme}
+        text={welcomeReply(account, locale)}
+        locale={locale}
+        key={0}
+      />
+      {messages.map((message, index) => {
+        return message.sender === "user" ? (
+          <User chatTheme={chatTheme} text={message.text} key={index} />
+        ) : (
+          <Agent
+            chatTheme={chatTheme}
+            text={message.text}
+            locale={locale}
+            key={index}
+          />
+        );
+      })}
+      <div ref={messagesEndRef} />
+
       <Input
         chatTheme={chatTheme}
         account={account}
@@ -93,6 +92,6 @@ export default function Chat({
         input={input}
         assistantResponseFinished={assistantResponseFinished}
       />
-    </>
+    </main>
   );
 }
