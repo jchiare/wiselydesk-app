@@ -3,8 +3,6 @@ import { combineClassNames, type ChatThemeSettings } from "@/lib/chat-theme";
 import { welcomeReply } from "@/lib/services/welcome-reply";
 import Agent from "@/components/agent";
 import User from "@/components/user";
-import { useState } from "react";
-import ChatMessage from "@/lib/chat-message";
 import { useChatSubmit } from "@/lib/hooks/use-chat-submit";
 import { useScrollToBottom } from "@/lib/hooks/use-scroll-to-bottom";
 import Input from "@/components/user/input";

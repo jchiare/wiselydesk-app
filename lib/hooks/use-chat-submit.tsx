@@ -123,16 +123,18 @@ export const useChatSubmit = ({
       return;
     }
 
-    // stream the assistant answer
-    if (messages.length > 0 && assistantStreamingResponse) {
-      const lastAssistantAnswer = messages.slice(-1)[0];
-      lastAssistantAnswer.text = assistantStreamingResponse;
-      setMessages([
-        ...messages.slice(0, messages.length - 1),
-        lastAssistantAnswer
-      ]);
+    if (assistantStreamingResponse) {
+      // Update the last AI message with the streaming response
+      setMessages((prevMessages) => {
+        const lastAssistantAnswer = prevMessages.slice(-1)[0];
+        lastAssistantAnswer.text = assistantStreamingResponse;
+        return [
+          ...prevMessages.slice(0, prevMessages.length - 1),
+          lastAssistantAnswer
+        ];
+      });
     }
-  }, [assistantStreamingResponse]);
+  }, [aiResponseDone, assistantStreamingResponse]);
 
   function clearStreamingResponse() {
     setAssistantStreamingResponse("");
