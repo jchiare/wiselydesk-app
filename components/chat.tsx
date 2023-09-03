@@ -77,7 +77,10 @@ export default function Chat({
             chatTheme={chatTheme}
             text={message.text}
             locale={locale}
+            sources={sources}
             key={index}
+            account={account}
+            streamingInProgress={assistantResponseFinished}
           />
         );
       })}

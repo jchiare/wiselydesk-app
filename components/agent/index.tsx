@@ -1,12 +1,16 @@
 import { combineClassNames, type ChatThemeSettings } from "@/lib/chat-theme";
 import AgentIcon from "@/components/agent/icon";
 import AgentMessage from "@/components/agent/message";
+import Sources from "@/components/agent/sources";
 import SupportTicketModal from "@/components/support-ticket-modal";
 
 type AgentMessageProps = {
   chatTheme: ChatThemeSettings;
   text: string;
   locale: string;
+  sources?: string[];
+  account?: string;
+  streamingInProgress?: boolean;
 };
 
 // const shouldDisplaySupportTicket =
@@ -17,7 +21,11 @@ type AgentMessageProps = {
 
 export default function AgentDiv({
   chatTheme,
-  text
+  text,
+  sources,
+  locale,
+  account,
+  streamingInProgress
 }: AgentMessageProps): JSX.Element {
   return (
     <div
@@ -44,6 +52,12 @@ export default function AgentDiv({
                   apiBaseUrl={apiBaseUrl}
                   conversationId={conversationId}
                 /> */}
+                <Sources
+                  sources={sources}
+                  account={account}
+                  locale={locale}
+                  streamingInProgress={streamingInProgress}
+                />
                 {/* {shouldDisplaySource && (
                   <div className=" ml-auto mt-6 w-fit rounded-lg bg-slate-600 p-4 text-[0.8rem] leading-5 sm:text-sm">
                     <p style={{ marginTop: "0.25em", marginBottom: "0.25em" }}>
