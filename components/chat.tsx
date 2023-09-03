@@ -1,5 +1,9 @@
-import getChatTheme, { combineClassNames } from "@/lib/chat-theme";
+"use client";
+import { combineClassNames, type ChatThemeSettings } from "@/lib/chat-theme";
 import Agent from "@/components/agent";
+import User from "@/components/user";
+import { useState } from "react";
+import ChatMessage from "@/lib/chat-message";
 
 export type SearchParams = {
   german_source?: string;
@@ -9,12 +13,12 @@ export type SearchParams = {
 };
 
 type ChatProps = {
-  account: string;
+  chatTheme: ChatThemeSettings;
   searchParams: SearchParams;
 };
 
 export default function Chat({
-  account,
+  chatTheme,
   searchParams,
 }: ChatProps): JSX.Element {
   const {
@@ -24,16 +28,19 @@ export default function Chat({
     model,
   } = searchParams;
 
-  const chatTheme = getChatTheme(account);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+
   return (
     <>
-      <div
-        className={`relative flex h-screen flex-col items-center overflow-scroll ${combineClassNames(
-          chatTheme.baseSettings,
-        )}  flex-shrink-0 font-medium`}
-      >
-        <Agent chatTheme={chatTheme} text={"hello"} />
-      </div>
+      <Agent chatTheme={chatTheme} text={"hello"} />
+      {messages.map((message, index) => {
+        return message.sender === "user" ? (
+          // <User chatTheme={chatTheme} />
+          <p>hi</p>
+        ) : (
+          <Agent chatTheme={chatTheme} text={"hello"} />
+        );
+      })}
     </>
   );
 }

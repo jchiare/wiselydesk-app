@@ -1,4 +1,5 @@
 import Chat, { type SearchParams } from "@/components/chat";
+import getChatTheme, { combineClassNames } from "@/lib/chat-theme";
 
 type ChatPageProps = {
   params: {
@@ -8,9 +9,14 @@ type ChatPageProps = {
 };
 
 export default function Page({ params, searchParams }: ChatPageProps) {
+  const chatTheme = getChatTheme(params.account);
   return (
-    <main className="h-full w-full antialiased">
-      <Chat account={params.account} searchParams={searchParams} />
+    <main
+      className={`relative flex h-screen w-full flex-col items-center overflow-scroll antialiased ${combineClassNames(
+        chatTheme.baseSettings,
+      )} flex-shrink-0 font-medium`}
+    >
+      <Chat chatTheme={chatTheme} searchParams={searchParams} />
     </main>
   );
 }
