@@ -1,11 +1,12 @@
 "use client";
-import { type ChatThemeSettings } from "@/lib/chat-theme";
+import { combineClassNames, type ChatThemeSettings } from "@/lib/chat-theme";
 import { welcomeReply } from "@/lib/services/welcome-reply";
 import Agent from "@/components/agent";
 import User from "@/components/user";
 import { useState } from "react";
 import ChatMessage from "@/lib/chat-message";
 import { useChatSubmit } from "@/lib/hooks/use-chat-submit";
+import { useScrollToBottom } from "@/lib/hooks/use-scroll-to-bottom";
 import Input from "@/components/user/input";
 
 export type SearchParams = {
@@ -52,26 +53,37 @@ export default function Chat({
     account
   });
 
+  const messagesEndRef = useScrollToBottom({
+    messages,
+    sources
+  });
+
   return (
     <>
-      <Agent
-        chatTheme={chatTheme}
-        text={welcomeReply(account, locale)}
-        locale={locale}
-        key={0}
-      />
-      {messages.map((message, index) => {
-        return message.sender === "user" ? (
-          <User chatTheme={chatTheme} text={message.text} key={index} />
-        ) : (
-          <Agent
-            chatTheme={chatTheme}
-            text={message.text}
-            locale={locale}
-            key={index}
-          />
-        );
-      })}
+      <main
+        className={`relative flex h-screen w-full flex-col items-center overflow-scroll antialiased ${combineClassNames(
+          chatTheme.baseSettings
+        )} flex-shrink-0 font-medium`}>
+        <Agent
+          chatTheme={chatTheme}
+          text={welcomeReply(account, locale)}
+          locale={locale}
+          key={0}
+        />
+        {messages.map((message, index) => {
+          return message.sender === "user" ? (
+            <User chatTheme={chatTheme} text={message.text} key={index} />
+          ) : (
+            <Agent
+              chatTheme={chatTheme}
+              text={message.text}
+              locale={locale}
+              key={index}
+            />
+          );
+        })}
+        <div ref={messagesEndRef} />
+      </main>
       <Input
         chatTheme={chatTheme}
         account={account}
