@@ -78,6 +78,7 @@ export default function Input({
                 onChange={(e) => setInput(e.target.value)}
                 className={`h-[24px] max-h-[200px] w-full resize-none border-0 bg-transparent p-0 pl-2 pr-7 ring-0 focus:outline-none focus:ring-0 focus-visible:ring-0 disabled:cursor-not-allowed md:pl-0`}></textarea>
               <button
+                aria-label="Input for Chat"
                 className={`absolute bottom-1.5 right-1 rounded-md p-1 text-gray-500 hover:bg-gray-900 hover:text-gray-400 disabled:cursor-not-allowed disabled:hover:bg-transparent md:bottom-4 md:right-2`}
                 onClick={(e) => handleSubmit(e)}
                 disabled={!aiResponseDone}

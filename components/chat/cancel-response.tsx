@@ -22,6 +22,7 @@ export default function CancelResponse({
   return (
     <div className="flex justify-center bg-[#343541]">
       <button
+        aria-label="Cancel Response"
         className="absolute z-[1] mt-[-90px] w-fit rounded bg-[#282934] p-3 text-white md:mt-[-120px]"
         onClick={handleCancelClick}>
         {getText(account)["cancelButton"][locale]}
