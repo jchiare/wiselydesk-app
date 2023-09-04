@@ -1,0 +1,150 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  relationMode      = "prisma"
+}
+
+/// OUR MODELS
+
+model Bot {
+  id                   Int       @id @default(autoincrement())
+  created_at           DateTime  @default(now()) @db.DateTime(0)
+  updated_at           DateTime? @db.DateTime(0)
+  deleted_at           DateTime? @db.DateTime(0)
+  name                 String    @db.VarChar(255)
+  client_api_key       String    @db.VarChar(255)
+  organization_id      Int       @default(2)
+  zendesk_kba_endpoint String    @db.VarChar(255)
+  zendesk_account_id   String    @db.VarChar(255)
+
+  @@map("bot")
+}
+
+model Conversation {
+  id         Int       @id @default(autoincrement())
+  summary    String?   @db.VarChar(255)
+  public_id  Int
+  bot_id     Int
+  user_id    Int
+  created_at DateTime  @default(now()) @db.DateTime(0)
+  updated_at DateTime? @db.DateTime(0)
+  deleted_at DateTime? @db.DateTime(0)
+
+  @@index([bot_id], map: "bot_id_index")
+  @@index([bot_id, user_id], map: "bot_id_user_id_index")
+  @@map("conversation")
+}
+
+model KnowledgeBaseArticle {
+  id                  BigInt    @id @default(autoincrement())
+  created_at          DateTime  @default(now()) @db.DateTime(0)
+  updated_at          DateTime? @db.DateTime(0)
+  deleted_at          DateTime? @db.DateTime(0)
+  title               String    @db.VarChar(255)
+  content             String    @db.Text
+  content_embedding   String    @db.Text
+  total_token_count   Int
+  bot_id              Int
+  client_last_updated DateTime  @db.DateTime(0)
+  client_article_id   String    @db.VarChar(255)
+  html_url            String    @db.VarChar(255)
+
+  @@index([bot_id], map: "bot_id_index")
+  @@map("knowledge_base_article")
+}
+
+model Message {
+  id                Int       @id @default(autoincrement())
+  text              String?   @db.VarChar(4096)
+  index             Int
+  conversation_id   Int
+  from_user_id      Int
+  to_user_id        Int
+  bot_id            Int
+  created_at        DateTime  @default(now()) @db.DateTime(0)
+  updated_at        DateTime? @db.DateTime(0)
+  deleted_at        DateTime? @db.DateTime(0)
+  api_response_cost Float?    @db.Float
+  sources           String?   @db.VarChar(2000)
+  is_helpful        Boolean?
+
+  @@index([conversation_id], map: "idx_conversation_id")
+  @@map("message")
+}
+
+model Organization {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime  @default(now()) @db.DateTime(0)
+  updated_at DateTime? @db.DateTime(0)
+  deleted_at DateTime? @db.DateTime(0)
+  name       String    @db.VarChar(255)
+
+  @@map("organization")
+}
+
+model User {
+  /// Note that the official prisma adapter for NextAuth uses a String id column
+  /// but we're using Int since that's what we started with before NextAuth.
+  id              Int       @id @default(autoincrement())
+  name            String    @db.VarChar(255)
+  email           String    @unique @db.VarChar(255)
+  emailVerified   DateTime?
+  image           String?
+  organization_id Int
+  created_at      DateTime  @default(now()) @db.DateTime(0)
+  updated_at      DateTime? @db.DateTime(0)
+  deleted_at      DateTime? @db.DateTime(0)
+  accounts        Account[]
+  sessions        Session[]
+
+  @@index([organization_id], map: "account_id_index")
+  @@map("user")
+}
+
+/// NEXTAUTH MODELS
+/// Note that `User` above is used by both us and nextauth.
+
+// Account is like the user's 3rd party account, ex. their google account.
+model Account {
+  id                String  @id @default(cuid())
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("account")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_token")
+}
