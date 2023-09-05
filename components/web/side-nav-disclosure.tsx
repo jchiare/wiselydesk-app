@@ -1,8 +1,4 @@
 "use client";
-import {
-  ChatBubbleBottomCenterTextIcon,
-  ChartBarSquareIcon
-} from "@heroicons/react/24/outline";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Disclosure } from "@headlessui/react";
 import { concatClassNames } from "@/lib/shared/utils";

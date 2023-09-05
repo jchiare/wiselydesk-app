@@ -19,7 +19,7 @@ export default async function WebLayout({
 
   return (
     <SessionProvider session={session}>
-      <div className="m-0 flex h-screen w-full min-w-0 bg-gray-100 p-0">
+      <div className="m-0 flex h-screen w-full bg-gray-100 p-0">
         <SideNav
           selectedBot={"jon"}
           // setSelectedBot={setSelectedBot}

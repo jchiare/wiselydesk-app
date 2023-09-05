@@ -1,12 +1,10 @@
+"use client";
 import { Fragment, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import type { Bot } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
-import { Session } from "next-auth/core/types";
 import { URL } from "@/lib/shared/constants";
-import { orgChooser } from "@/utils/orgChooser";
-import type { LayoutProps } from "@/components/Layout";
 
 type BotsApiType = {
   bots: Bot[];
@@ -16,41 +14,26 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-async function fetchBots(
-  session: Session | null
-): Promise<false | BotsApiType> {
-  if (!session) {
-    return Promise.resolve(false);
-  }
-
-  const orgId = orgChooser(session);
-  const res = await fetch(`${URL}/api/organization/${orgId}/bots`); //
-  return res.json() as Promise<BotsApiType>;
-}
-
-export default function BotSelector({
+export default function BotSelection({
   selectedBot,
   setSelectedBot,
   session
-}: LayoutProps) {
+}: any) {
   const [defaultBot, setDefaultBot] = useState<boolean>(false);
 
-  const { status, data, error } = useQuery(
-    ["getBots"],
-    () => fetchBots(session),
-    { enabled: !!session }
-  );
+  const data = { bots: [{ name: "big bot" }] };
 
   // set the first bot as the default bot
-  useEffect(() => {
-    if (!defaultBot && data) {
-      setSelectedBot(data.bots[0]);
-      setDefaultBot(true);
-    }
-  }, [data, defaultBot, setSelectedBot]);
+  // useEffect(() => {
+  //   if (!defaultBot && data) {
+  //     setSelectedBot(data.bots[0]);
+  //     setDefaultBot(true);
+  //   }
+  // }, [data, defaultBot, setSelectedBot]);
 
   function changeSelectedBot(bot: Bot) {
-    setSelectedBot(bot);
+    // setSelectedBot(bot);
+    console.log(bot);
   }
 
   return (
