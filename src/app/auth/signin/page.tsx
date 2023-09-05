@@ -1,12 +1,16 @@
 import { getServerSession } from "next-auth/next";
-import SignInButton from "@/src/app/web/signin/sign-in-button";
+import SignInButton from "@/src/app/auth/signin/sign-in-button";
 import { authOptions } from "@/src/app/api/auth/[...nextauth]/route";
 import Image from "next/image";
 import signInBg from "@/public/signin-screen-bg.png";
 import Head from "next/head";
+import { redirect } from "next/navigation";
 
 export default async function SignIn() {
   const session = await getServerSession(authOptions);
+  console.log("sign in page with session: ", session);
+  if (session) return redirect("/web/conversations");
+  console.log("past redirect");
   return (
     <>
       <Head>
