@@ -12,7 +12,6 @@ const ORG_IDS: { [key: string]: number } = {
 
 // delete this eventually .. please
 export function orgChooser(session: Session) {
-  console.log(session);
   const email = session.user?.email;
   if (!email) throw new Error("No organization found for this user");
 

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 type SearchParamsProps = {
-  filter?: string;
+  filter?: "all" | "down" | "up";
 };
 
 export default async function ConversationsPage({
