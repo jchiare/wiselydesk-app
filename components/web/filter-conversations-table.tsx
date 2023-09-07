@@ -1,8 +1,7 @@
 "use client";
 import ThumbsUpDown from "@/components/web/thumbs-up-down";
+import useCustomQueryString from "@/lib/web/use-custom-query-string";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
 
 type FilterType = "all" | "up" | "down";
 
@@ -15,20 +14,8 @@ export default function ConversationsTableFilter({
 }: {
   filter: FilterType;
 }) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams()!;
+  const { createQueryString, pathname } = useCustomQueryString();
 
-  // Get a new searchParams string by merging the current
-  // searchParams with a provided key/value pair
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams);
-      params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams]
-  );
   return (
     <div className="flex items-center space-x-4">
       <Link

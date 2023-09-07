@@ -20,11 +20,7 @@ export default async function WebLayout({
   return (
     <SessionProvider session={session}>
       <div className="m-0 flex h-screen w-full bg-gray-100 p-0">
-        <SideNav
-          selectedBot={"jon"}
-          // setSelectedBot={setSelectedBot}
-          session={session}
-        />
+        <SideNav session={session} />
         <main className=" w-[calc(100%_-_18rem)] flex-grow overflow-y-scroll">
           {children}
         </main>

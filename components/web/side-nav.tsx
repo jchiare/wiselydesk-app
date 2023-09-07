@@ -6,6 +6,7 @@ import { concatClassNames } from "@/lib/shared/utils";
 import Image from "next/image";
 import BotSelection from "@/components/web/bot-selection";
 import SideNavDisclosure from "@/components/web/side-nav-disclosure";
+import { Session } from "next-auth";
 
 const navigation = [
   {
@@ -23,21 +24,17 @@ const navigation = [
 ];
 
 export default async function SideNav({
-  selectedBot,
-  setSelectedBot,
   session
-}: any): Promise<JSX.Element> {
+}: {
+  session: Session;
+}): Promise<JSX.Element> {
   const currentItem = navigation.find(
-    (item) => item.href === "/web/conversations"
+    (item) => item.href === "/web/conversations" || item.href === "/web/"
   );
   return (
     <div className="flex w-64 grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-gray-800 px-6">
       <div className="flex h-16 flex-col items-center">
-        <BotSelection
-          selectedBot={selectedBot}
-          setSelectedBot={setSelectedBot}
-          session={session}
-        />
+        <BotSelection session={session} />
       </div>
       <div className="mt-[20px] flex" aria-hidden="true">
         <div className="w-full border-t border-gray-300" />

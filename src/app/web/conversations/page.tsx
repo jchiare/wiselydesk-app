@@ -11,6 +11,7 @@ export const metadata: Metadata = {
 
 type SearchParamsProps = {
   filter?: "all" | "down" | "up";
+  bot_id: number;
 };
 
 export default async function ConversationsPage({
@@ -18,8 +19,7 @@ export default async function ConversationsPage({
 }: {
   searchParams: SearchParamsProps;
 }) {
-  const { filter = "all" } = searchParams;
-  const selectedBot = { id: 1 };
+  const { filter = "all", bot_id: botId } = searchParams;
   const session = await getServerSession(authOptions);
   if (!session) return redirect("/auth/signin");
   return (
@@ -36,7 +36,7 @@ export default async function ConversationsPage({
       </div>
       <div className="-mx-4 mt-8 sm:-mx-0">
         <ConversationsTableParent
-          selectedBot={selectedBot}
+          botId={botId}
           session={session}
           filter={filter}
         />

@@ -3,37 +3,56 @@ import { Fragment, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import type { Bot } from "@prisma/client";
-import { useQuery } from "@tanstack/react-query";
 import { URL } from "@/lib/shared/constants";
-
-type BotsApiType = {
-  bots: Bot[];
-};
+import { orgChooser } from "@/lib/shared/orgChooser";
+import { useRouter } from "next/navigation";
+import useCustomQueryString from "@/lib/web/use-custom-query-string";
+import { Session } from "next-auth";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function BotSelection({
-  selectedBot,
-  setSelectedBot,
-  session
-}: any) {
-  const [defaultBot, setDefaultBot] = useState<boolean>(false);
+async function fetchBots(orgId: number) {
+  const res = await fetch(`${URL}/api/organization/${orgId}/bots`, {
+    cache: "force-cache"
+  });
+  const data = await res.json();
+  return data.bots;
+}
 
-  const data = { bots: [{ name: "big bot" }] };
+export default function BotSelection({ session }: { session: Session }) {
+  const router = useRouter();
+  const { createQueryString, pathname, searchParams } = useCustomQueryString();
 
-  // set the first bot as the default bot
-  // useEffect(() => {
-  //   if (!defaultBot && data) {
-  //     setSelectedBot(data.bots[0]);
-  //     setDefaultBot(true);
-  //   }
-  // }, [data, defaultBot, setSelectedBot]);
+  const [bots, setBots] = useState<Bot[] | undefined>();
+  const [selectedBot, setSelectedBot] = useState<Bot | undefined>();
+  const [defaultBot, setDefaultBot] = useState<Bot | false>(false);
+
+  useEffect(() => {
+    const orgId = orgChooser(session);
+    fetchBots(orgId).then((fetchedBots) => {
+      setBots(fetchedBots);
+      if (!defaultBot && fetchedBots) {
+        setDefaultBot(fetchedBots[0]);
+      }
+    });
+  }, [session]);
+
+  useEffect(() => {
+    // Get bot_id from query string if present
+    const queryBotId = searchParams.get("bot_id");
+    if (queryBotId) {
+      const foundBot = bots?.find((bot) => bot.id.toString() === queryBotId);
+      if (foundBot) {
+        setSelectedBot(foundBot);
+      }
+    }
+  }, [bots, searchParams]);
 
   function changeSelectedBot(bot: Bot) {
-    // setSelectedBot(bot);
-    console.log(bot);
+    setSelectedBot(bot);
+    router.push(pathname + "?" + createQueryString("bot_id", `${bot.id}`));
   }
 
   return (
@@ -63,8 +82,8 @@ export default function BotSelection({
               leaveFrom="opacity-100"
               leaveTo="opacity-0">
               <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                {data &&
-                  data.bots.map((bot: any) => (
+                {bots &&
+                  bots.map((bot: Bot) => (
                     <Listbox.Option
                       key={bot.id}
                       className={({ active }) =>

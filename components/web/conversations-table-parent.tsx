@@ -27,6 +27,7 @@ async function getConversations({
   } else if (selectedFilter.toLowerCase() === FILTER_DOWN.toLowerCase()) {
     url += "&is_helpful=false";
   }
+
   let res;
   try {
     res = await fetch(url, { next: { revalidate: 30 } });
@@ -38,17 +39,17 @@ async function getConversations({
 }
 
 export default async function ConversationsTableParent({
-  selectedBot,
+  botId,
   session,
   filter: selectedFilter
 }: any) {
   const orgId = orgChooser(session);
-
   const data = await getConversations({
     orgId,
-    botId: selectedBot.id,
+    botId,
     selectedFilter
   });
+
   return (
     <div className="-mx-4 mt-8 sm:-mx-0">
       <ConversationsTableFilter filter={selectedFilter} />
