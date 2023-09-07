@@ -1,5 +1,5 @@
 import type { ChatThemeSettings } from "@/lib/chat/chat-theme";
-import renderMessage from "@/lib/chat/services/render-message";
+import renderMessage from "@/lib/shared/services/render-message";
 
 type AgentMessageProps = {
   chatTheme: ChatThemeSettings;

@@ -5,7 +5,7 @@ import Sources from "@/components/chat/agent/sources";
 import SupportTicketModal from "@/components/chat/support-ticket-modal";
 import AiWarning from "@/components/chat/ai-warning";
 import Feedback from "@/components/chat/agent/feedback";
-import { removeSupportButton } from "@/lib/chat/services/render-message";
+import { removeSupportButton } from "@/lib/shared/services/render-message";
 
 type AgentMessageProps = {
   chatTheme: ChatThemeSettings;

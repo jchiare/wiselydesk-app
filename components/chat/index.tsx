@@ -3,7 +3,7 @@ import {
   combineClassNames,
   type ChatThemeSettings
 } from "@/lib/chat/chat-theme";
-import { welcomeReply } from "@/lib/chat/services/welcome-reply";
+import { welcomeReply } from "@/lib/shared/services/welcome-reply";
 import Agent from "@/components/chat/agent";
 import User from "@/components/chat/user";
 import { useChatSubmit } from "@/lib/chat/hooks/use-chat-submit";

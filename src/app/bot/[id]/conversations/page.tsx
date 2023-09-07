@@ -11,15 +11,21 @@ export const metadata: Metadata = {
 
 type SearchParamsProps = {
   filter?: "all" | "down" | "up";
-  bot_id: number;
+};
+
+type ParamsProps = {
+  id: string;
 };
 
 export default async function ConversationsPage({
-  searchParams
+  searchParams,
+  params
 }: {
   searchParams: SearchParamsProps;
+  params: ParamsProps;
 }) {
-  const { filter = "all", bot_id: botId } = searchParams;
+  const botId = params.id;
+  const { filter = "all" } = searchParams;
   const session = await getServerSession(authOptions);
   if (!session) return redirect("/auth/signin");
   return (

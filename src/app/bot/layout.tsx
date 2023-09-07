@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import SessionProvider from "@/src/app/web/providers";
+import SessionProvider from "@/src/app/bot/providers";
 import SideNav from "@/components/web/side-nav";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
