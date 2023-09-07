@@ -1,6 +1,6 @@
 "use client";
 import { formatUnixTimestamp } from "@/lib/shared/utils";
-import useCustomQueryString from "@/lib/bot/use-custom-query-string";
+import useCustomQueryString from "@/lib/web/use-custom-query-string";
 import type { Conversation } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { type MouseEvent } from "react";

@@ -7,7 +7,7 @@ const config: Config = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/chat/**/*.{js,ts,jsx,tsx,mdx}",
     "./lib/chat/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/bot/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/web/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/shared/**/*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {

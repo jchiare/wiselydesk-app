@@ -1,6 +1,6 @@
 "use client";
-import ThumbsUpDown from "@/components/bot/thumbs-up-down";
-import useCustomQueryString from "@/lib/bot/use-custom-query-string";
+import ThumbsUpDown from "@/components/web/thumbs-up-down";
+import useCustomQueryString from "@/lib/web/use-custom-query-string";
 import Link from "next/link";
 
 type FilterType = "all" | "up" | "down";

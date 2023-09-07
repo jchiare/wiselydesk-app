@@ -4,8 +4,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { concatClassNames } from "@/lib/shared/utils";
 import Image from "next/image";
-import BotSelection from "@/components/bot/bot-selection";
-import SideNavDisclosure from "@/components/bot/side-nav-disclosure";
+import BotSelection from "@/components/web/bot-selection";
+import SideNavDisclosure from "@/components/web/side-nav-disclosure";
 import { Session } from "next-auth";
 
 const navigation = [
