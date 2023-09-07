@@ -11,20 +11,17 @@ type Conversations = {
 
 export default function ConversationTable({ data }: { data: Conversations }) {
   const router = useRouter();
-  const { createQueryString, pathname } = useCustomQueryString();
+  const { pathname } = useCustomQueryString();
 
-  function conversationclicked(e: MouseEvent<HTMLTableRowElement>, id: any) {
-    console.log(id);
-    router.push(pathname + "?" + createQueryString("conversation_id", `123`));
+  function conversationclicked(e: MouseEvent<HTMLTableRowElement>, id: number) {
+    router.push(pathname + "/" + id.toString());
   }
 
-  return data.conversations.map((conversation: any) => (
+  return data.conversations.map((conversation) => (
     <tr
       key={conversation.id}
-      onClick={(e) => conversationclicked(e, conversation.id)}
+      onClick={(e) => conversationclicked(e, conversation.public_id)}
       className="hover:cursor-pointer hover:bg-gray-200">
-      {/* <Link */}
-      {/* href={`/conversation/${conversation.public_id}?bot_id=${selectedBot?.id}`}> */}
       <td className={`px-3 py-4 text-sm text-gray-900 `}>
         {conversation.public_id}
       </td>
@@ -53,7 +50,6 @@ export default function ConversationTable({ data }: { data: Conversations }) {
         className={`hidden overflow-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell `}>
         {formatUnixTimestamp(conversation.created_at)}
       </td>
-      {/* </Link> */}
     </tr>
   ));
 }

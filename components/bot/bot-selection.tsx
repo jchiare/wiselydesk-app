@@ -29,6 +29,7 @@ export default function BotSelection({ session }: { session: Session }) {
   const [selectedBot, setSelectedBot] = useState<Bot | undefined>();
   const [defaultBot, setDefaultBot] = useState<Bot | false>(false);
 
+  // Fetch the bots from the backend
   useEffect(() => {
     const orgId = orgChooser(session);
     fetchBots(orgId).then((fetchedBots) => {
@@ -39,6 +40,7 @@ export default function BotSelection({ session }: { session: Session }) {
     });
   }, [session, defaultBot]);
 
+  // set the bot
   useEffect(() => {
     const botId = getBotId();
     if (botId) {
@@ -49,6 +51,7 @@ export default function BotSelection({ session }: { session: Session }) {
     }
   }, [bots, getBotId]);
 
+  // change the bot when the user clicks another bot
   function changeSelectedBot(bot: Bot) {
     setSelectedBot(bot);
     const newPath = changeBotById(bot.id);
@@ -82,43 +85,39 @@ export default function BotSelection({ session }: { session: Session }) {
               leaveFrom="opacity-100"
               leaveTo="opacity-0">
               <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                {bots &&
-                  bots.map((bot: Bot) => (
-                    <Listbox.Option
-                      key={bot.id}
-                      className={({ active }) =>
-                        classNames(
-                          active ? "bg-indigo-600 text-white" : "text-gray-900",
-                          "relative cursor-default select-none py-2 pl-3 pr-9"
-                        )
-                      }
-                      value={bot}>
-                      {({ selected, active }) => (
-                        <>
+                {bots?.map((bot: Bot) => (
+                  <Listbox.Option
+                    key={bot.id}
+                    className={({ active }) =>
+                      classNames(
+                        active ? "bg-indigo-600 text-white" : "text-gray-900",
+                        "relative cursor-default select-none py-2 pl-3 pr-9"
+                      )
+                    }
+                    value={bot}>
+                    {({ selected, active }) => (
+                      <>
+                        <span
+                          className={classNames(
+                            selected ? "font-semibold" : "font-normal",
+                            "block truncate"
+                          )}>
+                          {bot.name}
+                        </span>
+
+                        {selected ? (
                           <span
                             className={classNames(
-                              selected ? "font-semibold" : "font-normal",
-                              "block truncate"
+                              active ? "text-white" : "text-indigo-600",
+                              "absolute inset-y-0 right-0 flex items-center pr-4"
                             )}>
-                            {bot.name}
+                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
                           </span>
-
-                          {selected ? (
-                            <span
-                              className={classNames(
-                                active ? "text-white" : "text-indigo-600",
-                                "absolute inset-y-0 right-0 flex items-center pr-4"
-                              )}>
-                              <CheckIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                            </span>
-                          ) : null}
-                        </>
-                      )}
-                    </Listbox.Option>
-                  ))}
+                        ) : null}
+                      </>
+                    )}
+                  </Listbox.Option>
+                ))}
               </Listbox.Options>
             </Transition>
           </div>
