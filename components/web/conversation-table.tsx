@@ -1,16 +1,27 @@
 "use client";
 import { formatUnixTimestamp } from "@/lib/shared/utils";
+import useCustomQueryString from "@/lib/web/use-custom-query-string";
 import type { Conversation } from "@prisma/client";
+import { useRouter } from "next/navigation";
+import { type MouseEvent } from "react";
 
 type Conversations = {
   conversations: Conversation[];
 };
 
 export default function ConversationTable({ data }: { data: Conversations }) {
+  const router = useRouter();
+  const { createQueryString, pathname } = useCustomQueryString();
+
+  function conversationclicked(e: MouseEvent<HTMLTableRowElement>, id: any) {
+    console.log(id);
+    router.push(pathname + "?" + createQueryString("conversation_id", `123`));
+  }
+
   return data.conversations.map((conversation: any) => (
     <tr
       key={conversation.id}
-      onClick={() => console.log("clicked!")}
+      onClick={(e) => conversationclicked(e, conversation.id)}
       className="hover:cursor-pointer hover:bg-gray-200">
       {/* <Link */}
       {/* href={`/conversation/${conversation.public_id}?bot_id=${selectedBot?.id}`}> */}
