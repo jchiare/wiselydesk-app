@@ -39,12 +39,11 @@ const createNavigation = (botId: string) => [
 ];
 
 export default function Navigation() {
-  const { getBotId } = useCustomQueryString();
+  const { getBotId, pathname } = useCustomQueryString();
   const botId = getBotId();
   const navigation = createNavigation(botId);
-  const currentItem = navigation.find(
-    (item) =>
-      item.href === `/bot/${botId}/conversations` || item.href === "/bot/"
+  const currentItem = navigation.find((item) =>
+    pathname.includes(item.name.toLowerCase())
   );
   return (
     <ul role="list" className="-mx-2 space-y-1">
