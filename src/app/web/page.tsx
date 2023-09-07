@@ -1,3 +1,3 @@
 export default function WebPage() {
-  return <h1>web page main page</h1>;
+  return <h1>hello from web page </h1>;
 }
