@@ -25,7 +25,7 @@ const useCustomQueryString = () => {
     (newBotId: number) => {
       const parts = pathname.split("/");
       parts[2] = newBotId.toString(); // Assuming bot ID is at index 2 in the pathname
-      const newPath = parts.join("/");
+      const newPath = parts.slice(0, 3).join("/");
       return newPath;
     },
     [pathname]
