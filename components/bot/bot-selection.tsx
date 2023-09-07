@@ -6,7 +6,7 @@ import type { Bot } from "@prisma/client";
 import { URL } from "@/lib/shared/constants";
 import { orgChooser } from "@/lib/shared/orgChooser";
 import { useRouter } from "next/navigation";
-import useCustomQueryString from "@/lib/web/use-custom-query-string";
+import useCustomQueryString from "@/lib/bot/use-custom-query-string";
 import { Session } from "next-auth";
 
 function classNames(...classes: string[]) {

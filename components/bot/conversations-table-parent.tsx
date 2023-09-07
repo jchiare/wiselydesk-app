@@ -2,7 +2,7 @@ import { URL } from "@/lib/shared/constants";
 import { orgChooser } from "@/lib/shared/orgChooser";
 import type { Conversation } from "@prisma/client";
 import ConversationTable from "./conversation-table";
-import ConversationsTableFilter from "@/components/web/filter-conversations-table";
+import ConversationsTableFilter from "@/components/bot/filter-conversations-table";
 
 type Conversations = {
   conversations: Conversation[];

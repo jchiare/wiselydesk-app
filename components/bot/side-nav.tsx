@@ -4,21 +4,21 @@ import {
 } from "@heroicons/react/24/outline";
 import { concatClassNames } from "@/lib/shared/utils";
 import Image from "next/image";
-import BotSelection from "@/components/web/bot-selection";
-import SideNavDisclosure from "@/components/web/side-nav-disclosure";
+import BotSelection from "@/components/bot/bot-selection";
+import SideNavDisclosure from "@/components/bot/side-nav-disclosure";
 import { Session } from "next-auth";
 
 const navigation = [
   {
     name: "Conversations",
     icon: ChatBubbleBottomCenterTextIcon,
-    href: "/web/conversations",
+    href: "/bot/conversations",
     children: null
   },
   {
     name: "Analytics",
     icon: ChartBarSquareIcon,
-    href: "/web/analytics",
+    href: "/bot/analytics",
     children: null
   }
 ];
@@ -29,7 +29,7 @@ export default async function SideNav({
   session: Session;
 }): Promise<JSX.Element> {
   const currentItem = navigation.find(
-    (item) => item.href === "/web/conversations" || item.href === "/web/"
+    (item) => item.href === "/bot/conversations" || item.href === "/bot/"
   );
   return (
     <div className="flex w-64 grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-gray-800 px-6">

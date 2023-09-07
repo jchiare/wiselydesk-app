@@ -1,4 +1,4 @@
-import ConversationsTableParent from "@/components/web/conversations-table-parent";
+import ConversationsTableParent from "@/components/bot/conversations-table-parent";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/src/app/api/auth/[...nextauth]/route";
 import type { Metadata } from "next";
