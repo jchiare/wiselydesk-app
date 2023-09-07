@@ -23,7 +23,7 @@ async function fetchBots(orgId: number) {
 
 export default function BotSelection({ session }: { session: Session }) {
   const router = useRouter();
-  const { createQueryString, pathname, searchParams } = useCustomQueryString();
+  const { changeBotById, getBotId } = useCustomQueryString();
 
   const [bots, setBots] = useState<Bot[] | undefined>();
   const [selectedBot, setSelectedBot] = useState<Bot | undefined>();
@@ -37,22 +37,22 @@ export default function BotSelection({ session }: { session: Session }) {
         setDefaultBot(fetchedBots[0]);
       }
     });
-  }, [session]);
+  }, [session, defaultBot]);
 
   useEffect(() => {
-    // Get bot_id from query string if present
-    const queryBotId = searchParams.get("bot_id");
-    if (queryBotId) {
-      const foundBot = bots?.find((bot) => bot.id.toString() === queryBotId);
+    const botId = getBotId();
+    if (botId) {
+      const foundBot = bots?.find((bot) => bot.id.toString() === botId);
       if (foundBot) {
         setSelectedBot(foundBot);
       }
     }
-  }, [bots, searchParams]);
+  }, [bots, getBotId]);
 
   function changeSelectedBot(bot: Bot) {
     setSelectedBot(bot);
-    router.push(pathname + "?" + createQueryString("bot_id", `${bot.id}`));
+    const newPath = changeBotById(bot.id);
+    router.push(newPath);
   }
 
   return (

@@ -15,7 +15,23 @@ const useCustomQueryString = () => {
     [searchParams]
   );
 
-  return { createQueryString, pathname, searchParams };
+  const getBotId = useCallback(() => {
+    const parts = pathname.split("/");
+    const id = parts[2];
+    return id;
+  }, [pathname]);
+
+  const changeBotById = useCallback(
+    (newBotId: number) => {
+      const parts = pathname.split("/");
+      parts[2] = newBotId.toString(); // Assuming bot ID is at index 2 in the pathname
+      const newPath = parts.join("/");
+      return newPath;
+    },
+    [pathname]
+  );
+
+  return { createQueryString, pathname, searchParams, getBotId, changeBotById };
 };
 
 export default useCustomQueryString;
