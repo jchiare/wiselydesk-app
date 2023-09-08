@@ -36,3 +36,15 @@ export function formatUnixTimestamp(unixTimestamp: number | Date): string {
 
   return `${month} ${day}, ${hours12}:${minutes} ${amPm}`;
 }
+
+export function generateRandomLorem(minLength = 15, maxLength = 70) {
+  const lorem =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+
+  const randomLength =
+    Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+
+  const start = Math.floor(Math.random() * (lorem.length - randomLength));
+
+  return lorem.slice(start, start + randomLength);
+}
