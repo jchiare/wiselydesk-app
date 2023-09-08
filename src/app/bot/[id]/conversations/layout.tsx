@@ -1,3 +1,5 @@
+import ConversationsTableFilter from "@/components/web/conversations/filter-conversations-table";
+
 export default function ConversationsLayout({
   children
 }: {
@@ -15,7 +17,10 @@ export default function ConversationsLayout({
           </p>
         </div>
       </div>
-      <div className="-mx-4 mt-8 sm:-mx-0">{children}</div>
+      <div className="-mx-4 mt-8 sm:-mx-0">
+        <ConversationsTableFilter />
+        <>{children}</>
+      </div>
     </div>
   );
 }

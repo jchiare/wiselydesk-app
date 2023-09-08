@@ -32,7 +32,7 @@ export default function Navigation() {
   );
 
   return (
-    <ul role="list" className="-mx-2 space-y-1">
+    <ul role="list" className="-mx-0 space-y-1">
       <li>
         <ul role="list" className="-mx-2 space-y-1">
           {navigation.map((item) => (
