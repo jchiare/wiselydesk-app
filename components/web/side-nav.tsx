@@ -10,7 +10,7 @@ export default async function SideNav({
   session: Session;
 }): Promise<JSX.Element> {
   return (
-    <div className="flex w-64 grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-gray-800 px-6">
+    <div className="flex w-56 grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-gray-800 px-6">
       <div className="flex h-16 flex-col items-center">
         <BotSelection session={session} />
       </div>
