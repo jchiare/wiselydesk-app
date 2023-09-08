@@ -8,20 +8,20 @@ const aiMessage = {
   created_at: "Tue, 05 Sep 2023 06:13:06 GMT",
   sources:
     "https://d3v-daspu.zendesk.com/hc/en-us/articles/13814641155985-Welcome-to-your-Help-Center-, https://d3v-daspu.zendesk.com/hc/en-us/articles/13814641155985-helcom-george, https://d3v-daspu.zendesk.com/hc/en-us/articles/13814641155985-Looking-great-tonight",
-  is_helpful: true
+  is_helpful: null
 };
 
 const userMessage = {
   text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   created_at: "Tue, 05 Sep 2023 06:13:06 GMT",
-  is_helpful: true
+  is_helpful: null
 };
 
 const firstMessage = {
   text: "hi there how are you doing t need to ask you a few questions hi there how need to ask you a few questions",
   created_at: "Tue, 05 Sep 2023 06:13:06 GMT",
   sources: "",
-  is_helpful: true
+  is_helpful: null
 };
 
 const conversation = {
