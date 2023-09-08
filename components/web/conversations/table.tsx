@@ -13,16 +13,18 @@ export default function ConversationTable({ data }: { data: Conversations }) {
   const router = useRouter();
   const { pathname } = useCustomQueryString();
 
-  function conversationclicked(e: MouseEvent<HTMLTableRowElement>, id: number) {
-    router.push(
-      pathname.replace("conversations", "conversation") + "/" + id.toString()
-    );
+  function goToConversation(id: number) {
+    const parts = pathname.split("/");
+    parts[parts.length - 1] = id.toString();
+    const newPath = parts.join("/");
+
+    router.push(newPath.replace("conversations", "conversation"));
   }
 
   return data.conversations.map((conversation) => (
     <tr
       key={conversation.id}
-      onClick={(e) => conversationclicked(e, conversation.public_id)}
+      onClick={() => goToConversation(conversation.public_id)}
       className="hover:cursor-pointer hover:bg-gray-200">
       <td className={`px-3 py-4 text-sm text-gray-900 `}>
         {conversation.public_id}

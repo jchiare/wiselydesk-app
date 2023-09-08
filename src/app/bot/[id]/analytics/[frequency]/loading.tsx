@@ -1,8 +1,5 @@
 export default function Loading() {
   return (
-    // <div className="mx-auto mt-40 h-12 w-12 animate-spin rounded-full border-8 border-t-8 border-gray-200 border-opacity-30">
-    //   loading
-    // </div>
     <div className="mx-auto mt-40 flex justify-center">
       <svg
         className="h-12 w-12 animate-spin"
@@ -15,7 +12,7 @@ export default function Loading() {
           cy="12"
           r="10"
           stroke="currentColor"
-          stroke-width="4"></circle>
+          strokeWidth="4"></circle>
         <path
           className="opacity-75"
           fill="currentColor"
