@@ -1,7 +1,7 @@
 import { formatConversationTime } from "@/lib/shared/utils";
 import Link from "next/link";
 import renderMessage from "@/lib/shared/services/render-message";
-// import ThumbsUpDown from "@/components/ThumbsUpDown";
+import ThumbsUpDown from "@/components/web/thumbs-up-down";
 
 const ZENDESK_SOURCE_ARTICLE_REGEX = "/[0-9]+-(.+)-?$";
 const WEBPAGE_SOURCE_ARTICLE_REGEX = "/([^/]+)$";
@@ -84,7 +84,7 @@ export default function AgentMessage({
         </div>
         <div className="grid grid-cols-2 justify-start">
           <div className="mt-1 flex space-x-2">
-            {/* {!isFirstMessage && (
+            {!isFirstMessage && (
               <>
                 <ThumbsUpDown
                   direction="up"
@@ -95,7 +95,7 @@ export default function AgentMessage({
                   fill={thumbFill({ direction: "down", isHelpful })}
                 />
               </>
-            )} */}
+            )}
           </div>
           <p
             className={`text-end text-xs text-gray-400 ${
