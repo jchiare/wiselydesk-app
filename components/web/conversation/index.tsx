@@ -15,29 +15,24 @@ export default function SingleConversation({
   conversation: SingleConversationReturnType;
 }) {
   return (
-    <>
-      <div>
-        {conversation.conversation.messages.map((message) => {
-          return (
-            <div key={message.id}>
-              {isMessageFromUser(message) ? (
-                <UserMessage
-                  text={message.text}
-                  sentTime={message.created_at}
-                />
-              ) : (
-                <AgentMessage
-                  text={message.text}
-                  sentTime={message.created_at}
-                  sources={message.sources}
-                  isHelpful={message.is_helpful}
-                  isFirstMessage={message.index === 0}
-                />
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </>
+    <div>
+      {conversation.conversation.messages.map((message) => {
+        return (
+          <div key={message.id}>
+            {isMessageFromUser(message) ? (
+              <UserMessage text={message.text} sentTime={message.created_at} />
+            ) : (
+              <AgentMessage
+                text={message.text}
+                sentTime={message.created_at}
+                sources={message.sources}
+                isHelpful={message.is_helpful}
+                isFirstMessage={message.index === 0}
+              />
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
