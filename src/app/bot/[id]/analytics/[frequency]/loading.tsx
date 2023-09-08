@@ -1,0 +1,26 @@
+export default function Loading() {
+  return (
+    // <div className="mx-auto mt-40 h-12 w-12 animate-spin rounded-full border-8 border-t-8 border-gray-200 border-opacity-30">
+    //   loading
+    // </div>
+    <div className="mx-auto mt-40 flex justify-center">
+      <svg
+        className="h-12 w-12 animate-spin"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24">
+        <circle
+          className="opacity-25"
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="currentColor"
+          stroke-width="4"></circle>
+        <path
+          className="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 1.37.259 2.678.725 3.874l.326-.962z"></path>
+      </svg>
+    </div>
+  );
+}

@@ -21,13 +21,18 @@ const config: Config = {
         sans: ["InterVariable", "Inter", ...defaultTheme.fontFamily.sans]
       },
       animation: {
-        "assistant-message": "blink 1s steps(5,start) infinite"
+        "assistant-message": "blink 1s steps(5,start) infinite",
+        spin: "spin 1s linear infinite"
       },
       keyframes: {
         blink: {
           to: {
             visibility: "hidden"
           }
+        },
+        spin: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" }
         }
       }
     }

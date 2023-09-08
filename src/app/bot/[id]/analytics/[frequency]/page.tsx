@@ -15,7 +15,7 @@ async function fetchConversationCounts(
   const res = await fetch(
     `${URL}/api/analytics/conversation-counts?bot_id=${botId}&frequency=${frequency}`,
     {
-      cache: "force-cache"
+      next: { revalidate: 360 }
     }
   );
   return await res.json();

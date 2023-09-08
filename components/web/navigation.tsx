@@ -8,21 +8,6 @@ import { concatClassNames } from "@/lib/shared/utils";
 import Link from "next/link";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
 
-const navigation = [
-  {
-    name: "Conversations",
-    icon: ChatBubbleBottomCenterTextIcon,
-    href: "/bot/conversations",
-    children: null
-  },
-  {
-    name: "Analytics",
-    icon: ChartBarSquareIcon,
-    href: "/bot/analytics",
-    children: null
-  }
-];
-
 const createNavigation = (botId: string) => [
   {
     name: "Conversations",
@@ -45,6 +30,7 @@ export default function Navigation() {
   const currentItem = navigation.find((item) =>
     pathname.includes(item.name.toLowerCase())
   );
+
   return (
     <ul role="list" className="-mx-2 space-y-1">
       <li>

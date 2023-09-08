@@ -15,8 +15,16 @@ export default function Error({
   }, [error]);
 
   return (
-    <div>
-      <h2>Something went wrong!</h2>
+    <div className="flex h-screen w-screen flex-col items-center justify-center gap-5">
+      <h1 className="text-3xl font-bold">Error - Something went wrong</h1>
+
+      <p>
+        Contact support at{" "}
+        <a href="mailto:support@wiselydesk.com" className="text-blue-500">
+          support@wiselydesk.com
+        </a>{" "}
+        and let us know what you were doing so we can resolve this!
+      </p>
       <button
         onClick={
           // Attempt to recover by trying to re-render the segment
