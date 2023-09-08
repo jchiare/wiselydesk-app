@@ -62,13 +62,15 @@ export default function AgentMessage({
   text,
   sources,
   isHelpful,
-  isFirstMessage
+  isFirstMessage,
+  isLoading
 }: {
   text: string;
   sentTime: string;
   sources: string;
   isHelpful: boolean | null;
   isFirstMessage: boolean;
+  isLoading?: boolean;
 }): JSX.Element {
   sentTime = formatConversationTime(sentTime);
 
@@ -76,7 +78,9 @@ export default function AgentMessage({
     <div className="flex items-end">
       <div className="mx-2 my-1 max-w-[60%]">
         <div className="rounded-lg bg-gray-600 p-2 font-medium text-white">
-          <p dangerouslySetInnerHTML={{ __html: renderMessage(text) }}></p>
+          <p
+            className={isLoading ? "blur-sm" : ""}
+            dangerouslySetInnerHTML={{ __html: renderMessage(text) }}></p>
         </div>
         <div className="grid grid-cols-2 justify-start">
           <div className="mt-1 flex space-x-2">
@@ -93,7 +97,12 @@ export default function AgentMessage({
               </>
             )} */}
           </div>
-          <p className="text-end text-xs text-gray-400">{sentTime}</p>
+          <p
+            className={`text-end text-xs text-gray-400 ${
+              isLoading ? "blur-sm" : ""
+            }`}>
+            {sentTime}
+          </p>
         </div>
         {sources && (
           <div className="grid">
@@ -106,7 +115,9 @@ export default function AgentMessage({
                       target="_blank"
                       key={`${source}${index}`}
                       href={source}
-                      className="mr-2 text-sm font-semibold text-[#161651] hover:text-blue-700 hover:underline">
+                      className={`mr-2 text-sm font-semibold text-[#161651] hover:text-blue-700 hover:underline ${
+                        isLoading ? "blur-sm" : ""
+                      }`}>
                       {sourceText(source, index)}
                     </Link>
                     <br />
