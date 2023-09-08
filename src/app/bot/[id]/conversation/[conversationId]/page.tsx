@@ -12,10 +12,16 @@ type ParamsType = {
   id: string;
 };
 
-export const metadata: Metadata = {
-  title: "Single Conversation | WiselyDesk",
-  description: "View a single conversation in WiselyDesk"
-};
+export async function generateMetadata({
+  params
+}: {
+  params: ParamsType;
+}): Promise<Metadata> {
+  return {
+    title: `Conversation #${params.conversationId} | WiselyDesk`,
+    description: `View conversation #${params.conversationId} for bot #${params.id} in WiselyDesk`
+  };
+}
 
 async function fetchConversation(id: string, botId: string) {
   const res = await fetch(`${URL}/api/conversation/${id}?bot_id=${botId}`);
