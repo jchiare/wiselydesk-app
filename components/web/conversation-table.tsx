@@ -14,7 +14,9 @@ export default function ConversationTable({ data }: { data: Conversations }) {
   const { pathname } = useCustomQueryString();
 
   function conversationclicked(e: MouseEvent<HTMLTableRowElement>, id: number) {
-    router.push(pathname + "/" + id.toString());
+    router.push(
+      pathname.replace("conversations", "conversation") + "/" + id.toString()
+    );
   }
 
   return data.conversations.map((conversation) => (

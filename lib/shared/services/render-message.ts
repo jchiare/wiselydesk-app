@@ -21,7 +21,7 @@ function formatMarkdownLinks(text: string): string {
       // If the link text is a number, we expect it to be a source, so make it a superscript
       return `<sup><a rel="noopener noreferrer" target="_blank" style="text-decoration:none;" href="${p2}"> ${p1}</a></sup>`;
     }
-    return `<a class="underline" rel="noopener noreferrer" target="_blank" href="${p2}">${p1}</a>`;
+    return `<a style="text-decoration:underline;" rel="noopener noreferrer" target="_blank" href="${p2}">${p1}</a>`;
   });
 
   return text;
