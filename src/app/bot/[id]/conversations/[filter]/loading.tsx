@@ -1,4 +1,5 @@
 import { generateRandomLorem } from "@/lib/shared/utils";
+
 export default function LoadingConversations() {
   return (
     <table className="min-w-full table-fixed divide-y divide-gray-300">

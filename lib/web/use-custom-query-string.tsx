@@ -31,7 +31,27 @@ const useCustomQueryString = () => {
     [pathname]
   );
 
-  return { createQueryString, pathname, searchParams, getBotId, changeBotById };
+  const changeFilter = useCallback(
+    (newFilter: string) => {
+      const parts = pathname.split("/");
+      if (parts.length >= 5) {
+        // Make sure the path has enough parts to contain the filter
+        parts[4] = newFilter; // Assuming filter is at index 4
+        return parts.join("/");
+      }
+      return pathname; // Return the original path if it doesn't have a filter
+    },
+    [pathname]
+  );
+
+  return {
+    createQueryString,
+    pathname,
+    searchParams,
+    getBotId,
+    changeBotById,
+    changeFilter
+  };
 };
 
 export default useCustomQueryString;

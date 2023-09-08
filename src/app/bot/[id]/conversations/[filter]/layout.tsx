@@ -1,10 +1,16 @@
-import ConversationsTableFilter from "@/components/web/conversations/filter-conversations-table";
+import ConversationsTableFilter, {
+  type FilterType
+} from "@/components/web/conversations/filter-conversations-table";
+
+type ConversationsLayoutProps = {
+  children: React.ReactNode;
+  params: { filter: FilterType };
+};
 
 export default function ConversationsLayout({
-  children
-}: {
-  children: React.ReactNode;
-}) {
+  children,
+  params
+}: ConversationsLayoutProps) {
   return (
     <div className="p-4 sm:p-6 lg:px-16 lg:py-10 ">
       <div className="sm:flex sm:items-center">
@@ -18,7 +24,7 @@ export default function ConversationsLayout({
         </div>
       </div>
       <div className="-mx-4 mt-8 sm:-mx-0">
-        <ConversationsTableFilter />
+        <ConversationsTableFilter filter={params.filter} />
         <>{children}</>
       </div>
     </div>
