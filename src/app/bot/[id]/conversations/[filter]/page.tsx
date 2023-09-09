@@ -1,11 +1,9 @@
 import ConversationsTable from "@/components/web/conversations/table";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/src/app/api/auth/[...nextauth]/route";
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import type { Conversation } from "@prisma/client";
 import { orgChooser } from "@/lib/shared/orgChooser";
 import { URL } from "@/lib/shared/constants";
+import { fetchServerSession } from "@/lib/shared/auth";
 
 export const metadata: Metadata = {
   title: "Conversations | WiselyDesk",
@@ -57,8 +55,7 @@ export default async function ConversationsPage({
   params: ParamsProps;
 }) {
   const { filter = "all", id: botId } = params;
-  const session = await getServerSession(authOptions);
-  if (!session) return redirect("/auth/signin");
+  const session = await fetchServerSession();
 
   const orgId = orgChooser(session);
   const data = await getConversations({

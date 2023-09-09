@@ -1,10 +1,8 @@
-import { getServerSession } from "next-auth/next";
 import SignInButton from "@/src/app/auth/signin/sign-in-button";
-import { authOptions } from "@/src/app/api/auth/[...nextauth]/route";
 import Image from "next/image";
 import signInBg from "@/public/signin-screen-bg.png";
-import { redirect } from "next/navigation";
 import type { Metadata } from "next/types";
+import { fetchServerSessionSignIn } from "@/lib/shared/auth";
 
 export const metadata: Metadata = {
   title: "Sign In | WiselyDesk App",
@@ -12,8 +10,8 @@ export const metadata: Metadata = {
 };
 
 export default async function SignIn() {
-  const session = await getServerSession(authOptions);
-  if (session) return redirect("/bot/");
+  await fetchServerSessionSignIn();
+
   return (
     <div className="flex min-h-screen">
       <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-6 lg:flex-none lg:px-20 xl:px-24">

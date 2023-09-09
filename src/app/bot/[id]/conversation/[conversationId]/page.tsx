@@ -2,10 +2,8 @@ import SingleConversation from "@/components/web/conversation";
 import RightBar from "@/components/web/conversation/right-bar";
 import { URL } from "@/lib/shared/constants";
 import type { SingleConversationReturnType } from "@/dto/single-conversation";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/src/app/api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
 import type { Metadata } from "next/types";
+import { fetchServerSession } from "@/lib/shared/auth";
 
 type ParamsType = {
   conversationId: string;
@@ -34,8 +32,7 @@ export default async function SingleConversationPage({
 }: {
   params: ParamsType;
 }) {
-  const session = await getServerSession(authOptions);
-  if (!session) return redirect("/auth/signin");
+  const session = await fetchServerSession();
 
   const conversation = await fetchConversation(
     params.conversationId,
