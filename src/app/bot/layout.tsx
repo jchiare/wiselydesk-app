@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import SessionProvider from "@/src/app/bot/providers";
 import SideNav from "@/components/web/side-nav";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+import { fetchServerSession } from "@/lib/shared/auth";
 
 export const metadata: Metadata = {
   title: "WiselyDesk App",
@@ -14,8 +13,7 @@ export default async function WebLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession();
-  if (!session) return redirect("/auth/signin");
+  const session = await fetchServerSession();
 
   return (
     <SessionProvider session={session}>
