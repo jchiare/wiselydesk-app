@@ -10,10 +10,6 @@ export const metadata: Metadata = {
   description: "View your bots conversations"
 };
 
-type SearchParamsProps = {
-  filter?: "all" | "down" | "up";
-};
-
 type Conversations = {
   conversations: Conversation[];
 };
@@ -41,7 +37,7 @@ async function getConversations({
 
   let res;
   try {
-    res = await fetch(url, { next: { revalidate: 30 } });
+    res = await fetch(url, { cache: "no-cache" });
   } catch (e) {
     console.error(e);
     throw e;

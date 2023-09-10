@@ -22,7 +22,9 @@ export async function generateMetadata({
 }
 
 async function fetchConversation(id: string, botId: string) {
-  const res = await fetch(`${URL}/api/conversation/${id}?bot_id=${botId}`);
+  const res = await fetch(`${URL}/api/conversation/${id}?bot_id=${botId}`, {
+    cache: "no-cache"
+  });
   const json = await res.json();
   return json as SingleConversationReturnType;
 }
