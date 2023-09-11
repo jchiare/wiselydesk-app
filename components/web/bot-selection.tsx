@@ -38,9 +38,14 @@ export default function BotSelection({ session }: { session: Session }) {
     [setSelectedBot, changeBotById, router]
   );
 
+  // get all bots
+  // and if no botId in url, set bot to first bot
   useEffect(() => {
     fetchBots(orgId).then((fetchedBots) => {
-      changeSelectedBot(fetchedBots[0]);
+      const botId = getBotId();
+      if (!botId) {
+        changeSelectedBot(fetchedBots[0]);
+      }
       setBots(fetchedBots);
     });
   }, [orgId]);
@@ -53,7 +58,7 @@ export default function BotSelection({ session }: { session: Session }) {
         setSelectedBot(foundBot);
       }
     }
-  }, [bots, getBotId]);
+  }, [bots]);
 
   return (
     <Listbox value={selectedBot ?? false} onChange={changeSelectedBot}>
