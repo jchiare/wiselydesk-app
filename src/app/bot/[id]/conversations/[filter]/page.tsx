@@ -5,6 +5,8 @@ import { orgChooser } from "@/lib/shared/orgChooser";
 import { URL } from "@/lib/shared/constants";
 import { fetchServerSession } from "@/lib/shared/auth";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Conversations | WiselyDesk",
   description: "View your bots conversations"
