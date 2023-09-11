@@ -18,7 +18,7 @@ const createNavigation = (botId: string) => [
   {
     name: "Analytics",
     icon: ChartBarSquareIcon,
-    href: `/bot/${botId}/analytics`,
+    href: `/bot/${botId}/analytics/daily`,
     children: null
   }
 ];
