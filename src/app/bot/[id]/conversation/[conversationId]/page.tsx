@@ -34,7 +34,7 @@ export default async function SingleConversationPage({
 }: {
   params: ParamsType;
 }) {
-  const session = await fetchServerSession();
+  await fetchServerSession();
 
   const conversation = await fetchConversation(
     params.conversationId,

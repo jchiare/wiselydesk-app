@@ -27,7 +27,7 @@ export default function BotSelection({ session }: { session: Session }) {
 
   const [bots, setBots] = useState<Bot[] | undefined>();
   const [selectedBot, setSelectedBot] = useState<Bot | undefined>();
-  const [defaultBot, setDefaultBot] = useState<Bot | false>(false);
+  const [defaultBot, setDefaultBot] = useState<Bot | boolean>(false);
 
   // Fetch the bots from the backend
   useEffect(() => {
@@ -35,10 +35,11 @@ export default function BotSelection({ session }: { session: Session }) {
     fetchBots(orgId).then((fetchedBots) => {
       setBots(fetchedBots);
       if (!defaultBot && fetchedBots) {
-        setDefaultBot(fetchedBots[0]);
+        changeSelectedBot(fetchedBots[0]);
+        setDefaultBot(true);
       }
     });
-  }, [session, defaultBot]);
+  }, [session]);
 
   // set the bot
   useEffect(() => {
