@@ -4,6 +4,8 @@ import signInBg from "@/public/signin-screen-bg.png";
 import type { Metadata } from "next/types";
 import { fetchServerSessionSignIn } from "@/lib/shared/auth";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Sign In | WiselyDesk App",
   description: "Sign in to your WiselyDesk account"

@@ -3,6 +3,8 @@ import SessionProvider from "@/src/app/bot/providers";
 import SideNav from "@/components/web/side-nav";
 import { fetchServerSession } from "@/lib/shared/auth";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "WiselyDesk App",
   description: "View conversation and settings for your WiselyDesk bots"

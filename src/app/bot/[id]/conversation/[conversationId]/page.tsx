@@ -5,6 +5,8 @@ import type { SingleConversationReturnType } from "@/dto/single-conversation";
 import type { Metadata } from "next/types";
 import { fetchServerSession } from "@/lib/shared/auth";
 
+export const dynamic = "force-dynamic";
+
 type ParamsType = {
   conversationId: string;
   id: string;
