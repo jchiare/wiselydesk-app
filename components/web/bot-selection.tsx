@@ -1,5 +1,5 @@
 "use client";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import type { Bot } from "@prisma/client";
@@ -24,43 +24,39 @@ async function fetchBots(orgId: number) {
 export default function BotSelection({ session }: { session: Session }) {
   const router = useRouter();
   const { changeBotById, getBotId } = useCustomQueryString();
+  const [bots, setBots] = useState<Bot[] | undefined>([]);
+  const [selectedBot, setSelectedBot] = useState<Bot | null>(null);
 
-  const [bots, setBots] = useState<Bot[] | undefined>();
-  const [selectedBot, setSelectedBot] = useState<Bot | undefined>();
-  const [defaultBot, setDefaultBot] = useState<Bot | boolean>(false);
+  const orgId = orgChooser(session);
 
-  // Fetch the bots from the backend
+  const changeSelectedBot = useCallback(
+    (bot: Bot) => {
+      setSelectedBot(bot);
+      const newPath = changeBotById(bot.id);
+      router.push(newPath);
+    },
+    [setSelectedBot, changeBotById, router]
+  );
+
   useEffect(() => {
-    const orgId = orgChooser(session);
     fetchBots(orgId).then((fetchedBots) => {
+      changeSelectedBot(fetchedBots[0]);
       setBots(fetchedBots);
-      if (!defaultBot && fetchedBots) {
-        changeSelectedBot(fetchedBots[0]);
-        setDefaultBot(true);
-      }
     });
-  }, [session]);
+  }, [orgId]);
 
-  // set the bot
   useEffect(() => {
     const botId = getBotId();
-    if (botId) {
-      const foundBot = bots?.find((bot) => bot.id.toString() === botId);
-      if (foundBot) {
+    if (botId && bots !== undefined && bots.length > 0) {
+      const foundBot = bots.find((bot) => bot.id.toString() === botId);
+      if (foundBot && foundBot !== selectedBot) {
         setSelectedBot(foundBot);
       }
     }
   }, [bots, getBotId]);
 
-  // change the bot when the user clicks another bot
-  function changeSelectedBot(bot: Bot) {
-    setSelectedBot(bot);
-    const newPath = changeBotById(bot.id);
-    router.push(newPath);
-  }
-
   return (
-    <Listbox value={selectedBot ?? defaultBot} onChange={changeSelectedBot}>
+    <Listbox value={selectedBot ?? false} onChange={changeSelectedBot}>
       {({ open }) => (
         <>
           <Listbox.Label className="block pt-6 text-center font-medium leading-6 text-white">
