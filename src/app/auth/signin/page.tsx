@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: "Sign in to your WiselyDesk account"
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function SignIn() {
   await fetchServerSessionSignIn();
 

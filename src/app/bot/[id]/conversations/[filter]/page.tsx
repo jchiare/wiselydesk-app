@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description: "View your bots conversations"
 };
 
+export const dynamic = "force-dynamic";
+
 type Conversations = {
   conversations: Conversation[];
 };

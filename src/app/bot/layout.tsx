@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: "View conversation and settings for your WiselyDesk bots"
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function WebLayout({
   children
 }: {
