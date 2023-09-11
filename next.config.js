@@ -17,7 +17,7 @@ module.exports = withSentryConfig(
     silent: true,
 
     org: "wiselydesk",
-    project: "weba"
+    project: "wiselydesk-app"
   },
   {
     // For all available options, see:
