@@ -45,7 +45,7 @@ export default function ConversationNote({ notes }: NotesProps) {
         />
         <button
           onClick={handleAddNote}
-          className="mt-2 w-fit rounded bg-blue-500 p-2 text-white">
+          className="mt-2 w-fit transform rounded bg-blue-500 p-2 text-white active:translate-x-[0.5px] active:translate-y-[0.5px] active:bg-blue-700">
           Add Note
         </button>
       </div>

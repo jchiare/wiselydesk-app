@@ -26,14 +26,16 @@ model Bot {
 }
 
 model Conversation {
-  id         Int       @id @default(autoincrement())
-  summary    String?   @db.VarChar(255)
-  public_id  Int
-  bot_id     Int
-  user_id    Int
-  created_at DateTime  @default(now()) @db.DateTime(0)
-  updated_at DateTime? @db.DateTime(0)
-  deleted_at DateTime? @db.DateTime(0)
+  id               Int       @id @default(autoincrement())
+  summary          String?   @db.VarChar(255)
+  public_id        Int
+  bot_id           Int
+  user_id          Int
+  created_at       DateTime  @default(now()) @db.DateTime(0)
+  updated_at       DateTime? @db.DateTime(0)
+  deleted_at       DateTime? @db.DateTime(0)
+  ticket_deflected Boolean?
+  to_review        Boolean?
 
   @@index([bot_id], map: "bot_id_index")
   @@index([bot_id, user_id], map: "bot_id_user_id_index")
