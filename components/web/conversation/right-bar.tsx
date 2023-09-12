@@ -1,37 +1,21 @@
-import type { SingleConversationReturnType } from "@/dto/single-conversation";
+import type { Note as NoteType } from "@prisma/client";
+import Note from "@/components/web/conversation/notes";
+import TicketDeflected from "@/components/web/conversation/ticket-deflection-checkbox";
+import ToReview from "@/components/web/conversation/to-review-checkbox";
 
 export default function SideBar({
-  conversation,
-  isLoading
+  isLoading,
+  notes
 }: {
-  conversation: SingleConversationReturnType;
   isLoading?: boolean;
+  notes?: NoteType[];
 }) {
   return (
-    <>
-      <span className="font-semibold">Summary: </span>
-      <span className={isLoading ? "blur-sm" : ""}>
-        {conversation.conversation.summary}
-      </span>
-      <br />
-      <br />
-      <span className="font-semibold">ID: </span>
-      <span className={isLoading ? "blur-sm" : ""}>
-        {conversation.conversation.public_id}
-      </span>
-      <br />
-      <br />
-      <span className="font-semibold">Created At: </span>
-      <span className={isLoading ? "blur-sm" : ""}>
-        {conversation.conversation.created_at}
-      </span>
-      <br />
-      <br />
-      <span className="font-semibold">Messages Count: </span>
-      <span className={isLoading ? "blur-sm" : ""}>
-        {conversation.conversation.messages.length}
-      </span>
-    </>
+    <div className="flex flex-col space-y-4">
+      <TicketDeflected />
+      <ToReview />
+      <Note notes={notes} />
+    </div>
   );
 }
 
