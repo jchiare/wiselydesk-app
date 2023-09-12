@@ -19,8 +19,8 @@ model Bot {
   name                 String    @db.VarChar(255)
   client_api_key       String    @db.VarChar(255)
   organization_id      Int       @default(2)
-  zendesk_kba_endpoint String    @db.VarChar(255)
-  zendesk_account_id   String    @db.VarChar(255)
+  zendesk_kba_endpoint String?   @db.VarChar(255)
+  zendesk_account_id   String?   @db.VarChar(255)
 
   @@map("bot")
 }
@@ -51,7 +51,7 @@ model KnowledgeBaseArticle {
   total_token_count   Int
   bot_id              Int
   client_last_updated DateTime  @db.DateTime(0)
-  client_article_id   String    @db.VarChar(255)
+  client_article_id   String?   @db.VarChar(255)
   html_url            String    @db.VarChar(255)
 
   @@index([bot_id], map: "bot_id_index")
@@ -147,4 +147,17 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_token")
+}
+
+model Note {
+  id              Int       @id @default(autoincrement())
+  content         String    @db.Text
+  conversation_id Int
+  user_id         Int
+  created_at      DateTime  @default(now()) @db.DateTime(0)
+  updated_at      DateTime? @db.DateTime(0)
+  deleted_at      DateTime? @db.DateTime(0)
+
+  @@index([conversation_id], map: "idx_conversation_id")
+  @@map("note")
 }

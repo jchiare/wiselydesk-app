@@ -1,34 +1,32 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Web App
+
+Frontend for the SaaS where our users can login, view conversations and more (tbh). Uses NextJS/React and TailwindCSS.
+
+prod link - [apps.wiselydesk.com/](https://apps.wiselydesk.com)
 
 ## Getting Started
 
-First, run the development server:
+Create a `.env.local` file with the the env vars in `.env.sample` (reach out to the team to get the actual values):
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deploy
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Will be deployed on Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Database Migrations
 
-## Learn More
+We use [Prisma](https://www.prisma.io/) as our ORM. Note that although Prisma has built-in support for migrations, we aren't using them since they don't work well with PlanetScale which uses dev branches + merging "Deploy Requests" to manage schema changes. For more info, see ["Making schema changes with db push"](https://www.prisma.io/docs/guides/database/planetscale#differences-to-consider) in Prisma's docs about PlanetScale.
 
-To learn more about Next.js, take a look at the following resources:
+To make a new database migration (aka schema change):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Create a new branch in [PlanetScale](https://app.planetscale.com/heybugs/wiselydesk-backend/branches)
+- Get the branch's username/password and update `DATABASE_URL` in `.env.local`
+- Add your schema change to `schema.prisma`
+- Push it to your PlanetScale development branch - `dotenv -e .env.local -- npx prisma db push`
+- Make a Deploy Request in PlanetScale, review the diff, merge it
+- Migrate the dev db - update `DATABASE_URL` in `.env.local` to the dev db, run `dotenv -e .env.local -- npx prisma db push`
