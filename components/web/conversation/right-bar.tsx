@@ -11,9 +11,11 @@ export default function SideBar({
   notes?: NoteType[];
 }) {
   return (
-    <div className="flex flex-col space-y-4">
-      <TicketDeflected />
-      <ToReview />
+    <div className="flex h-full flex-col justify-between space-y-4">
+      <div className="flex-grow space-y-4 px-4 py-6">
+        <TicketDeflected />
+        <ToReview />
+      </div>
       <Note notes={notes} />
     </div>
   );

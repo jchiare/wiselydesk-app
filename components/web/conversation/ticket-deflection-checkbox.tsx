@@ -28,7 +28,7 @@ const TicketDeflected: React.FC = () => {
         id="ticket-deflection"
         checked={isChecked}
         onChange={handleCheckboxChange}
-        className="form-checkbox h-5 w-5 text-blue-600 hover:cursor-pointer"
+        className="form-checkbox h-5 w-5 accent-green-600 hover:cursor-pointer"
       />
       <label
         htmlFor="ticket-deflection"

@@ -18,7 +18,7 @@ const ToReview: React.FC = () => {
         type="checkbox"
         checked={isChecked}
         onChange={handleCheckboxChange}
-        className="form-checkbox h-5 w-5 text-green-600 hover:cursor-pointer"
+        className="form-checkbox h-5 w-5 accent-orange-600 hover:cursor-pointer"
       />
       <label
         htmlFor="toReview"

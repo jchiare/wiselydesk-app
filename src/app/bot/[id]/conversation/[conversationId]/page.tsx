@@ -63,7 +63,7 @@ export default async function SingleConversationPage({
       <div className="mr-[300px] px-4 py-10 sm:px-6 lg:px-16 lg:py-10">
         <SingleConversation conversation={conversation} />
       </div>
-      <div className="fixed right-0 h-screen min-w-[350px] max-w-[350px] border-2 border-y-0 border-gray-300 bg-gray-200 px-4 pt-6 sm:px-6">
+      <div className="fixed right-0 h-screen min-w-[350px] max-w-[350px] border-2 border-y-0 border-gray-300 bg-gray-200">
         <RightBar notes={notes} />
       </div>
     </div>

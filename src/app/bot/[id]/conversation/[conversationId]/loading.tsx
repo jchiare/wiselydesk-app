@@ -66,7 +66,7 @@ export default function SingleConversationLoading() {
           />
         </div>
       </div>
-      <div className="h-screen min-w-[350px] max-w-[350px] border-2 border-y-0 border-gray-300 bg-gray-200 px-4 pt-6 sm:px-6">
+      <div className="h-screen min-w-[350px] max-w-[350px] border-2 border-y-0 border-gray-300 bg-gray-200">
         <RightBar isLoading={true} />
       </div>
     </div>
