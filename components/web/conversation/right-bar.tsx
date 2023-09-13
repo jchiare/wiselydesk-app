@@ -8,13 +8,15 @@ export default function SideBar({
   notes,
   ticketDeflected,
   toReview,
-  conversationId
+  conversationId,
+  botId
 }: {
   isLoading?: boolean;
   notes?: NoteType[];
   ticketDeflected: boolean | null;
   toReview: boolean | null;
   conversationId: string;
+  botId: string;
 }) {
   return (
     <div className="flex h-full flex-col justify-between space-y-4">
@@ -22,6 +24,7 @@ export default function SideBar({
         <TicketDeflected
           ticketDeflected={ticketDeflected}
           conversationId={conversationId}
+          botId={botId}
         />
         <ToReview toReview={toReview} conversationId={conversationId} />
       </div>

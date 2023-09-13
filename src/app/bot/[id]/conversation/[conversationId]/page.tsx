@@ -69,6 +69,7 @@ export default async function SingleConversationPage({
           toReview={conversation.conversation.to_review}
           ticketDeflected={conversation.conversation.ticket_deflected}
           conversationId={params.conversationId}
+          botId={params.id}
         />
       </div>
     </div>
