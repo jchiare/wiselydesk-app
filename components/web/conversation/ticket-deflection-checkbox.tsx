@@ -4,11 +4,11 @@ import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 
 const TicketDeflected = ({
   ticketDeflected,
-  conversationId,
+  publicConversationId,
   botId
 }: {
   ticketDeflected: boolean | null;
-  conversationId: string;
+  publicConversationId: string;
   botId: string;
 }) => {
   const [isChecked, setIsChecked] = useState<boolean | null>(ticketDeflected);
@@ -19,7 +19,7 @@ const TicketDeflected = ({
 
     try {
       const response = await fetch(
-        `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversation/${conversationId}/deflected`,
+        `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversation/${publicConversationId}/deflected`,
         {
           // Updated endpoint and ID
           method: "PATCH", // Updated method

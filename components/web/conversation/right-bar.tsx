@@ -9,30 +9,41 @@ export default function SideBar({
   ticketDeflected,
   toReview,
   conversationId,
-  botId
+  botId,
+  userId,
+  publicConversationId
 }: {
   isLoading?: boolean;
   notes?: NoteType[];
   ticketDeflected: boolean | null;
   toReview: boolean | null;
-  conversationId: string;
+  conversationId: number;
   botId: string;
+  userId: number;
+  publicConversationId: string;
 }) {
   return (
     <div className="flex h-full flex-col justify-between space-y-4">
       <div className="flex-grow space-y-4 px-4 py-6">
         <TicketDeflected
           ticketDeflected={ticketDeflected}
-          conversationId={conversationId}
+          publicConversationId={publicConversationId}
           botId={botId}
         />
         <ToReview
           toReview={toReview}
-          conversationId={conversationId}
+          publicConversationId={publicConversationId}
           botId={botId}
         />
       </div>
-      <Note notes={notes} />
+      <Note
+        notes={notes}
+        conversationId={conversationId}
+        botId={botId}
+        userId={userId}
+        publicConversationId={publicConversationId}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

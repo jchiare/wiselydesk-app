@@ -4,12 +4,12 @@ import { NextResponse, NextRequest } from "next/server";
 const prismaClient = new PrismaClient();
 
 type Params = {
-  params: { id: string };
+  params: { id: string; conversationId: string };
 };
 
 export async function GET(request: NextRequest, { params }: Params) {
   // Get conversation_id from the query params
-  const conversationId = params.id;
+  const conversationId = params.conversationId;
 
   if (!conversationId) {
     return NextResponse.json(
@@ -29,23 +29,22 @@ export async function GET(request: NextRequest, { params }: Params) {
 
 export const POST = async (request: NextRequest, { params }: Params) => {
   const body = await request.json();
-  const conversation_id = params.id;
 
-  const { content, user_id } = body;
+  const { content, userId, conversationId } = body;
 
   // Validate the necessary fields are present
-  if (!content || !conversation_id || !user_id) {
+  if (!content || !conversationId || !userId) {
     return NextResponse.json(
-      { message: "content and conversation_id and user_id are required" },
+      { message: "content and conversation_id and userId are required" },
       { status: 400 }
     );
   }
 
   const newNote = await prismaClient.note.create({
     data: {
-      user_id,
+      user_id: userId,
       content,
-      conversation_id: Number(conversation_id)
+      conversation_id: Number(conversationId)
     }
   });
 
