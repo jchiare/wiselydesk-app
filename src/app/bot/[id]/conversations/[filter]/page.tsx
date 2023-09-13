@@ -1,7 +1,7 @@
 import ConversationsTable from "@/components/web/conversations/table";
 import type { Metadata } from "next";
 import type { Conversation } from "@prisma/client";
-import { orgChooser } from "@/lib/shared/orgChooser";
+import { orgChooser } from "@/lib/shared/org-chooser";
 import { URL } from "@/lib/shared/constants";
 import { fetchServerSession } from "@/lib/shared/auth";
 

@@ -6,4 +6,4 @@ export const URL =
 export const NEXTJS_BACKEND_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:3002"
-    : "apps.wiselydesk.com";
+    : "https://apps.wiselydesk.com";

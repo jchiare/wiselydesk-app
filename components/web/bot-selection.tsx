@@ -4,7 +4,7 @@ import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import type { Bot } from "@prisma/client";
 import { URL } from "@/lib/shared/constants";
-import { orgChooser } from "@/lib/shared/orgChooser";
+import { orgChooser } from "@/lib/shared/org-chooser";
 import { useRouter } from "next/navigation";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
 import { Session } from "next-auth";
