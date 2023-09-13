@@ -3,7 +3,7 @@ import { formatUnixTimestamp } from "@/lib/shared/utils";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
 import type { Conversation } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { type MouseEvent } from "react";
+import useRefreshPage from "@/lib/web/use-refresh-page";
 
 type Conversations = {
   conversations: Conversation[];
@@ -20,6 +20,8 @@ export default function ConversationTable({ data }: { data: Conversations }) {
 
     router.push(newPath.replace("conversations", "conversation"));
   }
+
+  useRefreshPage(30);
 
   return data.conversations.map((conversation) => (
     <tr

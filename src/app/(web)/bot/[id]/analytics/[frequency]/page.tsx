@@ -13,10 +13,7 @@ async function fetchConversationCounts(
   frequency: FrequencyType
 ) {
   const res = await fetch(
-    `${URL}/api/analytics/conversation-counts?bot_id=${botId}&frequency=${frequency}`,
-    {
-      next: { revalidate: 360 }
-    }
+    `${URL}/api/analytics/conversation-counts?bot_id=${botId}&frequency=${frequency}`
   );
   return await res.json();
 }

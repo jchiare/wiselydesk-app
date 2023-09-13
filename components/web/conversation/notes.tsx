@@ -21,8 +21,8 @@ export default function ConversationNote({
   userId,
   publicConversationId
 }: NotesProps) {
-  // Local state to hold the new note content
   const [newNote, setNewNote] = useState("");
+  const [localNotes, setLocalNotes] = useState<Note[]>(notes || []);
 
   const handleAddNote = async () => {
     try {
@@ -36,6 +36,8 @@ export default function ConversationNote({
       );
       if (response.ok) {
         console.log("Added notes");
+        const newNoteObj: { note: Note } = await response.json();
+        setLocalNotes([...localNotes, newNoteObj.note]);
       } else {
         const json = await response.json();
         console.error(`Error: ${json.message}`);
@@ -49,13 +51,13 @@ export default function ConversationNote({
   return (
     <div className="my-6 bg-slate-100 px-2 py-4">
       <h2 className="mb-2 font-semibold">Notes</h2>
-      <ul>
-        {!notes || notes.length === 0 ? (
+      <ul className="ml-4 list-disc">
+        {!localNotes || localNotes.length === 0 ? (
           <li key={"first"} className="mb-2 rounded-sm bg-slate-50 p-1 text-sm">
-            {"No Notes"}
+            {isLoading ? "Loading Notes ... " : "No Notes"}
           </li>
         ) : (
-          notes.map((note, index) => (
+          localNotes.map((note, index) => (
             <li key={index} className="mb-2 text-sm">
               {note.content}
             </li>
