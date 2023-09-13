@@ -22,7 +22,7 @@ export default function ConversationNote({
   publicConversationId
 }: NotesProps) {
   const [newNote, setNewNote] = useState("");
-  const [localNotes, setLocalNotes] = useState<Note[]>(notes || []);
+  const [localNotes, setLocalNotes] = useState<Note[]>(notes ?? []);
 
   const handleAddNote = async () => {
     try {
