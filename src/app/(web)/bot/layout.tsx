@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import SessionProvider from "@/src/app/bot/providers";
+import SessionProvider from "@/src/app/(web)/bot/providers";
 import SideNav from "@/components/web/side-nav";
 import { fetchServerSession } from "@/lib/shared/auth";
 
