@@ -26,7 +26,11 @@ export default function SideBar({
           conversationId={conversationId}
           botId={botId}
         />
-        <ToReview toReview={toReview} conversationId={conversationId} />
+        <ToReview
+          toReview={toReview}
+          conversationId={conversationId}
+          botId={botId}
+        />
       </div>
       <Note notes={notes} />
     </div>
