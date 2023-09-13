@@ -1,37 +1,32 @@
-import type { SingleConversationReturnType } from "@/dto/single-conversation";
+import type { Note as NoteType } from "@prisma/client";
+import Note from "@/components/web/conversation/notes";
+import TicketDeflected from "@/components/web/conversation/ticket-deflection-checkbox";
+import ToReview from "@/components/web/conversation/to-review-checkbox";
 
 export default function SideBar({
-  conversation,
-  isLoading
+  isLoading,
+  notes,
+  ticketDeflected,
+  toReview,
+  conversationId
 }: {
-  conversation: SingleConversationReturnType;
   isLoading?: boolean;
+  notes?: NoteType[];
+  ticketDeflected: boolean | null;
+  toReview: boolean | null;
+  conversationId: string;
 }) {
   return (
-    <>
-      <span className="font-semibold">Summary: </span>
-      <span className={isLoading ? "blur-sm" : ""}>
-        {conversation.conversation.summary}
-      </span>
-      <br />
-      <br />
-      <span className="font-semibold">ID: </span>
-      <span className={isLoading ? "blur-sm" : ""}>
-        {conversation.conversation.public_id}
-      </span>
-      <br />
-      <br />
-      <span className="font-semibold">Created At: </span>
-      <span className={isLoading ? "blur-sm" : ""}>
-        {conversation.conversation.created_at}
-      </span>
-      <br />
-      <br />
-      <span className="font-semibold">Messages Count: </span>
-      <span className={isLoading ? "blur-sm" : ""}>
-        {conversation.conversation.messages.length}
-      </span>
-    </>
+    <div className="flex h-full flex-col justify-between space-y-4">
+      <div className="flex-grow space-y-4 px-4 py-6">
+        <TicketDeflected
+          ticketDeflected={ticketDeflected}
+          conversationId={conversationId}
+        />
+        <ToReview toReview={toReview} conversationId={conversationId} />
+      </div>
+      <Note notes={notes} />
+    </div>
   );
 }
 

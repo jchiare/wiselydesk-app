@@ -1,5 +1,7 @@
+import type { Conversation } from "@prisma/client";
+
 export type SingleConversationReturnType = {
-  conversation: Conversation;
+  conversation: ConversationType;
 };
 
 export type Message = {
@@ -16,14 +18,4 @@ export type Message = {
   is_helpful: boolean | null;
 };
 
-export type Conversation = {
-  bot_id: number;
-  created_at: string;
-  deleted_at: string | null;
-  id: number;
-  messages: Array<Message>;
-  public_id: number;
-  summary: string;
-  updated_at: string;
-  user_id: number;
-};
+export type ConversationType = { messages: Array<Message> } & Conversation;
