@@ -4,6 +4,7 @@ import type { Conversation } from "@prisma/client";
 import { orgChooser } from "@/lib/shared/org-chooser";
 import { URL } from "@/lib/shared/constants";
 import { fetchServerSession } from "@/lib/shared/auth";
+import type { FilterType } from "@/components/web/conversations/filter-conversations-table";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,7 @@ type Conversations = {
 };
 type ParamsProps = {
   id: string;
-  filter: "all" | "down" | "up";
+  filter: FilterType;
 };
 
 async function getConversations({
@@ -35,6 +36,10 @@ async function getConversations({
     url += "&is_helpful=true";
   } else if (filter.toLowerCase() === "down") {
     url += "&is_helpful=false";
+  } else if (filter === "review") {
+    url += "&filter=review";
+  } else if (filter === "deflected") {
+    url += "&fiter=deflected";
   }
 
   let res;
