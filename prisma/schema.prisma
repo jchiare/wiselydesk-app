@@ -37,6 +37,7 @@ model Conversation {
   ticket_deflected Boolean?
   to_review        Boolean?
 
+  @@unique([public_id, bot_id])
   @@index([bot_id], map: "bot_id_index")
   @@index([bot_id, user_id], map: "bot_id_user_id_index")
   @@map("conversation")

@@ -1,7 +1,6 @@
 import AgentMessage from "@/components/web/conversation/agent-message";
 import RightBar from "@/components/web/conversation/right-bar";
 import UserMessage from "@/components/web/conversation/user-message";
-import { SingleConversationReturnType } from "@/dto/single-conversation";
 
 const aiMessage = {
   text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque hendrerit ligula vel arcu tincidunt, vel varius urna consequat. Integer sit amet lectus quis tortor placerat commodo. Pellentesque fermentum, sapien in viverra dapibus, massa risus viverra elit. <br> <br> nec volutpat lacus sem aliquam arcu. Morbi odio justo, dapibus vel placerat non, maximus nec est. Aliquam erat volutpat. Integer accumsan nisi eget ante maximus aliquam. Proin bibendum metus at tristique scelerisque.",
@@ -23,20 +22,6 @@ const firstMessage = {
   sources: "",
   is_helpful: null
 };
-
-const conversation = {
-  conversation: {
-    summary: "hello",
-    public_id: 123,
-    created_at: "Tue, 05 Sep 2023 06:13:06 GMT",
-    messages: [aiMessage, firstMessage],
-    bot_id: 1,
-    deleted_at: null,
-    id: 1232,
-    updated_at: "Tue, 05 Sep 2023 06:13:06 GMT",
-    user_id: 432
-  }
-} as SingleConversationReturnType;
 
 export default function SingleConversationLoading() {
   return (
@@ -67,7 +52,12 @@ export default function SingleConversationLoading() {
         </div>
       </div>
       <div className="h-screen min-w-[350px] max-w-[350px] border-2 border-y-0 border-gray-300 bg-gray-200">
-        <RightBar isLoading={true} />
+        <RightBar
+          conversationId={"123"}
+          ticketDeflected={null}
+          toReview={null}
+          isLoading={true}
+        />
       </div>
     </div>
   );

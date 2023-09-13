@@ -64,7 +64,12 @@ export default async function SingleConversationPage({
         <SingleConversation conversation={conversation} />
       </div>
       <div className="fixed right-0 h-screen min-w-[350px] max-w-[350px] border-2 border-y-0 border-gray-300 bg-gray-200">
-        <RightBar notes={notes} />
+        <RightBar
+          notes={notes}
+          toReview={conversation.conversation.to_review}
+          ticketDeflected={conversation.conversation.ticket_deflected}
+          conversationId={params.conversationId}
+        />
       </div>
     </div>
   );

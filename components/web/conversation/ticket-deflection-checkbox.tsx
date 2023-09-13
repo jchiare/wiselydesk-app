@@ -1,20 +1,35 @@
 "use client";
 import React, { useState } from "react";
+import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 
-const TicketDeflected: React.FC = () => {
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+const TicketDeflected = ({
+  ticketDeflected,
+  conversationId
+}: {
+  ticketDeflected: boolean | null;
+  conversationId: string;
+}) => {
+  const [isChecked, setIsChecked] = useState<boolean | null>(ticketDeflected);
 
   const handleCheckboxChange = async () => {
     setIsChecked(!isChecked);
+    const updatedValue = !isChecked;
 
     try {
-      const response = await fetch("http://api.example.com/ticket_deflected", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ticket_deflected: !isChecked })
-      });
+      const response = await fetch(
+        `${NEXTJS_BACKEND_URL}/api/conversation/${conversationId}/deflected`,
+        {
+          // Updated endpoint and ID
+          method: "PATCH", // Updated method
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ futureDeflectValue: updatedValue }) // Updated field name
+        }
+      );
       if (response.ok) {
         console.log("Ticket deflected status updated successfully");
+      } else {
+        const json = await response.json();
+        console.error(`Error: ${json.message}`);
       }
     } catch (error) {
       console.error("Error updating ticket deflected status:", error);
@@ -26,7 +41,7 @@ const TicketDeflected: React.FC = () => {
       <input
         type="checkbox"
         id="ticket-deflection"
-        checked={isChecked}
+        checked={!!isChecked}
         onChange={handleCheckboxChange}
         className="form-checkbox h-5 w-5 accent-green-600 hover:cursor-pointer"
       />

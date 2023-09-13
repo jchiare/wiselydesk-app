@@ -1,14 +1,38 @@
 "use client";
 import React, { useState } from "react";
+import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 
-const ToReview: React.FC = () => {
-  const [isChecked, setIsChecked] = useState<boolean>(false);
+const ToReview = ({
+  toReview,
+  conversationId
+}: {
+  toReview: boolean | null;
+  conversationId: string;
+}) => {
+  const [isChecked, setIsChecked] = useState<boolean | null>(toReview);
 
   const handleCheckboxChange = async () => {
     setIsChecked(!isChecked);
+    const updatedValue = !isChecked;
 
-    // Your API call here
-    // ...
+    try {
+      const response = await fetch(
+        `${NEXTJS_BACKEND_URL}/api/conversation/${conversationId}/review`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ futureReviewValue: updatedValue })
+        }
+      );
+      if (response.ok) {
+        console.log("Ticket Review status updated successfully");
+      } else {
+        const json = await response.json();
+        console.error(`Error: ${json.message}`);
+      }
+    } catch (error) {
+      console.error("Error updating ticket Review status:", error);
+    }
   };
 
   return (
@@ -16,7 +40,7 @@ const ToReview: React.FC = () => {
       <input
         id="toReview"
         type="checkbox"
-        checked={isChecked}
+        checked={!!isChecked}
         onChange={handleCheckboxChange}
         className="form-checkbox h-5 w-5 accent-orange-600 hover:cursor-pointer"
       />
