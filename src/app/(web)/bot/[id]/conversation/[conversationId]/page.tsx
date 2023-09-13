@@ -32,9 +32,9 @@ async function fetchConversation(id: string, botId: string) {
   return json as SingleConversationReturnType;
 }
 
-async function fetchNotes(id: string, botId: string) {
+async function fetchNotes(conversationId: number, botId: string) {
   const res = await fetch(
-    `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversation/${id}/notes`,
+    `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversation/${conversationId}/notes`,
     {
       cache: "no-cache"
     }
@@ -57,7 +57,7 @@ export default async function SingleConversationPage({
     params.id
   );
 
-  const notes = await fetchNotes(params.conversationId, params.id);
+  const notes = await fetchNotes(conversation.conversation.id, params.id);
 
   return (
     <div className="flex">

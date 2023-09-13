@@ -9,7 +9,7 @@ type Params = {
 
 export async function GET(request: NextRequest, { params }: Params) {
   // Get conversation_id from the query params
-  const conversationId = params.id;
+  const conversationId = params.conversationId;
 
   if (!conversationId) {
     return NextResponse.json(
