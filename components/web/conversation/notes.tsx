@@ -2,19 +2,47 @@
 
 import { useState } from "react";
 import { Note } from "@prisma/client";
+import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 
 type NotesProps = {
+  isLoading?: boolean;
   notes?: Note[];
+  conversationId: number;
+  botId: string;
+  userId: number;
+  publicConversationId: string;
 };
 
-export default function ConversationNote({ notes }: NotesProps) {
+export default function ConversationNote({
+  isLoading,
+  notes,
+  conversationId,
+  botId,
+  userId,
+  publicConversationId
+}: NotesProps) {
   // Local state to hold the new note content
   const [newNote, setNewNote] = useState("");
 
-  const handleAddNote = () => {
-    // Your logic to add a new note could go here
-    // e.g., an API call to save the note
-
+  const handleAddNote = async () => {
+    try {
+      const response = await fetch(
+        `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversation/${publicConversationId}/notes`,
+        {
+          method: "POST", // Updated method
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId, content: newNote, conversationId })
+        }
+      );
+      if (response.ok) {
+        console.log("Added notes");
+      } else {
+        const json = await response.json();
+        console.error(`Error: ${json.message}`);
+      }
+    } catch (error) {
+      console.error("Error adding note:", error);
+    }
     setNewNote(""); // Clear the note input
   };
 
@@ -42,6 +70,7 @@ export default function ConversationNote({ notes }: NotesProps) {
           className="mt-1 w-full flex-1 rounded border p-2"
           placeholder="New note"
           rows={3}
+          disabled={isLoading}
         />
         <button
           onClick={handleAddNote}

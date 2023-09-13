@@ -49,7 +49,8 @@ export default async function SingleConversationPage({
 }: {
   params: ParamsType;
 }) {
-  await fetchServerSession();
+  const session = await fetchServerSession();
+  const userId = session.user.internal_user_id;
 
   const conversation = await fetchConversation(
     params.conversationId,
@@ -68,8 +69,10 @@ export default async function SingleConversationPage({
           notes={notes}
           toReview={conversation.conversation.to_review}
           ticketDeflected={conversation.conversation.ticket_deflected}
-          conversationId={params.conversationId}
+          conversationId={conversation.conversation.id}
+          publicConversationId={params.conversationId}
           botId={params.id}
+          userId={userId}
         />
       </div>
     </div>

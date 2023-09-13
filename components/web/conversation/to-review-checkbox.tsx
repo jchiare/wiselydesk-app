@@ -4,11 +4,11 @@ import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 
 const ToReview = ({
   toReview,
-  conversationId,
+  publicConversationId,
   botId
 }: {
   toReview: boolean | null;
-  conversationId: string;
+  publicConversationId: string;
   botId: string;
 }) => {
   const [isChecked, setIsChecked] = useState<boolean | null>(toReview);
@@ -19,7 +19,7 @@ const ToReview = ({
 
     try {
       const response = await fetch(
-        `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversation/${conversationId}/review`,
+        `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversation/${publicConversationId}/review`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
