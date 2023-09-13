@@ -53,11 +53,13 @@ export default function SingleConversationLoading() {
       </div>
       <div className="h-screen min-w-[350px] max-w-[350px] border-2 border-y-0 border-gray-300 bg-gray-200">
         <RightBar
-          conversationId={"123"}
+          conversationId={123}
           botId="123"
           ticketDeflected={null}
           toReview={null}
-          isLoading={true}
+          notes={[]}
+          userId={123}
+          publicConversationId={"hello"}
         />
       </div>
     </div>
