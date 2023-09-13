@@ -39,7 +39,7 @@ async function getConversations({
   } else if (filter === "review") {
     url += "&filter=review";
   } else if (filter === "deflected") {
-    url += "&fiter=deflected";
+    url += "&filter=deflected";
   }
 
   let res;
