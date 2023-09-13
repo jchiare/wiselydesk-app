@@ -21,6 +21,8 @@ export const PATCH = async (request: NextRequest, { params }: Params) => {
     );
   }
 
+  console.log("public_id:", Number(conversation_id));
+  console.log("bot id: ", Number(params.id));
   try {
     const updatedConversation = await prismaClient.conversation.update({
       where: {
