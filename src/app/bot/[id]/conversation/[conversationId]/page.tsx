@@ -25,16 +25,16 @@ export async function generateMetadata({
 }
 
 async function fetchConversation(id: string, botId: string) {
-  const res = await fetch(`${URL}/api/conversation/${id}?bot_id=${botId}`, {
+  const res = await fetch(`${URL}/api//conversation/${id}?bot_id=${botId}`, {
     cache: "no-cache"
   });
   const json = await res.json();
   return json as SingleConversationReturnType;
 }
 
-async function fetchNotes(id: string) {
+async function fetchNotes(id: string, botId: string) {
   const res = await fetch(
-    `${NEXTJS_BACKEND_URL}/api/conversation/${id}/notes`,
+    `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversation/${id}/notes`,
     {
       cache: "no-cache"
     }
@@ -56,7 +56,7 @@ export default async function SingleConversationPage({
     params.id
   );
 
-  const notes = await fetchNotes(params.conversationId);
+  const notes = await fetchNotes(params.conversationId, params.id);
 
   return (
     <div className="flex">
