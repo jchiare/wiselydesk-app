@@ -9,7 +9,7 @@ import { fetchServerSession } from "@/lib/shared/auth";
 export const dynamic = "force-dynamic";
 
 type ParamsType = {
-  conversationId: string;
+  publicConversationId: string;
   id: string;
 };
 
@@ -19,8 +19,8 @@ export async function generateMetadata({
   params: ParamsType;
 }): Promise<Metadata> {
   return {
-    title: `Conversation #${params.conversationId} | WiselyDesk`,
-    description: `View conversation #${params.conversationId} for bot #${params.id} in WiselyDesk`
+    title: `Conversation #${params.publicConversationId} | WiselyDesk`,
+    description: `View conversation #${params.publicConversationId} for bot #${params.id} in WiselyDesk`
   };
 }
 
@@ -32,9 +32,9 @@ async function fetchConversation(id: string, botId: string) {
   return json as SingleConversationReturnType;
 }
 
-async function fetchNotes(conversationId: number, botId: string) {
+async function fetchNotes(publicConversationId: number, botId: string) {
   const res = await fetch(
-    `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversation/${conversationId}/notes`,
+    `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversation/${publicConversationId}/notes`,
     {
       cache: "no-cache"
     }
@@ -53,7 +53,7 @@ export default async function SingleConversationPage({
   const userId = session.user.internal_user_id;
 
   const conversation = await fetchConversation(
-    params.conversationId,
+    params.publicConversationId,
     params.id
   );
 
@@ -70,7 +70,7 @@ export default async function SingleConversationPage({
           toReview={conversation.conversation.to_review}
           ticketDeflected={conversation.conversation.ticket_deflected}
           conversationId={conversation.conversation.id}
-          publicConversationId={params.conversationId}
+          publicConversationId={params.publicConversationId}
           botId={params.id}
           userId={userId}
         />
