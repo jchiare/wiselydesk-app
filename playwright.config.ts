@@ -7,19 +7,35 @@ const baseURL = `http://localhost:${PORT}`;
 export default defineConfig({
   timeout: 30 * 1000,
   testDir: "e2e",
+  fullyParallel: true,
   outputDir: "test-results/",
   forbidOnly: !!process.env.CI,
-
-  webServer: {
-    command: "npm run dev",
-    url: baseURL,
-    reuseExistingServer: !process.env.CI,
-    timeout: 31 * 1000
+  expect: {
+    timeout: 10 * 1000
   },
+
+  webServer: [
+    {
+      command: "npm run dev",
+      url: baseURL,
+      reuseExistingServer: !process.env.CI,
+      timeout: 31 * 1000
+    },
+    {
+      command: "npm run test:e2e:server",
+      url: "http://localhost:5000",
+      reuseExistingServer: !process.env.CI,
+      timeout: 31 * 1000
+    }
+  ],
 
   use: {
     baseURL,
-    trace: "retry-with-trace"
+    trace: "retry-with-trace",
+    bypassCSP: true,
+    launchOptions: {
+      args: ["--disable-web-security"]
+    }
   },
 
   projects: [
@@ -36,8 +52,8 @@ export default defineConfig({
       }
     },
     {
-      name: "Mobile Safari",
-      use: devices["iPhone 12"]
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"] }
     }
   ]
 });
