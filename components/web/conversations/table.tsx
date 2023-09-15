@@ -21,7 +21,7 @@ export default function ConversationTable({ data }: { data: Conversations }) {
     router.push(newPath.replace("conversations", "conversation"));
   }
 
-  useRefreshPage(30);
+  useRefreshPage(10);
 
   return data.conversations.map((conversation) => (
     <tr
