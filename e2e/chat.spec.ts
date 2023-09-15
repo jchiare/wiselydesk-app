@@ -45,4 +45,25 @@ test("should navigate to the chat page for amboss de", async ({ page }) => {
   await expect(page.getByRole("paragraph")).toContainText(
     "Hallo und herzlich Willkommen bei AMBOSS! Ich bin ein virtueller Assistent und stehe dir bei Fragen gerne zur Verfügung!"
   );
+
+  // Ask a question
+  await page
+    .getByPlaceholder("Wie kann ich dir helfen?")
+    .fill("how many apples do I get");
+
+  // Press Enter
+  await page.keyboard.press("Enter");
+
+  await expect(page.getByRole("paragraph").nth(1)).toContainText(
+    AI_EN_RESPONSE
+  );
+
+  // sleep two seconds to allow server to close SSE connection
+  await page.waitForTimeout(2000);
+
+  await expect(page.getByRole("paragraph").nth(1)).toContainText(
+    AI_EN_RESPONSE
+  );
+
+  await expect(page.getByRole("link")).toContainText(source);
 });
