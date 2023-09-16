@@ -19,6 +19,7 @@ export default function useRefreshPage(seconds: number) {
       if (document.visibilityState === "hidden") {
         clearInterval(timer);
       } else {
+        router.refresh(); // refresh the page when page is viewed from a hidden state
         startTimer();
       }
     }
