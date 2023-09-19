@@ -10,6 +10,7 @@ type UseChatSubmitParams = {
   account: string;
   model: string | undefined;
   createSupportTicket: boolean;
+  inlineSources: boolean;
 };
 
 export const useChatSubmit = ({
@@ -17,7 +18,8 @@ export const useChatSubmit = ({
   clientApiKey,
   account,
   model,
-  createSupportTicket
+  createSupportTicket,
+  inlineSources
 }: UseChatSubmitParams) => {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [input, setInput] = useState<string>("");
@@ -59,7 +61,8 @@ export const useChatSubmit = ({
         account,
         model,
         conversationId,
-        createSupportTicket
+        createSupportTicket,
+        inlineSources
       }),
       signal: controller.signal,
       async onopen() {

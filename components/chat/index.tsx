@@ -17,6 +17,7 @@ export type SearchParams = {
   client_api_key: string;
   model?: string;
   locale: string;
+  inline_sources?: boolean;
 };
 
 type ChatProps = {
@@ -34,7 +35,8 @@ export default function Chat({
     locale = "en",
     create_support_ticket: createSupportTicket = false,
     client_api_key: clientApiKey,
-    model = "gpt-4"
+    model = "gpt-4",
+    inline_sources: inlineSources = false
   } = searchParams;
 
   const {
@@ -52,7 +54,8 @@ export default function Chat({
     clientApiKey,
     createSupportTicket,
     model,
-    account
+    account,
+    inlineSources
   });
 
   const messagesEndRef = useScrollToBottom({
