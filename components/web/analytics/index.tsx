@@ -1,7 +1,5 @@
-"use client";
 import ChartFrequencySelector from "@/components/web/analytics/chart-frequency-selector";
 import ConversationCountChart from "@/components/web/analytics/conversation-chart-count";
-import { useState } from "react";
 
 export type FrequencyType = "daily" | "weekly" | "monthly";
 

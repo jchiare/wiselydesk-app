@@ -1,3 +1,4 @@
+"use client";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -49,10 +50,30 @@ function formattedDates(
     "28": "10-07-2023",
     "27": "03-07-2023"
   };
+
+  const monthNames: { [key: string]: string } = {
+    "01": "January",
+    "02": "February",
+    "03": "March",
+    "04": "April",
+    "05": "May",
+    "06": "June",
+    "07": "July",
+    "08": "August",
+    "09": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December"
+  };
   if (frequency === "weekly") {
     return dates.map((date) => {
       const weekNum = date.slice(0, 2);
       return weekStartDates[weekNum];
+    });
+  } else if (frequency === "monthly") {
+    return dates.map((date) => {
+      const monthNum = date.slice(0, 2);
+      return monthNames[monthNum];
     });
   } else {
     return dates;
@@ -85,35 +106,26 @@ export default function ConversationCountChart({
     (conversationCounts &&
       conversationCounts.map((x: any) => x.total_convo_count)) ||
     [];
+
+  const deflectedCounts =
+    (conversationCounts &&
+      conversationCounts.map((x: any) => x.deflected_convo_count)) ||
+    [];
   const chartData = {
     labels: formattedDates(frequency, dates),
     datasets: [
       {
-        label: "count",
+        label: "Total Conversations",
         data: counts,
         backgroundColor: "rgba(255, 99, 132, 0.5)"
+      },
+      {
+        label: "Deflected Conversations",
+        data: deflectedCounts,
+        backgroundColor: "rgba(75, 192, 192, 0.5)"
       }
     ]
   };
-
-  if (!conversationCounts) {
-    return (
-      <svg
-        className="mr-3 h-5 w-5 animate-spin text-blue-500"
-        viewBox="0 0 24 24">
-        <circle
-          className="opacity-0"
-          cx="12"
-          cy="12"
-          r="10"
-          strokeWidth="4"></circle>
-        <path
-          className="opacity-75"
-          fill="grey"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-      </svg>
-    );
-  }
 
   return <Bar options={options} data={chartData} />;
 }
