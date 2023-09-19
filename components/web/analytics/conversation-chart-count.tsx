@@ -87,7 +87,9 @@ export default function ConversationCountChart({
   frequency: "daily" | "weekly" | "monthly";
   conversationCounts: any;
 }) {
-  const title = `${frequency} conversation counts`;
+  const title = `${
+    frequency.charAt(0).toUpperCase() + frequency.slice(1)
+  } conversation counts`;
   const options = {
     responsive: true,
     plugins: {
@@ -115,12 +117,12 @@ export default function ConversationCountChart({
     labels: formattedDates(frequency, dates),
     datasets: [
       {
-        label: "Total Conversations",
+        label: "Total",
         data: counts,
         backgroundColor: "rgba(255, 99, 132, 0.5)"
       },
       {
-        label: "Deflected Conversations",
+        label: "Deflected",
         data: deflectedCounts,
         backgroundColor: "rgba(75, 192, 192, 0.5)"
       }
