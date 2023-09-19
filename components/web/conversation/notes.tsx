@@ -35,7 +35,6 @@ export default function ConversationNote({
         }
       );
       if (response.ok) {
-        console.log("Added notes");
         const newNoteObj: { note: Note } = await response.json();
         setLocalNotes([...localNotes, newNoteObj.note]);
       } else {
