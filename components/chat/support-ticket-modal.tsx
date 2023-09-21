@@ -18,13 +18,11 @@ export default function SupportTicketModal({
   function handleClick() {
     setIsModalOpen(true);
     if (conversationId) {
-      console.log("convo ID: ", conversationId);
       if (!summary) {
         fetch(`${URL}/api/conversation/${conversationId}/summarization`)
           .then((res) => res.json())
           .then((data) => {
             setSummary(data["summary"]);
-            console.log("summary: ", data["summary"]);
           });
       }
       if (!transcript) {
@@ -32,7 +30,6 @@ export default function SupportTicketModal({
           .then((res) => res.json())
           .then((data) => {
             setTranscript(data["transcription"]);
-            console.log("transcriptin: ", data["transcription"]);
           });
       }
     } else {
