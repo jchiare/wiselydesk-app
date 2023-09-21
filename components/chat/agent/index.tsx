@@ -6,6 +6,7 @@ import SupportTicketModal from "@/components/chat/support-ticket-modal";
 import AiWarning from "@/components/chat/ai-warning";
 import Feedback from "@/components/chat/agent/feedback";
 import { removeSupportButton } from "@/lib/shared/services/render-message";
+import { Bot } from "@prisma/client";
 
 type AgentMessageProps = {
   chatTheme: ChatThemeSettings;
@@ -18,6 +19,7 @@ type AgentMessageProps = {
   latestMessageId?: number | null | undefined;
   conversationId?: string;
   createSupportTicket?: boolean;
+  bot: Bot;
 };
 
 export default function AgentDiv({
@@ -30,7 +32,8 @@ export default function AgentDiv({
   isLastMessage,
   latestMessageId,
   conversationId,
-  createSupportTicket
+  createSupportTicket,
+  bot
 }: AgentMessageProps): JSX.Element {
   const [_, buttonCreateHtml] = removeSupportButton(text);
 
@@ -57,7 +60,10 @@ export default function AgentDiv({
                   isLastMessage={isLastMessage}
                 />
                 {displaySupportModal && (
-                  <SupportTicketModal conversationId={conversationId} />
+                  <SupportTicketModal
+                    conversationId={conversationId}
+                    botId={bot.id}
+                  />
                 )}
 
                 <Sources

@@ -10,6 +10,7 @@ import { useChatSubmit } from "@/lib/chat/hooks/use-chat-submit";
 import { useScrollToBottom } from "@/lib/chat/hooks/use-scroll-to-bottom";
 import Input from "@/components/chat/user/input";
 import CancelResponse from "@/components/chat/cancel-response";
+import type { Bot } from "@prisma/client";
 
 export type SearchParams = {
   german_source?: string;
@@ -24,12 +25,14 @@ type ChatProps = {
   chatTheme: ChatThemeSettings;
   searchParams: SearchParams;
   account: string;
+  bot: Bot;
 };
 
 export default function Chat({
   chatTheme,
   searchParams,
-  account
+  account,
+  bot
 }: ChatProps): JSX.Element {
   const {
     locale = "en",
@@ -75,6 +78,7 @@ export default function Chat({
         key={0}
         aiResponseDone={false}
         isLastMessage={false}
+        bot={bot}
       />
       {messages.map((message, index) => {
         const isLastMessage = messages.length === index + 1;
@@ -93,6 +97,7 @@ export default function Chat({
             latestMessageId={latestMessageId}
             conversationId={conversationId}
             createSupportTicket={createSupportTicket}
+            bot={bot}
           />
         );
       })}
