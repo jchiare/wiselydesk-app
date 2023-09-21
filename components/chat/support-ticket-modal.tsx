@@ -13,15 +13,18 @@ export default function SupportTicketModal({
   const [email, setEmail] = useState("");
   const [summary, setSummary] = useState("");
   const [transcript, setTranscript] = useState("");
+  const [additionalInfo, setAdditionalInfo] = useState("");
 
   function handleClick() {
     setIsModalOpen(true);
     if (conversationId) {
+      console.log("convo ID: ", conversationId);
       if (!summary) {
         fetch(`${URL}/api/conversation/${conversationId}/summarization`)
           .then((res) => res.json())
           .then((data) => {
             setSummary(data["summary"]);
+            console.log("summary: ", data["summary"]);
           });
       }
       if (!transcript) {
@@ -29,6 +32,7 @@ export default function SupportTicketModal({
           .then((res) => res.json())
           .then((data) => {
             setTranscript(data["transcription"]);
+            console.log("transcriptin: ", data["transcription"]);
           });
       }
     } else {
@@ -44,7 +48,8 @@ export default function SupportTicketModal({
     const formData = {
       email,
       summary,
-      transcript
+      transcript,
+      additionalInfo
     };
 
     try {
@@ -87,34 +92,41 @@ export default function SupportTicketModal({
             className="absolute inset-0 bg-black opacity-70"
             onClick={closeModal}></div>
 
-          <div className="relative z-10 flex h-5/6 w-1/2 flex-col rounded bg-white p-7 text-gray-800 shadow-lg">
-            <h2 className="my-1 text-center text-xl text-black">
-              Submit a Support Ticket
-            </h2>
-
+          <div className="relative z-10 flex h-fit w-1/3 flex-col rounded bg-white p-7 text-gray-800 shadow-lg">
             <label className="mb-2 block ">
-              <span className="pl-1">Email:</span>
+              <span className="pl-1">AMBOSS account email:</span>
               <input
                 type="email"
                 autoFocus
                 name="email"
-                placeholder="Enter your email..."
+                placeholder="Enter your AMBOSS account email ..."
                 className="mt-1 w-full rounded border p-2"
                 onChange={(e) => setEmail(e.target.value)}
               />
             </label>
+            <label className="mb-2 flex flex-col">
+              <span className="pl-1">Additional info:</span>
+              <textarea
+                name="additional-info"
+                value={additionalInfo}
+                rows={3}
+                placeholder="Let us know anything else here ..."
+                className="mt-1 w-full rounded border p-2"
+                onChange={(e) => setAdditionalInfo(e.target.value)}
+              />
+            </label>
 
-            <label className="mb-2 flex flex-1 flex-col">
+            {/* <label className="mb-2 flex flex-1 flex-col">
               <span className="pl-1">Summary:</span>
               <textarea
                 name="summary"
                 value={summary}
                 placeholder="Auto generating summary in 3 seconds"
-                className="mt-1 w-full flex-1 rounded border p-2"
+                className="mt-1 w-full flex-1 rounded border bg-gray-100 p-2 hover:bg-white"
                 onChange={(e) => setSummary(e.target.value)}
               />
-            </label>
-
+            </label> */}
+            {/* 
             <label className="mb-2 block">
               <span className="pl-1">Transcript:</span>
               <textarea
@@ -123,12 +135,16 @@ export default function SupportTicketModal({
                 value={transcript}
                 className="mt-1 h-32 w-full rounded border p-2"
               />
-            </label>
+            </label> */}
+
+            <i className="text-center text-sm font-normal">
+              AI summary and transcript automatically included
+            </i>
 
             <button
               onClick={submitButton}
-              className="float-right mt-4 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-              Submit
+              className="mx-auto mt-4 w-fit rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
+              Submit support ticket
             </button>
           </div>
         </div>
