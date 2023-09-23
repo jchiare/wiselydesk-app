@@ -1,3 +1,4 @@
+import { ZendeskClient, type TicketOptions } from "@/lib/chat/zendesk";
 import { PrismaClient } from "@prisma/client";
 import { NextResponse, NextRequest } from "next/server";
 
@@ -16,23 +17,27 @@ type RequestBody = {
 
 export const POST = async (request: NextRequest, { params }: Params) => {
   const body = await request.json();
-  const { conversationId, id } = params;
+  const { id } = params;
 
   const { email, summary, transcript, additionalInfo } = body as RequestBody;
 
-  // const zendeskClient = ZendeskClient()
-  // const zendeskSupportTicket = zendeskClient.createTicket({email, summary, transcript, additionalInfo})
+  const zendeskClient = new ZendeskClient(id);
+  zendeskClient.initialize();
 
-  // await prismaClient.conversation.update({
-  // where: {
-  //     public_id_bot_id: {
-  //       public_id: Number(conversationId),
-  //       bot_id: Number(id)
-  //     }
-  //   },
-  //   data: {
-  //     ticket_deflected: futureDeflectValue
-  //   }
-  // });
-  // return NextResponse.json({ ticket: zendeskSupportTicket })
+  const ticketOptions: TicketOptions = {
+    priority: "high",
+    tags: ["app_issue", "urgent"]
+  };
+
+  const zendeskSupportTicket = zendeskClient.createTicket(
+    {
+      email,
+      summary,
+      transcript,
+      additionalInfo
+    },
+    ticketOptions
+  );
+
+  return NextResponse.json({ ticket: zendeskSupportTicket });
 };
