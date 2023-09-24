@@ -11,7 +11,6 @@ export default function SupportTicketModal({
   conversationId,
   botId
 }: SupportTicketModalProps): JSX.Element {
-  console.log("botId", botId);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [summary, setSummary] = useState("");

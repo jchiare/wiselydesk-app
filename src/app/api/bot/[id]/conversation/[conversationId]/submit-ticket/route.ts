@@ -13,11 +13,11 @@ type RequestBody = {
 
 export const POST = async (request: NextRequest, { params }: Params) => {
   const body = await request.json();
-  const { id } = params;
+  const { id, conversationId } = params;
 
   const { email, summary, transcript, additionalInfo } = body as RequestBody;
 
-  const zendeskClient = new ZendeskClient(id);
+  const zendeskClient = new ZendeskClient(id, conversationId);
   await zendeskClient.initialize();
 
   const ticketOptions: TicketOptions = {

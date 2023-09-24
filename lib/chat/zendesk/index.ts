@@ -14,12 +14,14 @@ type CreateTicketData = {
 
 export class ZendeskClient {
   private botId: string;
+  private conversationId: string;
   private apiToken?: string;
   private subdomain?: string;
   private prismaClient: PrismaClient;
 
-  constructor(botId: string, prisma?: PrismaClient) {
+  constructor(botId: string, conversationId: string, prisma?: PrismaClient) {
     this.botId = botId;
+    this.conversationId = conversationId;
     this.prismaClient = prisma ?? new PrismaClient();
   }
   public async initialize(): Promise<void> {
@@ -44,16 +46,16 @@ export class ZendeskClient {
       requester: {
         email: data.email
       },
-      subject: `WiselyDesk Chat: ${data.summary.slice(0, 45)} ${
-        data.summary.length > 45 && "..."
-      }}`,
+      subject: `WiselyDesk Chat: ${data.summary.slice(0, 60)} ${
+        data.summary.length > 60 && "..."
+      }`,
       comment: {
         public: false,
         html_body: [
-          `<h3>AI Summary: </h3>${this.formatSummary(data.summary)}`,
+          `<h2>Ticket created from a WiselyDesk chat</h2> <br> ${this.generateWiselyDeskConvoUrl()}`,
+          `<h3>AI Summary: </h3> ${this.formatSummary(data.summary)}`,
           `<h3>Additional Information: </h3> ${data.additionalInfo}`,
-          `<h3>Transcript: </h3>
-          ${this.formatTranscript(data.transcript)}
+          `<h3>Transcript: </h3> ${this.formatTranscript(data.transcript)}
           `
         ].join("<br><br>")
       },
@@ -79,8 +81,6 @@ export class ZendeskClient {
       "Content-Type": "application/json"
     });
 
-    console.log("Creating ticket:", ticket);
-
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -90,7 +90,7 @@ export class ZendeskClient {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log("Ticket created:", responseData);
+        return responseData;
       } else {
         console.log("Failed to create ticket:", await response.text());
       }
@@ -106,6 +106,7 @@ export class ZendeskClient {
     // Filter lines that start with a hyphen and join them with <br>.
     const formattedLines = lines.map((line) => line.trim()).join("<br> - ");
 
+    console.log("formattedLines", formattedLines);
     return formattedLines;
   }
 
@@ -116,22 +117,39 @@ export class ZendeskClient {
     // Split the transcript by lines to separate user and bot messages
     const lines = formattedTranscript.split("<br>");
 
-    let markdownTranscript = "<br>";
+    let markdownTranscript = "";
+    for (let line of lines) {
+      console.log(line);
+      line = line.replace(
+        "- User Message:",
+        "<strong>- User Message:</strong>"
+      );
+      line = line.replace("- Bot Message:", "<strong>- Bot Message:</strong>");
+      console.log("line after: ", line);
+      markdownTranscript += line + "<br>";
+    }
 
-    lines.forEach((line) => {
-      if (line.includes("- User Message:")) {
-        markdownTranscript += `<strong>- User Message:</strong>  ${line
-          .replace("- User Message:", "")
-          .trim()} <br> `;
-      }
+    // let markdownTranscript = "<br>";
 
-      if (line.includes("- Bot Message:")) {
-        markdownTranscript += `<strong>- Bot Message:</strong>  ${line
-          .replace("- Bot Message:", "")
-          .trim()} <br> `;
-      }
-    });
+    // lines.forEach((line) => {
+    //   if (line.includes("- User Message:")) {
+    //     markdownTranscript += `<strong>- User Message:</strong>  ${line
+    //       .replace("- User Message:", "")
+    //       .trim()} <br> `;
+    //   }
 
+    //   if (line.includes("- Bot Message:")) {
+    //     markdownTranscript += `<strong>- Bot Message:</strong>  ${line
+    //       .replace("- Bot Message:", "")
+    //       .trim()} <br> `;
+    //   }
+    // });
+
+    console.log("markdownTranscript", markdownTranscript);
     return markdownTranscript;
+  }
+
+  private generateWiselyDeskConvoUrl(): string {
+    return `<a target="_blank" href="https://apps.wiselydesk.com/bot/${this.botId}/conversation/${this.conversationId}">Link to WiselyDesk conversation</a>`;
   }
 }
