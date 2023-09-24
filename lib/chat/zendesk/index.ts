@@ -13,7 +13,6 @@ interface CreateTicketData {
 }
 
 export class ZendeskClient {
-  w;
   private botId: string;
   private apiToken?: string;
   private subdomain?: string;
@@ -32,11 +31,11 @@ export class ZendeskClient {
       where: { id: Number(this.botId) }
     });
 
-    if (!bot || !bot.client_api_key || !bot.zendesk_subdomain) {
+    if (!bot || !bot.zendesk_api_key || !bot.zendesk_subdomain) {
       throw new Error(`Invalid bot configuration for id: ${this.botId}`);
     }
 
-    this.apiToken = bot.client_api_key;
+    this.apiToken = bot.zendesk_api_key;
     this.subdomain = bot.zendesk_subdomain;
   }
 
@@ -45,12 +44,16 @@ export class ZendeskClient {
       requester: {
         email: data.email
       },
-      subject: `WiselyDesk Chat: ${data.summary}`,
+      subject: `WiselyDesk Chat: ${data.summary.slice(0, 45)}`,
       comment: {
-        body: [
-          `Transcript: ${data.transcript}`,
+        public: false,
+        html_body: [
+          ` ------ Transcript Start ------ 
+          ${this.formatTranscript(data.transcript)}
+            ------ Transcript End ------ 
+          `,
           `Additional Information: ${data.additionalInfo}`
-        ].join("\n")
+        ].join("<br>")
       },
       ...options
     };
@@ -74,6 +77,8 @@ export class ZendeskClient {
       "Content-Type": "application/json"
     });
 
+    console.log("Creating ticket:", ticket);
+
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -90,5 +95,31 @@ export class ZendeskClient {
     } catch (error) {
       console.error("Error creating ticket:", error);
     }
+  }
+
+  private formatTranscript(transcript: string): string {
+    // Replace <NEWLINE> placeholders with actual newline characters
+    const formattedTranscript = transcript.replace(/<NEWLINE>/g, "<br>");
+
+    // Split the transcript by lines to separate user and bot messages
+    const lines = formattedTranscript.split("<br>");
+
+    let markdownTranscript = "<br>";
+
+    lines.forEach((line) => {
+      if (line.includes("- User Message:")) {
+        markdownTranscript += `<strong>- User Message:</strong>  ${line
+          .replace("- User Message:", "")
+          .trim()} <br> `;
+      }
+
+      if (line.includes("- Bot Message:")) {
+        markdownTranscript += `<strong>- Bot Message:</strong>  ${line
+          .replace("- Bot Message:", "")
+          .trim()} <br> `;
+      }
+    });
+
+    return markdownTranscript;
   }
 }

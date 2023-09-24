@@ -11,6 +11,7 @@ export default function SupportTicketModal({
   conversationId,
   botId
 }: SupportTicketModalProps): JSX.Element {
+  console.log("botId", botId);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [summary, setSummary] = useState("");
@@ -53,7 +54,7 @@ export default function SupportTicketModal({
 
     try {
       const response = await fetch(
-        `${NEXTJS_BACKEND_URL}/api/bot/submitSupportTicket`,
+        `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversation/${conversationId}/submit-ticket`,
         {
           method: "POST",
           headers: {

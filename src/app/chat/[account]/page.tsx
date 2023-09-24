@@ -16,12 +16,15 @@ async function getBot(clientApiKey: string) {
     body: JSON.stringify({ clientApiKey })
   });
   const bot = await response.json();
-  return bot as Bot;
+  return bot.bot as Bot;
 }
 
 export default async function Page({ params, searchParams }: ChatPageProps) {
   const bot = await getBot(searchParams.client_api_key);
   const chatTheme = getChatTheme(params.account);
+  if (!bot) {
+    return <div>Bot not found</div>;
+  }
   return (
     <main>
       <Chat
