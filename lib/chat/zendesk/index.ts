@@ -1,16 +1,16 @@
 import { PrismaClient } from "@prisma/client";
 
-export interface TicketOptions {
+export type TicketOptions = {
   priority?: string;
   tags?: string[];
-}
+};
 
-interface CreateTicketData {
+type CreateTicketData = {
   email: string;
   summary: string;
   transcript: string;
   additionalInfo: string;
-}
+};
 
 export class ZendeskClient {
   private botId: string;
@@ -44,16 +44,18 @@ export class ZendeskClient {
       requester: {
         email: data.email
       },
-      subject: `WiselyDesk Chat: ${data.summary.slice(0, 45)}`,
+      subject: `WiselyDesk Chat: ${data.summary.slice(0, 45)} ${
+        data.summary.length > 45 && "..."
+      }}`,
       comment: {
         public: false,
         html_body: [
-          ` ------ Transcript Start ------ 
+          `<h3>AI Summary: </h3>${this.formatSummary(data.summary)}`,
+          `<h3>Additional Information: </h3> ${data.additionalInfo}`,
+          `<h3>Transcript: </h3>
           ${this.formatTranscript(data.transcript)}
-            ------ Transcript End ------ 
-          `,
-          `Additional Information: ${data.additionalInfo}`
-        ].join("<br>")
+          `
+        ].join("<br><br>")
       },
       ...options
     };
@@ -95,6 +97,16 @@ export class ZendeskClient {
     } catch (error) {
       console.error("Error creating ticket:", error);
     }
+  }
+
+  private formatSummary(summary: string): string {
+    // Split the text into lines based on the hyphen and space "- ".
+    const lines = summary.split("- ");
+
+    // Filter lines that start with a hyphen and join them with <br>.
+    const formattedLines = lines.map((line) => line.trim()).join("<br> - ");
+
+    return formattedLines;
   }
 
   private formatTranscript(transcript: string): string {
