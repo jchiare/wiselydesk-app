@@ -110,8 +110,10 @@ export class ZendeskClient {
     return formattedLines;
   }
 
-  private formatTranscript(transcript: string): string {
+  private formatTranscript(transcript: string): string | null {
     let markdownTranscript = renderMessage(transcript);
+
+    if (!markdownTranscript) return markdownTranscript;
 
     markdownTranscript = markdownTranscript.replaceAll(
       "- User Message:",

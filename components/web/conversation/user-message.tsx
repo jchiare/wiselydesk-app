@@ -5,8 +5,8 @@ export default function UserMessage({
   text,
   isLoading
 }: {
-  text: string;
-  sentTime: string;
+  text: string | null;
+  sentTime: Date | string;
   isLoading?: boolean;
 }): JSX.Element {
   sentTime = formatConversationTime(sentTime);
@@ -19,7 +19,7 @@ export default function UserMessage({
         </div>
         <div className="mt-1 flex justify-end">
           <p className={`text-xs text-gray-400 ${isLoading ? "blur-sm" : ""}`}>
-            {sentTime}
+            {sentTime.toString()}
           </p>
         </div>
       </div>
