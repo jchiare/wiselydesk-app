@@ -16,6 +16,7 @@ export const POST = async (request: NextRequest) => {
     );
   }
 
+  // dirty way to hack that we don't have a database_url set in tests
   const bot =
     process.env.APP_ENV === "test"
       ? { jon: "doe" }
