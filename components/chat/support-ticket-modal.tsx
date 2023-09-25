@@ -22,6 +22,7 @@ export default function SupportTicketModal({
   const [email, setEmail] = useLocalStorage<string>("savedEmail", "");
   const [isLoading, setIsLoading] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [ticketCreated, setTicketCreated] = useState(false);
 
   function handleClick() {
     setIsModalOpen(true);
@@ -72,13 +73,14 @@ export default function SupportTicketModal({
 
       if (response.ok) {
         console.log("Ticket submitted successfully");
-        localStorage.removeItem("savedAdditionalInfo");
-        setAdditionalInfo("");
         setSubmitSuccess(true);
         setTimeout(() => {
           closeModal();
           setSubmitSuccess(false);
-        }, 2500);
+          localStorage.removeItem("savedAdditionalInfo");
+          setTicketCreated(true);
+          setAdditionalInfo("");
+        }, 2100);
       } else {
         console.error("Failed to submit ticket");
         window.alert("Sorry - Error submitting support ticket");
@@ -94,12 +96,15 @@ export default function SupportTicketModal({
   }
 
   return (
-    <div className="relative">
+    <div className="relative ">
       <button
         aria-label="Create Support Ticket"
         onClick={handleClick}
-        className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-        Create Support Ticket
+        disabled={ticketCreated}
+        className={`rounded ${
+          ticketCreated ? "bg-green-500" : "bg-blue-500 hover:bg-blue-700"
+        } px-4 py-2 font-bold text-white transition-colors duration-300 `}>
+        {ticketCreated ? "Support Ticket Created" : "Create Support Ticket"}
       </button>
 
       {isModalOpen && (
@@ -159,7 +164,7 @@ export default function SupportTicketModal({
             <button
               onClick={submitButton}
               disabled={isLoading || submitSuccess}
-              className={`mx-auto mt-4 w-fit rounded px-4 py-2 font-bold text-white ${
+              className={`mx-auto mt-4 w-fit rounded px-4 py-2 font-bold text-white transition-colors duration-300 ${
                 submitSuccess ? "bg-green-500" : "bg-blue-500 hover:bg-blue-700"
               }`}>
               {submitSuccess ? (
