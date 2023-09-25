@@ -21,6 +21,7 @@ export default function SupportTicketModal({
   );
   const [email, setEmail] = useLocalStorage<string>("savedEmail", "");
   const [isLoading, setIsLoading] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   function handleClick() {
     setIsModalOpen(true);
@@ -71,8 +72,13 @@ export default function SupportTicketModal({
 
       if (response.ok) {
         console.log("Ticket submitted successfully");
-        closeModal();
-        // Maybe show a success message to the user here
+        localStorage.removeItem("savedAdditionalInfo");
+        setAdditionalInfo("");
+        setSubmitSuccess(true);
+        setTimeout(() => {
+          closeModal();
+          setSubmitSuccess(false);
+        }, 2500);
       } else {
         console.error("Failed to submit ticket");
         window.alert("Sorry - Error submitting support ticket");
@@ -152,9 +158,23 @@ export default function SupportTicketModal({
             </i>
             <button
               onClick={submitButton}
-              disabled={isLoading}
-              className="mx-auto mt-4 w-fit rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-              {isLoading ? (
+              disabled={isLoading || submitSuccess}
+              className={`mx-auto mt-4 w-fit rounded px-4 py-2 font-bold text-white ${
+                submitSuccess ? "bg-green-500" : "bg-blue-500 hover:bg-blue-700"
+              }`}>
+              {submitSuccess ? (
+                <span className="flex items-center">
+                  <svg
+                    className="-ml-1 mr-3 h-6 w-6 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true">
+                    <path d="M20.285 2l-11.285 11.567-5.286-4.745-3.714 4.161 9 8.017 15-15.426-4.715-3.574z" />
+                  </svg>
+                  Successfully created support ticket
+                </span>
+              ) : isLoading ? (
                 <span className="flex items-center">
                   <svg
                     className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
