@@ -16,13 +16,12 @@ export const POST = async (request: NextRequest) => {
     );
   }
 
-  console.log(process.env.APP_ENV);
-
-  // const bot = await prismaClient.bot.findFirst({
-  //   where: { client_api_key: clientApiKey }
-  // });
-
-  const bot = { john: "deo" };
+  const bot =
+    process.env.APP_ENV === "test"
+      ? { jon: "doe" }
+      : await prismaClient.bot.findFirst({
+          where: { client_api_key: clientApiKey }
+        });
 
   return NextResponse.json({ bot }, { status: 200 });
 };

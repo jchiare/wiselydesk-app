@@ -36,6 +36,8 @@ jobs:
         run: npx playwright install --with-deps
       - name: Run tests
         run: npm run test:e2e
+        env:
+          APP_ENV: test
       - uses: actions/upload-artifact@v3
         if: always()
         with:
