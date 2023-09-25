@@ -6,7 +6,7 @@ import SupportTicketModal from "@/components/chat/support-ticket-modal";
 import AiWarning from "@/components/chat/ai-warning";
 import Feedback from "@/components/chat/agent/feedback";
 import { removeSupportButton } from "@/lib/shared/services/render-message";
-import { Bot } from "@prisma/client";
+import type { Bot } from "@prisma/client";
 
 type AgentMessageProps = {
   chatTheme: ChatThemeSettings;
