@@ -21,6 +21,8 @@ model Bot {
   organization_id      Int       @default(2)
   zendesk_kba_endpoint String?   @db.VarChar(255)
   zendesk_account_id   String?   @db.VarChar(255)
+  zendesk_subdomain    String?   @db.VarChar(255)
+  zendesk_api_key      String?   @db.VarChar(255)
 
   @@map("bot")
 }

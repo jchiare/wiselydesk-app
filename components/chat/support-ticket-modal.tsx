@@ -1,13 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { URL } from "@/lib/shared/constants";
+import { URL, NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 
 type SupportTicketModalProps = {
   conversationId: string | undefined;
+  botId: number;
 };
 
 export default function SupportTicketModal({
-  conversationId
+  conversationId,
+  botId
 }: SupportTicketModalProps): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -50,13 +52,16 @@ export default function SupportTicketModal({
     };
 
     try {
-      const response = await fetch(`${URL}/api/submitSupportTicket`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
-      });
+      const response = await fetch(
+        `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversation/${conversationId}/submit-ticket`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formData)
+        }
+      );
 
       if (response.ok) {
         console.log("Ticket submitted successfully");

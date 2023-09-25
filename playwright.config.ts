@@ -20,13 +20,15 @@ export default defineConfig({
       command: "npm run dev",
       url: baseURL,
       reuseExistingServer: !process.env.CI,
-      timeout: 31 * 1000
+      timeout: 31 * 1000,
+      stdout: "pipe"
     },
     {
       command: "npm run test:e2e:server",
       url: "http://localhost:5000",
       reuseExistingServer: !process.env.CI,
-      timeout: 31 * 1000
+      timeout: 31 * 1000,
+      stdout: "pipe"
     }
   ],
 

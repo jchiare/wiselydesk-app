@@ -27,7 +27,8 @@ function formatMarkdownLinks(text: string): string {
   return text;
 }
 
-export default function renderMessage(text: string) {
+export default function renderMessage(text: string | null) {
+  if (!text) return text;
   text = text.replaceAll("<NEWLINE>", "<br>");
   [text] = removeSupportButton(text);
   text = formatMarkdownLinks(text);

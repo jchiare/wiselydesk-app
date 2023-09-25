@@ -65,9 +65,9 @@ export default function AgentMessage({
   isFirstMessage,
   isLoading
 }: {
-  text: string;
-  sentTime: string;
-  sources: string;
+  text: string | null;
+  sentTime: Date | string;
+  sources: string | null;
   isHelpful: boolean | null;
   isFirstMessage: boolean;
   isLoading?: boolean;
@@ -80,6 +80,7 @@ export default function AgentMessage({
         <div className="rounded-lg bg-gray-600 p-2 font-medium text-white">
           <p
             className={isLoading ? "blur-sm" : ""}
+            // @ts-expect-error some htmlthing
             dangerouslySetInnerHTML={{ __html: renderMessage(text) }}></p>
         </div>
         <div className="grid grid-cols-2 justify-start">
@@ -101,7 +102,7 @@ export default function AgentMessage({
             className={`text-end text-xs text-gray-400 ${
               isLoading ? "blur-sm" : ""
             }`}>
-            {sentTime}
+            {sentTime.toString()}
           </p>
         </div>
         {sources && (

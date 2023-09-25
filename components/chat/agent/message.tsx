@@ -23,6 +23,7 @@ export default function AgentMessage({
         isLastMessage &&
         `!last:after:mt-1 last:after:animate-assistant-message  last:after:bg-white last:after:text-white last:after:content-['▋']`
       }`}
+      // @ts-expect-error some htmlthing
       dangerouslySetInnerHTML={{ __html: renderMessage(text) }}></p>
   );
 }
