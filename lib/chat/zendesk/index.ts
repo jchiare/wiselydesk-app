@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import renderMessage from "@/lib/shared/services/render-message";
 
 export type TicketOptions = {
   priority?: string;
@@ -52,7 +53,7 @@ export class ZendeskClient {
       comment: {
         public: false,
         html_body: [
-          `<h2>Ticket created from a WiselyDesk chat</h2> <br> ${this.generateWiselyDeskConvoUrl()}`,
+          `<h2>Ticket created from a WiselyDesk chat</h2> ${this.generateWiselyDeskConvoUrl()}`,
           `<h3>AI Summary: </h3> ${this.formatSummary(data.summary)}`,
           `<h3>Additional Information: </h3> ${data.additionalInfo}`,
           `<h3>Transcript: </h3> ${this.formatTranscript(data.transcript)}
@@ -106,46 +107,23 @@ export class ZendeskClient {
     // Filter lines that start with a hyphen and join them with <br>.
     const formattedLines = lines.map((line) => line.trim()).join("<br> - ");
 
-    console.log("formattedLines", formattedLines);
     return formattedLines;
   }
 
   private formatTranscript(transcript: string): string {
-    // Replace <NEWLINE> placeholders with actual newline characters
-    const formattedTranscript = transcript.replace(/<NEWLINE>/g, "<br>");
+    let markdownTranscript = renderMessage(transcript);
 
-    // Split the transcript by lines to separate user and bot messages
-    const lines = formattedTranscript.split("<br>");
+    markdownTranscript = markdownTranscript.replaceAll(
+      "- User Message:",
+      "<strong>- User Message:</strong>"
+    );
 
-    let markdownTranscript = "";
-    for (let line of lines) {
-      console.log(line);
-      line = line.replace(
-        "- User Message:",
-        "<strong>- User Message:</strong>"
-      );
-      line = line.replace("- Bot Message:", "<strong>- Bot Message:</strong>");
-      console.log("line after: ", line);
-      markdownTranscript += line + "<br>";
-    }
+    // Start with a newline since we expect it to be second
+    markdownTranscript = markdownTranscript.replaceAll(
+      "- Bot Message:",
+      "<br> <strong>- Bot Message:</strong>"
+    );
 
-    // let markdownTranscript = "<br>";
-
-    // lines.forEach((line) => {
-    //   if (line.includes("- User Message:")) {
-    //     markdownTranscript += `<strong>- User Message:</strong>  ${line
-    //       .replace("- User Message:", "")
-    //       .trim()} <br> `;
-    //   }
-
-    //   if (line.includes("- Bot Message:")) {
-    //     markdownTranscript += `<strong>- Bot Message:</strong>  ${line
-    //       .replace("- Bot Message:", "")
-    //       .trim()} <br> `;
-    //   }
-    // });
-
-    console.log("markdownTranscript", markdownTranscript);
     return markdownTranscript;
   }
 
