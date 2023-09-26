@@ -63,6 +63,7 @@ export default function AgentDiv({
                   <SupportTicketModal
                     conversationId={conversationId}
                     botId={bot.id}
+                    locale={locale}
                   />
                 )}
 

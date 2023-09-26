@@ -9,13 +9,15 @@ type RequestBody = {
   summary: string;
   transcript: string;
   additionalInfo: string;
+  locale?: string;
 };
 
 export const POST = async (request: NextRequest, { params }: Params) => {
   const body = await request.json();
   const { id, conversationId } = params;
 
-  const { email, summary, transcript, additionalInfo } = body as RequestBody;
+  const { email, summary, transcript, additionalInfo, locale } =
+    body as RequestBody;
 
   const zendeskClient = new ZendeskClient(id, conversationId);
   await zendeskClient.initialize();
@@ -24,8 +26,8 @@ export const POST = async (request: NextRequest, { params }: Params) => {
     tags: ["wiselydesk"],
     custom_fields: [
       {
-        id: 360036152652,
-        value: "hc_locale_en"
+        id: 360036152652, // help center locale
+        value: locale === "en" ? "hc_locale_en" : "hc_locale_de"
       }
     ]
   };
