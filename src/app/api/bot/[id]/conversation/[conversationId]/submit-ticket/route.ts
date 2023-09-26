@@ -21,8 +21,13 @@ export const POST = async (request: NextRequest, { params }: Params) => {
   await zendeskClient.initialize();
 
   const ticketOptions: TicketOptions = {
-    priority: "high",
-    tags: ["app_issue", "urgent"]
+    tags: ["wiselydesk"],
+    custom_fields: [
+      {
+        id: 360036152652,
+        value: "hc_locale_en"
+      }
+    ]
   };
 
   const zendeskSupportTicket = await zendeskClient.createTicket(

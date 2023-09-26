@@ -4,6 +4,7 @@ import renderMessage from "@/lib/shared/services/render-message";
 export type TicketOptions = {
   priority?: string;
   tags?: string[];
+  custom_fields?: any[];
 };
 
 type CreateTicketData = {
