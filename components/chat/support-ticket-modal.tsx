@@ -6,11 +6,13 @@ import { useLocalStorage } from "@/lib/chat/hooks/use-local-storage";
 type SupportTicketModalProps = {
   conversationId: string | undefined;
   botId: number;
+  locale?: string;
 };
 
 export default function SupportTicketModal({
   conversationId,
-  botId
+  botId,
+  locale
 }: SupportTicketModalProps): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [summary, setSummary] = useState("");
@@ -56,7 +58,8 @@ export default function SupportTicketModal({
       email,
       summary,
       transcript,
-      additionalInfo
+      additionalInfo,
+      locale
     };
 
     try {
