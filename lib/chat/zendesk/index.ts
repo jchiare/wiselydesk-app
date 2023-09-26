@@ -74,7 +74,7 @@ export class ZendeskClient {
     const username =
       process.env.NODE_ENV === "development"
         ? "jay.gch93+daspu@gmail.com/token"
-        : "jay@wiselydesk.com";
+        : "jay@wiselydesk.com/token";
     const base64Credentials = btoa(`${username}:${this.apiToken}`);
 
     const headers = new Headers({
