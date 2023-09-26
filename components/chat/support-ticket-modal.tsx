@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { URL, NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
+import { useLocalStorage } from "@/lib/chat/hooks/use-local-storage";
 
 type SupportTicketModalProps = {
   conversationId: string | undefined;
@@ -12,10 +13,16 @@ export default function SupportTicketModal({
   botId
 }: SupportTicketModalProps): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [email, setEmail] = useState("");
   const [summary, setSummary] = useState("");
   const [transcript, setTranscript] = useState("");
-  const [additionalInfo, setAdditionalInfo] = useState("");
+  const [additionalInfo, setAdditionalInfo] = useLocalStorage<string>(
+    "savedAdditionalInfo",
+    ""
+  );
+  const [email, setEmail] = useLocalStorage<string>("savedEmail", "");
+  const [isLoading, setIsLoading] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [ticketCreated, setTicketCreated] = useState(false);
 
   function handleClick() {
     setIsModalOpen(true);
@@ -44,6 +51,7 @@ export default function SupportTicketModal({
   }
 
   async function submitButton() {
+    setIsLoading(true);
     const formData = {
       email,
       summary,
@@ -65,8 +73,14 @@ export default function SupportTicketModal({
 
       if (response.ok) {
         console.log("Ticket submitted successfully");
-        closeModal();
-        // Maybe show a success message to the user here
+        setSubmitSuccess(true);
+        setTimeout(() => {
+          closeModal();
+          setSubmitSuccess(false);
+          localStorage.removeItem("savedAdditionalInfo");
+          setTicketCreated(true);
+          setAdditionalInfo("");
+        }, 2100);
       } else {
         console.error("Failed to submit ticket");
         window.alert("Sorry - Error submitting support ticket");
@@ -76,16 +90,21 @@ export default function SupportTicketModal({
       console.error("There was an error submitting the ticket:", error);
       window.alert("Sorry - Error submitting support ticket");
       // Handle the error, maybe show an error message to the user
+    } finally {
+      setIsLoading(false); //
     }
   }
 
   return (
-    <div className="relative">
+    <div className="relative ">
       <button
         aria-label="Create Support Ticket"
         onClick={handleClick}
-        className="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-        Create Support Ticket
+        disabled={ticketCreated}
+        className={`rounded ${
+          ticketCreated ? "bg-green-500" : "bg-blue-500 hover:bg-blue-700"
+        } px-4 py-2 font-bold text-white transition-colors duration-300 `}>
+        {ticketCreated ? "Support Ticket Created" : "Create Support Ticket"}
       </button>
 
       {isModalOpen && (
@@ -99,8 +118,9 @@ export default function SupportTicketModal({
               <span className="pl-1">AMBOSS account email:</span>
               <input
                 type="email"
-                autoFocus
+                autoFocus={email.length === 0}
                 name="email"
+                value={email}
                 placeholder="Enter your AMBOSS account email ..."
                 className="mt-1 w-full rounded border p-2"
                 onChange={(e) => setEmail(e.target.value)}
@@ -111,13 +131,13 @@ export default function SupportTicketModal({
               <textarea
                 name="additional-info"
                 value={additionalInfo}
+                autoFocus={email.length > 0}
                 rows={3}
                 placeholder="Let us know anything else here ..."
                 className="mt-1 w-full rounded border p-2"
                 onChange={(e) => setAdditionalInfo(e.target.value)}
               />
             </label>
-
             {/* <label className="mb-2 flex flex-1 flex-col">
               <span className="pl-1">Summary:</span>
               <textarea
@@ -138,15 +158,51 @@ export default function SupportTicketModal({
                 className="mt-1 h-32 w-full rounded border p-2"
               />
             </label> */}
-
             <i className="text-center text-sm font-normal">
               AI summary and transcript automatically included
             </i>
-
             <button
               onClick={submitButton}
-              className="mx-auto mt-4 w-fit rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-              Submit support ticket
+              disabled={isLoading || submitSuccess}
+              className={`mx-auto mt-4 w-fit rounded px-4 py-2 font-bold text-white transition-colors duration-300 ${
+                submitSuccess ? "bg-green-500" : "bg-blue-500 hover:bg-blue-700"
+              }`}>
+              {submitSuccess ? (
+                <span className="flex items-center">
+                  <svg
+                    className="-ml-1 mr-3 h-6 w-6 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    aria-hidden="true">
+                    <path d="M20.285 2l-11.285 11.567-5.286-4.745-3.714 4.161 9 8.017 15-15.426-4.715-3.574z" />
+                  </svg>
+                  Successfully created support ticket
+                </span>
+              ) : isLoading ? (
+                <span className="flex items-center">
+                  <svg
+                    className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3.002 7.938l1.272-1.272-.536-.375z"></path>
+                  </svg>
+                  Creating support ticket
+                </span>
+              ) : (
+                "Submit support ticket"
+              )}
             </button>
           </div>
         </div>
