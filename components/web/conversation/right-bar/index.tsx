@@ -1,9 +1,10 @@
 import type { Note as NoteType } from "@prisma/client";
-import Note from "@/components/web/conversation/notes";
-import TicketDeflected from "@/components/web/conversation/ticket-deflection-checkbox";
-import ToReview from "@/components/web/conversation/to-review-checkbox";
+import Note from "@/components/web/conversation/right-bar/notes";
+import TicketDeflected from "@/components/web/conversation/right-bar/ticket-deflection-checkbox";
+import ToReview from "@/components/web/conversation/right-bar/to-review-checkbox";
+import Link from "next/link";
 
-export default function SideBar({
+export default function RightBar({
   isLoading,
   notes,
   ticketDeflected,
@@ -11,7 +12,8 @@ export default function SideBar({
   conversationId,
   botId,
   userId,
-  publicConversationId
+  publicConversationId,
+  zendeskTicketUrl
 }: {
   isLoading?: boolean;
   notes?: NoteType[];
@@ -21,6 +23,7 @@ export default function SideBar({
   botId: string;
   userId: number;
   publicConversationId: string;
+  zendeskTicketUrl: string | null;
 }) {
   return (
     <div className="flex h-full flex-col justify-between space-y-4">
@@ -35,7 +38,20 @@ export default function SideBar({
           publicConversationId={publicConversationId}
           botId={botId}
         />
+        <div className="rounded-md border bg-gray-50 p-4">
+          {zendeskTicketUrl ? (
+            <Link
+              href={zendeskTicketUrl}
+              target="_blank"
+              className="text-blue-500 underline hover:text-blue-700">
+              Zendesk Ticket
+            </Link>
+          ) : (
+            <p className="text-gray-600">No linked Zendesk ticket</p>
+          )}
+        </div>
       </div>
+
       <Note
         notes={notes}
         conversationId={conversationId}

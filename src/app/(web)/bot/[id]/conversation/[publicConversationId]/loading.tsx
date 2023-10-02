@@ -60,6 +60,7 @@ export default function SingleConversationLoading() {
           notes={[]}
           userId={123}
           publicConversationId={"hello"}
+          zendeskTicketUrl={null}
         />
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import renderMessage from "@/lib/shared/services/render-message";
+import type { ZendeskTicket } from "@/types/zendesk-ticket";
 
 export type TicketOptions = {
   priority?: string;
@@ -68,7 +69,7 @@ export class ZendeskClient {
   public async createTicket(
     data: CreateTicketData,
     options?: TicketOptions
-  ): Promise<void> {
+  ): Promise<ZendeskTicket | undefined> {
     const ticket = this.createTicketObject(data, options);
     const url = `https://${this.subdomain}.zendesk.com/api/v2/tickets.json`;
     // todo fix at some point ..
@@ -92,13 +93,20 @@ export class ZendeskClient {
 
       if (response.ok) {
         const responseData = await response.json();
-        return responseData;
+        return responseData as ZendeskTicket;
       } else {
         console.log("Failed to create ticket:", await response.text());
       }
     } catch (error) {
       console.error("Error creating ticket:", error);
     }
+  }
+
+  public generateAgentTicketUrl(ticketId: number): string {
+    if (!this.subdomain) {
+      throw new Error("Subdomain is not initialized");
+    }
+    return `https://${this.subdomain}.zendesk.com/agent/tickets/${ticketId}`;
   }
 
   private formatSummary(summary: string): string {

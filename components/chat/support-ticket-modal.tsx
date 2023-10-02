@@ -83,7 +83,7 @@ export default function SupportTicketModal({
           localStorage.removeItem("savedAdditionalInfo");
           setTicketCreated(true);
           setAdditionalInfo("");
-        }, 2100);
+        }, 1700);
       } else {
         console.error("Failed to submit ticket");
         window.alert("Sorry - Error submitting support ticket");
@@ -94,12 +94,12 @@ export default function SupportTicketModal({
       window.alert("Sorry - Error submitting support ticket");
       // Handle the error, maybe show an error message to the user
     } finally {
-      setIsLoading(false); //
+      setIsLoading(false);
     }
   }
 
   return (
-    <div className="relative ">
+    <div className="relative">
       <button
         aria-label="Create Support Ticket"
         onClick={handleClick}
