@@ -1,6 +1,6 @@
 import AgentMessage from "@/components/web/conversation/agent-message";
 import UserMessage from "@/components/web/conversation/user-message";
-import type { SingleConversationReturnType } from "@/dto/single-conversation";
+import type { SingleConversationReturnType } from "@/types/single-conversation";
 import type { Message } from "@prisma/client";
 
 function isMessageFromUser(message: Message) {

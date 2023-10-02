@@ -1,5 +1,7 @@
 import { ZendeskClient, type TicketOptions } from "@/lib/chat/zendesk";
 import { NextResponse, NextRequest } from "next/server";
+import { PrismaClient } from "@prisma/client";
+
 type Params = {
   params: { id: string; conversationId: string };
 };
@@ -41,6 +43,19 @@ export const POST = async (request: NextRequest, { params }: Params) => {
     },
     ticketOptions
   );
+
+  if (zendeskSupportTicket) {
+    console.log(zendeskSupportTicket.ticket);
+    const zendeskTicketUrl = zendeskClient.generateAgentTicketUrl(
+      zendeskSupportTicket.ticket.id
+    );
+
+    const prismaClient = new PrismaClient();
+    await prismaClient.conversation.update({
+      where: { id: Number(conversationId) },
+      data: { zendesk_ticket_url: zendeskTicketUrl }
+    });
+  }
 
   return NextResponse.json({ ticket: zendeskSupportTicket });
 };

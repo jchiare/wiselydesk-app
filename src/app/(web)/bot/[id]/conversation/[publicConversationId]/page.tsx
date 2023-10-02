@@ -1,7 +1,7 @@
 import SingleConversation from "@/components/web/conversation";
 import RightBar from "@/components/web/conversation/right-bar";
 import { URL, NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
-import type { SingleConversationReturnType } from "@/dto/single-conversation";
+import type { SingleConversationReturnType } from "@/types/single-conversation";
 import type { Metadata } from "next/types";
 import type { Note as NoteType } from "@prisma/client";
 import { fetchServerSession } from "@/lib/shared/auth";
@@ -70,6 +70,7 @@ export default async function SingleConversationPage({
           toReview={conversation.conversation.to_review}
           ticketDeflected={conversation.conversation.ticket_deflected}
           conversationId={conversation.conversation.id}
+          zendeskTicketUrl={conversation.conversation.zendesk_ticket_url}
           publicConversationId={params.publicConversationId}
           botId={params.id}
           userId={userId}
