@@ -1,7 +1,7 @@
 import type { Note as NoteType } from "@prisma/client";
-import Note from "@/components/web/conversation/notes";
-import TicketDeflected from "@/components/web/conversation/ticket-deflection-checkbox";
-import ToReview from "@/components/web/conversation/to-review-checkbox";
+import Note from "@/components/web/conversation/right-bar/notes";
+import TicketDeflected from "@/components/web/conversation/right-bar/ticket-deflection-checkbox";
+import ToReview from "@/components/web/conversation/right-bar/to-review-checkbox";
 import Link from "next/link";
 
 export default function RightBar({
@@ -38,7 +38,7 @@ export default function RightBar({
           publicConversationId={publicConversationId}
           botId={botId}
         />
-        <div className="bg-grayg-50 rounded-md border p-4">
+        <div className="rounded-md border bg-gray-50 p-4">
           {zendeskTicketUrl ? (
             <Link
               href={zendeskTicketUrl}
