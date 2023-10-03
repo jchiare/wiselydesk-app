@@ -35,6 +35,7 @@ export default function SingleConversationLoading() {
             isHelpful={firstMessage.is_helpful}
             isFirstMessage={true}
             isLoading={true}
+            isFinished={true}
           />
           <UserMessage
             text={userMessage.text}
@@ -48,6 +49,7 @@ export default function SingleConversationLoading() {
             isHelpful={aiMessage.is_helpful}
             isFirstMessage={false}
             isLoading={true}
+            isFinished={true}
           />
         </div>
       </div>
