@@ -63,13 +63,15 @@ export default function AgentMessage({
   sources,
   isHelpful,
   isFirstMessage,
-  isLoading
+  isLoading,
+  isFinished
 }: {
   text: string | null;
   sentTime: Date | string;
   sources: string | null;
   isHelpful: boolean | null;
   isFirstMessage: boolean;
+  isFinished: boolean;
   isLoading?: boolean;
 }): JSX.Element {
   sentTime = formatConversationTime(sentTime);
@@ -77,11 +79,29 @@ export default function AgentMessage({
   return (
     <div className="flex items-end">
       <div className="mx-2 my-1 max-w-[60%]">
-        <div className="rounded-lg bg-gray-600 p-2 font-medium text-white">
-          <p
-            className={isLoading ? "blur-sm" : ""}
-            // @ts-expect-error some htmlthing
-            dangerouslySetInnerHTML={{ __html: renderMessage(text) }}></p>
+        <div
+          className={`rounded-lg border-2 ${
+            isLoading
+              ? "border-gray-700 bg-gray-600"
+              : isFinished
+              ? "border-gray-700 bg-gray-600"
+              : "border-red-800 bg-red-600 opacity-80"
+          } p-2 font-medium text-white`}>
+          {isLoading ? (
+            <p
+              className="blur-sm"
+              // @ts-expect-error some htmlthing
+              dangerouslySetInnerHTML={{ __html: renderMessage(text) }}></p>
+          ) : isFinished ? (
+            <p
+              // @ts-expect-error some htmlthing
+              dangerouslySetInnerHTML={{ __html: renderMessage(text) }}></p>
+          ) : (
+            <p>
+              Message did not finish - user likely closed browser window before
+              AI finished responding
+            </p>
+          )}
         </div>
         <div className="grid grid-cols-2 justify-start">
           <div className="mt-1 flex space-x-2">

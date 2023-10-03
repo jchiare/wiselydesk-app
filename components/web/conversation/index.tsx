@@ -26,6 +26,7 @@ export default function SingleConversation({
                 sources={message.sources}
                 isHelpful={message.is_helpful}
                 isFirstMessage={message.index === 0}
+                isFinished={message.finished}
               />
             )}
           </div>

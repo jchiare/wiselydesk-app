@@ -25,6 +25,7 @@ export default async function Page({ params, searchParams }: ChatPageProps) {
   if (!bot) {
     return <div>Bot not found</div>;
   }
+
   return (
     <main>
       <Chat

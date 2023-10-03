@@ -78,6 +78,7 @@ model Message {
   api_response_cost Float?    @db.Float
   sources           String?   @db.VarChar(2000)
   is_helpful        Boolean?
+  finished          Boolean   @default(false)
 
   @@index([conversation_id], map: "idx_conversation_id")
   @@map("message")

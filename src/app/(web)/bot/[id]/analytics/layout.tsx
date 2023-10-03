@@ -1,4 +1,3 @@
-import Analytics from "@/components/web/analytics";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
