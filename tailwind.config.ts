@@ -8,7 +8,8 @@ const config: Config = {
     "./components/chat/**/*.{js,ts,jsx,tsx,mdx}",
     "./lib/chat/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/web/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/shared/**/*.{js,ts,jsx,tsx,mdx}"
+    "./components/shared/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/widget/**/*.{js,ts,jsx,tsx,mdx}"
   ],
   theme: {
     extend: {
