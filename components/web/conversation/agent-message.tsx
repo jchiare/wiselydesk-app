@@ -81,9 +81,7 @@ export default function AgentMessage({
       <div className="mx-2 my-1 max-w-[60%]">
         <div
           className={`rounded-lg border-2 ${
-            isLoading
-              ? "border-gray-700 bg-gray-600"
-              : isFinished
+            isFinished
               ? "border-gray-700 bg-gray-600"
               : "border-red-800 bg-red-600 opacity-80"
           } p-2 font-medium text-white`}>
