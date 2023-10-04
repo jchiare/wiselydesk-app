@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { URL, NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 import { useLocalStorage } from "@/lib/chat/hooks/use-local-storage";
+import { getChatThemeByBotId } from "@/lib/chat/chat-theme";
 
 type SupportTicketModalProps = {
   conversationId: string | undefined;
@@ -98,6 +99,8 @@ export default function SupportTicketModal({
     }
   }
 
+  const { supportTicketSetting } = getChatThemeByBotId(botId);
+
   return (
     <div className="relative">
       <button
@@ -105,7 +108,9 @@ export default function SupportTicketModal({
         onClick={handleClick}
         disabled={ticketCreated}
         className={`rounded ${
-          ticketCreated ? "bg-green-500" : "bg-blue-500 hover:bg-blue-700"
+          ticketCreated
+            ? supportTicketSetting.chatButtonCreated
+            : supportTicketSetting.chatButton
         } px-4 py-2 font-bold text-white transition-colors duration-300 `}>
         {ticketCreated ? "Support Ticket Created" : "Create Support Ticket"}
       </button>
@@ -118,7 +123,7 @@ export default function SupportTicketModal({
 
           <div className="relative z-10 flex h-fit w-1/3 flex-col rounded bg-white p-7 text-gray-800 shadow-lg">
             <label className="mb-2 block ">
-              <span className="pl-1">AMBOSS account email:</span>
+              <span className="pl-1">AMBOSS Account Email:</span>
               <input
                 type="email"
                 autoFocus={email.length === 0}
@@ -130,13 +135,13 @@ export default function SupportTicketModal({
               />
             </label>
             <label className="mb-2 flex flex-col">
-              <span className="pl-1">Additional info:</span>
+              <span className="pl-1">Additional Info:</span>
               <textarea
                 name="additional-info"
                 value={additionalInfo}
                 autoFocus={email.length > 0}
                 rows={3}
-                placeholder="Let us know anything else here ..."
+                placeholder="Transcript automatically included. Let us know anything else here"
                 className="mt-1 w-full rounded border p-2"
                 onChange={(e) => setAdditionalInfo(e.target.value)}
               />
@@ -161,9 +166,6 @@ export default function SupportTicketModal({
                 className="mt-1 h-32 w-full rounded border p-2"
               />
             </label> */}
-            <i className="text-center text-sm font-normal">
-              AI summary and transcript automatically included
-            </i>
             <button
               onClick={submitButton}
               disabled={isLoading || submitSuccess}
