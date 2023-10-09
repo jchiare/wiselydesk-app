@@ -206,7 +206,9 @@ export default function SupportTicketModal({
                   Creating support ticket
                 </span>
               ) : (
-                "Submit support ticket"
+                <span className={`${supportTicketSetting.submitTicket}`}>
+                  Submit support ticket
+                </span>
               )}
             </button>
           </div>
