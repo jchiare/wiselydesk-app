@@ -11,6 +11,13 @@ type MessageSetting = {
   icon?: string;
 };
 
+type SupportTicketSetting = {
+  chatButton: string;
+  chatButtonCreated: string;
+  submitButton: string;
+  submitButtonSuccess: string;
+};
+
 export type InputSetting = {
   bgColour: string;
   textColour: string;
@@ -22,6 +29,7 @@ export type ChatThemeSettings = {
   userMessageSetting: MessageSetting;
   inputSetting: InputSetting;
   default: boolean;
+  supportTicketSetting: SupportTicketSetting;
 };
 
 const BASE_CHAT_SETTINGS: ChatThemeSettings = {
@@ -39,7 +47,13 @@ const BASE_CHAT_SETTINGS: ChatThemeSettings = {
     text: "text-gray-100"
   },
   inputSetting: { bgColour: "bg-[#343541]", textColour: "text-black" },
-  default: true
+  default: true,
+  supportTicketSetting: {
+    chatButton: "bg-blue-500 hover:bg-blue-700",
+    chatButtonCreated: "bg-green-500",
+    submitButton: "bg-blue-500 hover:bg-blue-700",
+    submitButtonSuccess: "bg-green-500"
+  }
 };
 
 const AMBOSS_BOT_SETTINGS: ChatThemeSettings = {
@@ -58,15 +72,28 @@ const AMBOSS_BOT_SETTINGS: ChatThemeSettings = {
     text: "text-black"
   },
   inputSetting: { bgColour: "bg-[#F8FAFC]", textColour: "text-black" },
-  default: false
+  default: false,
+  supportTicketSetting: {
+    chatButton: "bg-[#0AA7B9]",
+    chatButtonCreated: "",
+    submitButton: "bg-[#0AA7B9] hover:bg-[#099AA4]",
+    submitButtonSuccess: "bg-[#0ECD9A]"
+  }
 };
 
 const accountSettings: Record<string, ChatThemeSettings> = {
-  amboss: AMBOSS_BOT_SETTINGS
+  amboss: AMBOSS_BOT_SETTINGS,
+  3: AMBOSS_BOT_SETTINGS,
+  4: AMBOSS_BOT_SETTINGS,
+  1: AMBOSS_BOT_SETTINGS
 };
 
 export default function getChatTheme(account: string): ChatThemeSettings {
   return accountSettings[account] ?? BASE_CHAT_SETTINGS;
+}
+
+export function getChatThemeByBotId(botId: number): ChatThemeSettings {
+  return accountSettings[botId] ?? BASE_CHAT_SETTINGS;
 }
 
 export const combineClassNames = (
