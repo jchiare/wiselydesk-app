@@ -55,7 +55,7 @@ export class ZendeskClient {
       comment: {
         public: false,
         html_body: [
-          `<h2>Ticket created from a WiselyDesk chat</h2> ${this.generateWiselyDeskConvoUrl()}`,
+          `<h3>Ticket created from a WiselyDesk chat</h3> ${this.generateWiselyDeskConvoUrl()}`,
           `<h3>AI Summary: </h3> ${this.formatSummary(data.summary)}`,
           `<h3>Additional Information: </h3> ${data.additionalInfo}`,
           `<h3>Transcript: </h3> ${this.formatTranscript(data.transcript)}
