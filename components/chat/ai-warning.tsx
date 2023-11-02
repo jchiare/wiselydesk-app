@@ -3,7 +3,7 @@ import { useState } from "react";
 import getText from "@/i18n/chat";
 
 type AiWarningProps = {
-  locale: string;
+  locale: "en" | "de";
   account: string | undefined;
 };
 

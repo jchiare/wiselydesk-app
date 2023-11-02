@@ -17,7 +17,7 @@ export default function Input({
   chatTheme: ChatThemeSettings;
   aiResponseDone: boolean;
   account: string;
-  locale: string;
+  locale: "en" | "de";
 }) {
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 

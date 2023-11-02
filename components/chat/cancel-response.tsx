@@ -3,7 +3,7 @@ import getText from "@/i18n/chat";
 type CancelResponseProps = {
   aiResponseDone: boolean;
   setAiResponseDone: (arg: boolean) => void;
-  locale: string;
+  locale: "en" | "de";
   account: string;
 };
 

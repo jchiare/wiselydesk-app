@@ -1,6 +1,7 @@
 import Link from "next/link";
 import getText from "@/i18n/chat";
 import React from "react";
+import { __String } from "typescript";
 
 const ZENDESK_SOURCE_ARTICLE_REGEX = "/[0-9]+-(.+)-?$";
 const WEBPAGE_SOURCE_ARTICLE_REGEX = "/([^/]+)$";
@@ -44,8 +45,8 @@ function sourceText(sourceUrl: string, sourceIndex: number): string {
 
 type SourcesProps = {
   sources: string[] | undefined;
-  locale: string;
-  account: string | undefined;
+  locale: "en" | "de";
+  account: string;
   aiResponseDone: boolean;
 };
 
@@ -59,7 +60,6 @@ export default function Sources({
   return (
     <div className=" ml-auto mt-6 w-fit rounded-lg bg-slate-600 p-4 text-[0.8rem] leading-5 sm:text-sm">
       <p style={{ marginTop: "0.25em", marginBottom: "0.25em" }}>
-        {/* @ts-expect-error ... types be crazy */}
         {getText(account)["sources"][locale]}
       </p>
       {sources.map((source, index) => {
