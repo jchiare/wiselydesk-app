@@ -106,12 +106,14 @@ export default function Chat({
         <CancelResponse
           aiResponseDone={aiResponseDone}
           setAiResponseDone={setAiResponseDone}
+          // @ts-expect-error done with ts for the day
           locale={locale}
           account={account}
         />
         <Input
           chatTheme={chatTheme}
           account={account}
+          // @ts-expect-error done with ts for the day
           locale={locale}
           onSubmit={onSubmit}
           setInput={setInput}

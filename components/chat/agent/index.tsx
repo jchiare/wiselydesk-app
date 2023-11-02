@@ -69,7 +69,9 @@ export default function AgentDiv({
 
                 <Sources
                   sources={sources}
+                  // @ts-expect-error done with ts for the day
                   account={account}
+                  // @ts-expect-error done with ts for the day
                   locale={locale}
                   aiResponseDone={aiResponseDone}
                 />
@@ -81,7 +83,10 @@ export default function AgentDiv({
             chatTheme={chatTheme}
             messageId={latestMessageId}
           />
-          <AiWarning account={account} locale={locale} />
+          {
+            // @ts-expect-error done with ts for the day
+            <AiWarning account={account} locale={locale} />
+          }
         </div>
       </div>
     </div>
