@@ -74,8 +74,8 @@ const AMBOSS_BOT_SETTINGS: ChatThemeSettings = {
   inputSetting: { bgColour: "bg-[#F8FAFC]", textColour: "text-black" },
   default: false,
   supportTicketSetting: {
-    chatButton: "bg-[#0AA7B9]",
-    chatButtonCreated: "",
+    chatButton: "bg-[#0AA7B9] hover:bg-[#099AA4]",
+    chatButtonCreated: "bg-[#0ECD9A]",
     submitButton: "bg-[#0AA7B9] hover:bg-[#099AA4]",
     submitButtonSuccess: "bg-[#0ECD9A]"
   }
