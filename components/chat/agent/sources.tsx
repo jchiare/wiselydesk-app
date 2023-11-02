@@ -1,7 +1,6 @@
 import Link from "next/link";
 import getText from "@/i18n/chat";
 import React from "react";
-import { __String } from "typescript";
 
 const ZENDESK_SOURCE_ARTICLE_REGEX = "/[0-9]+-(.+)-?$";
 const WEBPAGE_SOURCE_ARTICLE_REGEX = "/([^/]+)$";
