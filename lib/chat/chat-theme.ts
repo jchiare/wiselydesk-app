@@ -14,7 +14,8 @@ type MessageSetting = {
 type SupportTicketSetting = {
   chatButton: string;
   chatButtonCreated: string;
-  submitTicket: string;
+  submitButton: string;
+  submitButtonSuccess: string;
 };
 
 export type InputSetting = {
@@ -50,7 +51,8 @@ const BASE_CHAT_SETTINGS: ChatThemeSettings = {
   supportTicketSetting: {
     chatButton: "bg-blue-500 hover:bg-blue-700",
     chatButtonCreated: "bg-green-500",
-    submitTicket: ""
+    submitButton: "bg-blue-500 hover:bg-blue-700",
+    submitButtonSuccess: "bg-green-500"
   }
 };
 
@@ -74,7 +76,8 @@ const AMBOSS_BOT_SETTINGS: ChatThemeSettings = {
   supportTicketSetting: {
     chatButton: "bg-[#0AA7B9]",
     chatButtonCreated: "",
-    submitTicket: "bg-[#0AA7B9]"
+    submitButton: "bg-[#0AA7B9] hover:bg-[#099AA4]",
+    submitButtonSuccess: "bg-[#0ECD9A]"
   }
 };
 
