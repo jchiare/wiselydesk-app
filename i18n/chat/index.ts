@@ -98,7 +98,7 @@ const AMBOSS_TEXT = {
   },
   supportTicketModal: {
     createButton: {
-      en: "Create Support Ticket!",
+      en: "Create Support Ticket",
       de: "Support-Ticket erstellen"
     },
     createdButton: {

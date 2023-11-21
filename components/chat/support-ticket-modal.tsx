@@ -62,7 +62,8 @@ export default function SupportTicketModal({
       summary,
       transcript,
       additionalInfo,
-      locale
+      locale,
+      name
     };
 
     try {
