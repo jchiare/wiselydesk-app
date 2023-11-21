@@ -1,4 +1,4 @@
-import { authOptions } from "@/src/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/web/next-auth-hack";
 import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation";
 

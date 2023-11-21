@@ -13,6 +13,8 @@ type CreateTicketData = {
   summary: string;
   transcript: string;
   additionalInfo: string;
+  locale: string;
+  name: string;
 };
 
 export class ZendeskClient {
@@ -47,11 +49,13 @@ export class ZendeskClient {
   private createTicketObject(data: CreateTicketData, options?: TicketOptions) {
     return {
       requester: {
-        email: data.email
+        email: data.email,
+        name: data.name
       },
-      subject: `WiselyDesk Chat: ${data.summary.slice(0, 60)} ${
-        data.summary.length > 60 && "..."
-      }`,
+      subject:
+        data.locale === "de"
+          ? `DE: Deine Support-Anfrage`
+          : "EN: Your Support Request",
       comment: {
         public: false,
         html_body: [
