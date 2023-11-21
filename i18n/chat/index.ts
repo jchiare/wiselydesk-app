@@ -48,13 +48,13 @@ const BASE_TEXT = {
       en: "Submit",
       de: "Einreichen"
     },
+    name: {
+      en: "Your Name",
+      de: "Ihr Name"
+    },
     email: {
       en: "Account email address",
       de: "Account email address"
-    },
-    emailPlaceholder: {
-      en: "Enter your account email ...",
-      de: "Geben Sie Ihre Konto-E-Mail ein ..."
     },
     info: {
       en: "Additional Info",
@@ -62,7 +62,7 @@ const BASE_TEXT = {
     },
     additionalInfo: {
       en: "Transcript automatically included. Let us know anything else here",
-      de: "Abschrift automatisch enthalten. Lassen Sie uns hier alles Weitere wissen"
+      de: "Unterhaltung wird übermittelt. Teile uns hier gerne weitere Infos mit"
     },
     creating: {
       en: "Creating",
@@ -98,7 +98,7 @@ const AMBOSS_TEXT = {
   },
   supportTicketModal: {
     createButton: {
-      en: "Create Support Ticket",
+      en: "Create Support Ticket!",
       de: "Support-Ticket erstellen"
     },
     createdButton: {
@@ -113,9 +113,9 @@ const AMBOSS_TEXT = {
       en: "AMBOSS Account Email",
       de: "E-Mail-Adresse (AMBOSS-Account)"
     },
-    emailPlaceholder: {
-      en: "Enter your AMBOSS account email ...",
-      de: "Geben Sie Ihre AMBOSS-Konto-E-Mail ein ..."
+    name: {
+      en: "Your Name",
+      de: "Ihr Name"
     },
     info: {
       en: "Additional Info",

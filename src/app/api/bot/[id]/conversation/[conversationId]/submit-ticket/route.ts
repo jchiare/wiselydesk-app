@@ -11,14 +11,15 @@ type RequestBody = {
   summary: string;
   transcript: string;
   additionalInfo: string;
-  locale?: string;
+  locale: string;
+  name: string;
 };
 
 export const POST = async (request: NextRequest, { params }: Params) => {
   const body = await request.json();
   const { id, conversationId } = params;
 
-  const { email, summary, transcript, additionalInfo, locale } =
+  const { email, summary, transcript, additionalInfo, locale, name } =
     body as RequestBody;
 
   const zendeskClient = new ZendeskClient(id, conversationId);
@@ -39,7 +40,9 @@ export const POST = async (request: NextRequest, { params }: Params) => {
       email,
       summary,
       transcript,
-      additionalInfo
+      additionalInfo,
+      locale,
+      name
     },
     ticketOptions
   );

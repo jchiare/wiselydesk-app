@@ -24,6 +24,7 @@ export default function SupportTicketModal({
     ""
   );
   const [email, setEmail] = useLocalStorage<string>("savedEmail", "");
+  const [name, setName] = useLocalStorage<string>("savedName", "");
   const [isLoading, setIsLoading] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [ticketCreated, setTicketCreated] = useState(false);
@@ -131,16 +132,26 @@ export default function SupportTicketModal({
           <div className="relative z-10 flex h-fit w-1/3 flex-col rounded bg-white p-7 text-gray-800 shadow-lg">
             <label className="mb-2 block ">
               <span className="pl-1">
+                {texti18.supportTicketModal.name[adjustedLocale]}:
+              </span>
+              <input
+                type="input"
+                autoFocus={name.length === 0}
+                name="name"
+                value={name}
+                className="mt-1 w-full rounded border p-2"
+                onChange={(e) => setName(e.target.value)}
+              />
+            </label>
+            <label className="mb-2 block ">
+              <span className="pl-1">
                 {texti18.supportTicketModal.email[adjustedLocale]}:
               </span>
               <input
                 type="email"
-                autoFocus={email.length === 0}
+                autoFocus={name.length > 0 && email.length === 0}
                 name="email"
                 value={email}
-                placeholder={
-                  texti18.supportTicketModal.emailPlaceholder[adjustedLocale]
-                }
                 className="mt-1 w-full rounded border p-2"
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -152,7 +163,7 @@ export default function SupportTicketModal({
               <textarea
                 name="additional-info"
                 value={additionalInfo}
-                autoFocus={email.length > 0}
+                autoFocus={name.length > 0 && email.length > 0}
                 rows={3}
                 placeholder={
                   texti18.supportTicketModal.additionalInfo[adjustedLocale]
