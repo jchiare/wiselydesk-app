@@ -53,14 +53,11 @@ export class ZendeskClient {
         name: data.name
       },
       subject:
-        data.locale === "de"
-          ? `DE: Deine Support-Anfrage`
-          : "EN: Your Support Request",
+        data.locale === "de" ? `Deine Support-Anfrage` : "Your Support Request",
       comment: {
         public: false,
         html_body: [
           `<h3>Ticket created from a WiselyDesk chat</h3> ${this.generateWiselyDeskConvoUrl()}`,
-          `<h3>AI Summary: </h3> ${this.formatSummary(data.summary)}`,
           `<h3>Additional Information: </h3> ${data.additionalInfo}`,
           `<h3>Transcript: </h3> ${this.formatTranscript(data.transcript)}
           `

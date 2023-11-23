@@ -62,7 +62,7 @@ const BASE_TEXT = {
     },
     additionalInfo: {
       en: "Transcript automatically included. Let us know anything else here",
-      de: "Unterhaltung wird übermittelt. Teile uns hier gerne weitere Infos mit"
+      de: "Abschrift automatisch enthalten. Lass uns gern hier alles Weitere wissen"
     },
     creating: {
       en: "Creating",
@@ -123,7 +123,7 @@ const AMBOSS_TEXT = {
     },
     additionalInfo: {
       en: "Transcript automatically included. Let us know anything else here",
-      de: "Abschrift automatisch enthalten. Lassen Sie uns hier alles Weitere wissen"
+      de: "Abschrift automatisch enthalten. Lass uns gern hier alles Weitere wissen"
     },
     creating: {
       en: "Creating",
