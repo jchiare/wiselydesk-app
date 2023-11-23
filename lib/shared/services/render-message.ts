@@ -1,7 +1,7 @@
 // removes the HTML text <button create> </button create>
 // from the message
 export function removeSupportButton(text: string): [string, boolean] {
-  const supportTicketRegex = /<button\s+create.*>(.*?)<\/button(\s+create>)?/g;
+  const supportTicketRegex = /<button\s+create.*>(.*?)<\/(button\s+create>)?/g;
   let foundSupportTicketRegex = false;
 
   console.log("Original text:", text); // Debug: Log the original text
