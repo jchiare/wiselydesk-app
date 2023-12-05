@@ -50,7 +50,7 @@ const BASE_TEXT = {
     },
     name: {
       en: "Your Name",
-      de: "Ihr Name"
+      de: "Vor- und Nachname"
     },
     email: {
       en: "Account email address",
@@ -61,8 +61,8 @@ const BASE_TEXT = {
       de: "Zusätzliche Informationen"
     },
     additionalInfo: {
-      en: "Transcript automatically included. Let us know anything else here",
-      de: "Abschrift automatisch enthalten. Lass uns gern hier alles Weitere wissen"
+      en: "Transcript automatically included. Let us know anything else here.",
+      de: "Abschrift automatisch enthalten. Lass uns hier gerne alles Weitere wissen."
     },
     creating: {
       en: "Creating",
@@ -115,15 +115,15 @@ const AMBOSS_TEXT = {
     },
     name: {
       en: "Your Name",
-      de: "Ihr Name"
+      de: "Vor- und Nachname"
     },
     info: {
       en: "Additional Info",
       de: "Zusätzliche Informationen"
     },
     additionalInfo: {
-      en: "Transcript automatically included. Let us know anything else here",
-      de: "Abschrift automatisch enthalten. Lass uns gern hier alles Weitere wissen"
+      en: "Transcript automatically included. Let us know anything else here.",
+      de: "Abschrift automatisch enthalten. Lass uns hier gerne alles Weitere wissen."
     },
     creating: {
       en: "Creating",
