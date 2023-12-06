@@ -4,17 +4,10 @@ export function removeSupportButton(text: string): [string, boolean] {
   const supportTicketRegex = /<button\s+create.*>(.*?)(<\/button\s+create>|$)/g;
   let foundSupportTicketRegex = false;
 
-  console.log("Original text:", text); // Debug: Log the original text
-
   text = text.replace(supportTicketRegex, (match) => {
     foundSupportTicketRegex = true;
-    console.log("Match found:", match); // Debug: Log the match
-
     return "";
   });
-
-  console.log("Modified text:", text); // Debug: Log the modified text
-  console.log("Regex found:", foundSupportTicketRegex); // Debug: Log the regex found status
 
   return [text, foundSupportTicketRegex];
 }
