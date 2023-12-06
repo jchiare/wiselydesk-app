@@ -19,12 +19,12 @@ type CreateTicketData = {
 
 export class ZendeskClient {
   private botId: string;
-  private conversationId: string;
+  private conversationId: number;
   private apiToken?: string;
   private subdomain?: string;
   private prismaClient: PrismaClient;
 
-  constructor(botId: string, conversationId: string, prisma?: PrismaClient) {
+  constructor(botId: string, conversationId: number, prisma?: PrismaClient) {
     this.botId = botId;
     this.conversationId = conversationId;
     this.prismaClient = prisma ?? new PrismaClient();

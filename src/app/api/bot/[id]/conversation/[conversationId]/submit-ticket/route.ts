@@ -22,7 +22,15 @@ export const POST = async (request: NextRequest, { params }: Params) => {
   const { email, summary, transcript, additionalInfo, locale, name } =
     body as RequestBody;
 
-  const zendeskClient = new ZendeskClient(id, conversationId);
+  const prismaClient = new PrismaClient();
+
+  const publicConversationId = await prismaClient.conversation
+    .findUnique({
+      where: { id: Number(conversationId) }
+    })
+    .then((conversation) => conversation!.public_id);
+
+  const zendeskClient = new ZendeskClient(id, publicConversationId);
   await zendeskClient.initialize();
 
   const ticketOptions: TicketOptions = {
@@ -53,7 +61,6 @@ export const POST = async (request: NextRequest, { params }: Params) => {
       zendeskSupportTicket.ticket.id
     );
 
-    const prismaClient = new PrismaClient();
     await prismaClient.conversation.update({
       where: { id: Number(conversationId) },
       data: { zendesk_ticket_url: zendeskTicketUrl }
