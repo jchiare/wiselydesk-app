@@ -68,7 +68,7 @@ export default function Chat({
 
   return (
     <main
-      className={`flex h-[calc(100vh-100px)] w-full flex-col items-center overflow-scroll antialiased ${combineClassNames(
+      className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll antialiased md:h-[calc(100vh-100px)] ${combineClassNames(
         chatTheme.baseSettings
       )} flex-shrink-0 font-medium`}>
       <Agent
