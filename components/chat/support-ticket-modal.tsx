@@ -130,7 +130,7 @@ export default function SupportTicketModal({
             className="absolute inset-0 bg-black opacity-70"
             onClick={closeModal}></div>
 
-          <div className="relative z-10 flex h-fit w-1/3 flex-col rounded bg-white p-7 text-gray-800 shadow-lg">
+          <div className="relative z-10 flex h-fit max-w-[1/3] flex-col rounded bg-white p-7 text-gray-800 shadow-lg">
             <label className="mb-2 block ">
               <span className="pl-1">
                 {texti18.supportTicketModal.name[adjustedLocale]}:
