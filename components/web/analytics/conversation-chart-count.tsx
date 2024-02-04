@@ -174,5 +174,5 @@ export default function ConversationCountChart({
     ]
   };
 
-  return <Bar options={options} data={chartData} redraw={true} />;
+  return <Bar options={options} data={chartData} />;
 }
