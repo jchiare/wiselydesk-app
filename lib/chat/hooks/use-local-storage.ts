@@ -8,7 +8,8 @@ export function useLocalStorage<T>(
 ): [T, SetState<T>] {
   // Initialize state with the value in local storage or a fallback
   const [value, setValue] = useState<T>(() => {
-    const storedValue = localStorage.getItem(storageKey);
+    const storedValue =
+      typeof window !== "undefined" ? localStorage?.getItem(storageKey) : null;
     return storedValue !== null ? JSON.parse(storedValue) : fallbackState;
   });
 

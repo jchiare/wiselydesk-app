@@ -20,6 +20,7 @@ type AgentMessageProps = {
   conversationId?: string;
   createSupportTicket?: boolean;
   bot: Bot;
+  testSupportModal?: boolean;
 };
 
 export default function AgentDiv({
@@ -33,12 +34,17 @@ export default function AgentDiv({
   latestMessageId,
   conversationId,
   createSupportTicket,
-  bot
+  bot,
+  testSupportModal
 }: AgentMessageProps): JSX.Element {
   const [_, buttonCreateHtml] = removeSupportButton(text);
 
   const displaySupportModal =
-    buttonCreateHtml && aiResponseDone && isLastMessage && createSupportTicket;
+    testSupportModal ||
+    (buttonCreateHtml &&
+      aiResponseDone &&
+      isLastMessage &&
+      createSupportTicket);
   return (
     <div
       className={`w-full border-b ${
