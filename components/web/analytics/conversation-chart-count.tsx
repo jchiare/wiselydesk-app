@@ -115,6 +115,14 @@ export default function ConversationCountChart({
         display: true,
         text: title
       }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1
+        }
+      }
     }
   };
   const dates =
@@ -128,18 +136,28 @@ export default function ConversationCountChart({
     (conversationCounts &&
       conversationCounts.map((x: any) => x.deflected_convo_count)) ||
     [];
+
+  const ticketCreationcounts =
+    (conversationCounts &&
+      conversationCounts.map((x: any) => x.ticket_created_count)) ||
+    [];
   const chartData = {
     labels: formattedDates(frequency, dates),
     datasets: [
       {
         label: "Total",
         data: counts,
-        backgroundColor: "rgba(255, 99, 132, 0.5)"
+        backgroundColor: "rgb(31,41,55)"
       },
       {
         label: "Deflected",
         data: deflectedCounts,
         backgroundColor: "rgba(75, 192, 192, 0.5)"
+      },
+      {
+        label: "Tickets Created",
+        data: ticketCreationcounts,
+        backgroundColor: "rgb(240,230,140)"
       }
     ]
   };
