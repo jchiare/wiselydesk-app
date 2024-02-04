@@ -19,6 +19,8 @@ ChartJS.register(
   Legend
 );
 
+import type { FrequencyType, ViewingType } from "@/components/web/analytics";
+
 function formattedDates(
   frequency: "daily" | "weekly" | "monthly",
   dates: Array<string>
@@ -98,15 +100,17 @@ function formattedDates(
 
 export default function ConversationCountChart({
   frequency,
+  viewingType,
   conversationCounts
 }: {
-  frequency: "daily" | "weekly" | "monthly";
+  frequency: FrequencyType;
+  viewingType?: ViewingType;
   conversationCounts: any;
 }) {
   const title = `${
     frequency.charAt(0).toUpperCase() + frequency.slice(1)
   } Conversations`;
-  const options: ChartOptions<"bar"> = {
+  const separateOptions: ChartOptions<"bar"> = {
     responsive: true,
     elements: {
       bar: {
@@ -134,6 +138,42 @@ export default function ConversationCountChart({
         ticks: {
           precision: 0
         }
+      }
+    }
+  };
+
+  const stackedOptions: ChartOptions<"bar"> = {
+    responsive: true,
+    elements: {
+      bar: {
+        borderRadius: 4
+      }
+    },
+    layout: {
+      padding: 20
+    },
+    plugins: {
+      legend: {
+        position: "bottom" as const
+      },
+      title: {
+        color: "black",
+        display: true,
+        text: title,
+        padding: 15,
+        font: { size: 24 }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          precision: 0
+        },
+        stacked: true
+      },
+      x: {
+        stacked: true
       }
     }
   };
@@ -174,5 +214,10 @@ export default function ConversationCountChart({
     ]
   };
 
-  return <Bar options={options} data={chartData} />;
+  return (
+    <Bar
+      options={viewingType === "stacked" ? stackedOptions : separateOptions}
+      data={chartData}
+    />
+  );
 }

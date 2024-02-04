@@ -2,7 +2,7 @@
 import { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
-import type { FrequencyType } from "@/components/web/analytics";
+import type { ViewingType } from "@/components/web/analytics";
 import { useRouter } from "next/navigation";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
 
@@ -10,31 +10,31 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ChartFrequencySelector({
-  frequency
+export default function ChartViewingTypeSelector({
+  viewingType
 }: {
-  frequency: FrequencyType;
+  viewingType: ViewingType;
 }) {
   const router = useRouter();
   const { pathname } = useCustomQueryString();
-  const changeFrequency = (newFrequency: FrequencyType) => {
+  const changeViewingType = (newViewingType: ViewingType) => {
     const segments = pathname.split("/");
     const analyticsIndex = segments.indexOf("analytics");
 
     if (analyticsIndex !== -1) {
-      segments[analyticsIndex + 1] = newFrequency;
+      segments[analyticsIndex + 2] = newViewingType;
       const newPath = segments.join("/");
       router.push(newPath);
     }
   };
 
   return (
-    <Listbox value={frequency} onChange={changeFrequency}>
+    <Listbox value={viewingType} onChange={changeViewingType}>
       {({ open }) => (
         <>
-          <div className="relative mt-2">
+          <div className="mt-2">
             <Listbox.Button className="relative cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
-              <span className="block truncate">{frequency}</span>
+              <span className="block truncate">{viewingType}</span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronDownIcon
                   className="h-5 w-5 text-gray-400"
@@ -50,16 +50,16 @@ export default function ChartFrequencySelector({
               leaveFrom="opacity-100"
               leaveTo="opacity-0">
               <Listbox.Options className="absolute z-10 mt-2 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                {["daily", "weekly", "monthly"].map((frequency) => (
+                {["separate", "stacked"].map((viewingType) => (
                   <Listbox.Option
-                    key={frequency}
+                    key={viewingType}
                     className={({ active }) =>
                       classNames(
                         active ? "bg-indigo-600 text-white" : "text-gray-900",
                         "relative cursor-default select-none py-2 pl-3 pr-9"
                       )
                     }
-                    value={frequency}>
+                    value={viewingType}>
                     {({ selected, active }) => (
                       <>
                         <span
@@ -67,7 +67,7 @@ export default function ChartFrequencySelector({
                             selected ? "font-semibold" : "font-normal",
                             "block truncate"
                           )}>
-                          {frequency}
+                          {viewingType}
                         </span>
 
                         {selected ? (
