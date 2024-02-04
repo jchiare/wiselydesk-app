@@ -105,7 +105,7 @@ export default function ConversationCountChart({
 }) {
   const title = `${
     frequency.charAt(0).toUpperCase() + frequency.slice(1)
-  } conversation counts`;
+  } Conversations`;
   const options: ChartOptions<"bar"> = {
     responsive: true,
     elements: {
