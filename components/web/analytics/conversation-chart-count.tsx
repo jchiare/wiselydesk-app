@@ -6,7 +6,8 @@ import {
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ChartOptions
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 ChartJS.register(
@@ -105,22 +106,33 @@ export default function ConversationCountChart({
   const title = `${
     frequency.charAt(0).toUpperCase() + frequency.slice(1)
   } conversation counts`;
-  const options = {
+  const options: ChartOptions<"bar"> = {
     responsive: true,
+    elements: {
+      bar: {
+        borderRadius: 4
+      }
+    },
+    layout: {
+      padding: 20
+    },
     plugins: {
       legend: {
-        position: "top" as const
+        position: "bottom" as const
       },
       title: {
+        color: "black",
         display: true,
-        text: title
+        text: title,
+        padding: 15,
+        font: { size: 24 }
       }
     },
     scales: {
       y: {
         beginAtZero: true,
         ticks: {
-          stepSize: 1
+          precision: 0
         }
       }
     }
@@ -162,5 +174,5 @@ export default function ConversationCountChart({
     ]
   };
 
-  return <Bar options={options} data={chartData} redraw={true} />;
+  return <Bar options={options} data={chartData} />;
 }
