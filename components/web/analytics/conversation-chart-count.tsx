@@ -177,6 +177,7 @@ export default function ConversationCountChart({
       }
     }
   };
+
   const dates =
     (conversationCounts && conversationCounts.map((x: any) => x.date)) || [];
   const counts =

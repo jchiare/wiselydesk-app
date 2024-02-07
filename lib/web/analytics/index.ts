@@ -44,7 +44,9 @@ export class Analytics {
     botId: string,
     today: Date
   ): Promise<ConversationAnalyticsData[]> {
-    const sevenDaysAgo = new Date(today).setDate(today.getDate() - 7);
+    const sevenDaysAgo = Math.floor(
+      new Date(today).setDate(today.getDate() - 7) / 1000
+    );
 
     const conversations: RawConversationData[] = await this.prisma.$queryRaw`
       SELECT
@@ -56,7 +58,7 @@ export class Analytics {
       conversation
       WHERE
         bot_id = ${botId} AND
-        created_at >= ${sevenDaysAgo}
+        UNIX_TIMESTAMP(created_at) >= ${sevenDaysAgo}
       GROUP BY
         date_format(created_at, '%d-%m-%Y')
     `;
