@@ -2,7 +2,7 @@ import Analytics, {
   type ViewingType,
   type FrequencyType
 } from "@/components/web/analytics";
-import { URL, NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
+import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 
 type AnalyticsProps = {
   params: {
