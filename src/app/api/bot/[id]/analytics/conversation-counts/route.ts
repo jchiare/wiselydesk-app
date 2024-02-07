@@ -1,6 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-const prismaClient = new PrismaClient();
+import { Analytics as AnalyticsService } from "@/lib/web/analytics";
 
 type Params = {
   params: { id: string; conversationId: string };
@@ -20,11 +18,12 @@ export async function GET(request: Request, { params }: Params) {
     return Response.json({ message: "Missing viewingType" }, { status: 400 });
   }
 
-  const notes = await prismaClient.note.findMany({
-    where: {
-      conversation_id: Number(conversationId)
-    }
-  });
+  const analyticsService = new AnalyticsService();
+  const conversationCounts = await analyticsService.getConvoCounts(
+    botId,
+    frequency,
+    viewingType
+  );
 
-  return Response.json({ notes }, { status: 200 });
+  return Response.json({ conversationCounts }, { status: 200 });
 }
