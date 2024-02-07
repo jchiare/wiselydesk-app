@@ -1,29 +1,15 @@
-import Analytics, { type FrequencyType } from "@/components/web/analytics";
-import { URL } from "@/lib/shared/constants";
+import { redirect } from "next/navigation";
 
-type AnalyticsProps = {
+type ParamsType = {
   params: {
     id: number;
-    frequency: FrequencyType;
+    frequency: string;
+    viewingType: string;
   };
 };
 
-async function fetchConversationCounts(
-  botId: number,
-  frequency: FrequencyType
-) {
-  const res = await fetch(
-    `${URL}/api/analytics/conversation-counts?bot_id=${botId}&frequency=${frequency}`
-  );
-  return await res.json();
-}
-
-export default async function AnalyticsFrequencyPage({
-  params
-}: AnalyticsProps) {
-  const { id: botId, frequency } = params;
-  const conversationCounts = await fetchConversationCounts(botId, frequency);
-  return (
-    <Analytics frequency={frequency} conversationCounts={conversationCounts} />
-  );
+export default function AnalyticsPageRedirect({ params }: ParamsType) {
+  const frequency = params.frequency ?? "daily";
+  const viewingType = params.viewingType ?? "separate";
+  return redirect(`/bot/${params.id}/analytics/${frequency}/${viewingType}`);
 }
