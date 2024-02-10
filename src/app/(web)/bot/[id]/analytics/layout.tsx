@@ -10,11 +10,8 @@ export default async function AnalyticsLayout({ children }: { children: any }) {
     <div className="p-4 sm:p-6 lg:px-16 lg:py-10 ">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h1 className="text-base font-semibold leading-6 text-gray-900">
-            Analytics
-          </h1>
-          <p className="mt-2 text-sm text-gray-700">
-            View analytics about your conversations.
+          <p className="mb-1 text-sm text-gray-700">
+            Analyze by time and viewing options
           </p>
         </div>
       </div>
