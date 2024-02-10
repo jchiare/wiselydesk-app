@@ -5,16 +5,28 @@ import { useLocalStorage } from "@/lib/chat/hooks/use-local-storage";
 import { getChatThemeByBotId } from "@/lib/chat/chat-theme";
 import { textByBotId } from "@/i18n/chat";
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+
 type SupportTicketModalProps = {
   conversationId: string | undefined;
   botId: number;
   locale?: string;
+  contactReason?: boolean;
 };
 
 export default function SupportTicketModal({
   conversationId,
   botId,
-  locale
+  locale,
+  contactReason
 }: SupportTicketModalProps): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [summary, setSummary] = useState("");
@@ -157,6 +169,41 @@ export default function SupportTicketModal({
                 onChange={(e) => setEmail(e.target.value)}
               />
             </label>
+            {contactReason && (
+              <div className="flex justify-center">
+                <div className="px-4 py-2">
+                  <Select>
+                    <SelectTrigger className="w-[180px] bg-slate-100">
+                      <SelectValue placeholder="Contact Reason?" />
+                    </SelectTrigger>
+                    <SelectContent className="m-2 bg-slate-100">
+                      <SelectGroup>
+                        <SelectItem
+                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                          value="wrong-information">
+                          Wrong Information
+                        </SelectItem>
+                        <SelectItem
+                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                          value="missing-information">
+                          Missing Information
+                        </SelectItem>
+                        <SelectItem
+                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                          value="useless-chatbot">
+                          Useless Chatbot
+                        </SelectItem>
+                        <SelectItem
+                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                          value="other">
+                          Other
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            )}
             <label className="mb-2 flex flex-col">
               <span className="pl-1">
                 {texti18.supportTicketModal.info[adjustedLocale]}:
@@ -173,53 +220,55 @@ export default function SupportTicketModal({
                 onChange={(e) => setAdditionalInfo(e.target.value)}
               />
             </label>
-            <button
-              onClick={submitButton}
-              disabled={isLoading || submitSuccess}
-              className={` mx-auto mt-4 w-fit rounded px-4 py-2 font-bold text-white transition-colors duration-300 ${
-                submitSuccess
-                  ? supportTicketSetting.submitButtonSuccess
-                  : supportTicketSetting.submitButton
-              }`}>
-              {submitSuccess ? (
-                <span className="flex items-center">
-                  <svg
-                    className="-ml-1 mr-3 h-6 w-6 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    aria-hidden="true">
-                    <path d="M20.285 2l-11.285 11.567-5.286-4.745-3.714 4.161 9 8.017 15-15.426-4.715-3.574z" />
-                  </svg>
-                  {texti18.supportTicketModal.success[adjustedLocale]}
-                </span>
-              ) : isLoading ? (
-                <span className="flex items-center">
-                  <svg
-                    className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24">
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"></circle>
-                    <path
-                      className="opacity-75"
+            <div className="mx-auto">
+              <button
+                onClick={submitButton}
+                disabled={isLoading || submitSuccess}
+                className={` mx-auto mt-4 w-fit rounded px-4 py-2 font-bold text-white transition-colors duration-300 ${
+                  submitSuccess
+                    ? supportTicketSetting.submitButtonSuccess
+                    : supportTicketSetting.submitButton
+                }`}>
+                {submitSuccess ? (
+                  <span className="flex items-center">
+                    <svg
+                      className="-ml-1 mr-3 h-6 w-6 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
                       fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3.002 7.938l1.272-1.272-.536-.375z"></path>
-                  </svg>
-                  {texti18.supportTicketModal.creating[adjustedLocale]}
-                </span>
-              ) : (
-                <span>
-                  {texti18.supportTicketModal.submitButton[adjustedLocale]}
-                </span>
-              )}
-            </button>
+                      aria-hidden="true">
+                      <path d="M20.285 2l-11.285 11.567-5.286-4.745-3.714 4.161 9 8.017 15-15.426-4.715-3.574z" />
+                    </svg>
+                    {texti18.supportTicketModal.success[adjustedLocale]}
+                  </span>
+                ) : isLoading ? (
+                  <span className="flex items-center">
+                    <svg
+                      className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3.002 7.938l1.272-1.272-.536-.375z"></path>
+                    </svg>
+                    {texti18.supportTicketModal.creating[adjustedLocale]}
+                  </span>
+                ) : (
+                  <span>
+                    {texti18.supportTicketModal.submitButton[adjustedLocale]}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

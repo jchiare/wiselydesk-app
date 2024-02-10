@@ -19,6 +19,8 @@ export type SearchParams = {
   model?: string;
   locale: string;
   inline_sources?: boolean;
+  testSupportModal?: boolean;
+  contactReason?: string;
 };
 
 type ChatProps = {
@@ -39,7 +41,9 @@ export default function Chat({
     create_support_ticket: createSupportTicket = false,
     client_api_key: clientApiKey,
     model = "gpt-4",
-    inline_sources: inlineSources = false
+    inline_sources: inlineSources = false,
+    testSupportModal = false,
+    contactReason
   } = searchParams;
 
   const {
@@ -79,6 +83,8 @@ export default function Chat({
         aiResponseDone={false}
         isLastMessage={false}
         bot={bot}
+        testSupportModal={testSupportModal}
+        contactReason={!!contactReason}
       />
       {messages.map((message, index) => {
         const isLastMessage = messages.length === index + 1;
@@ -98,6 +104,7 @@ export default function Chat({
             conversationId={conversationId}
             createSupportTicket={createSupportTicket}
             bot={bot}
+            contactReason={!!contactReason}
           />
         );
       })}
