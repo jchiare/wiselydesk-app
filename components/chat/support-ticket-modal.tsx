@@ -19,12 +19,14 @@ type SupportTicketModalProps = {
   conversationId: string | undefined;
   botId: number;
   locale?: string;
+  contactReason?: boolean;
 };
 
 export default function SupportTicketModal({
   conversationId,
   botId,
-  locale
+  locale,
+  contactReason
 }: SupportTicketModalProps): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [summary, setSummary] = useState("");
@@ -167,24 +169,8 @@ export default function SupportTicketModal({
                 onChange={(e) => setEmail(e.target.value)}
               />
             </label>
-            <label className="mb-2 flex flex-col">
-              <span className="pl-1">
-                {texti18.supportTicketModal.info[adjustedLocale]}:
-              </span>
-              <textarea
-                name="additional-info"
-                value={additionalInfo}
-                autoFocus={name.length > 0 && email.length > 0}
-                rows={3}
-                placeholder={
-                  texti18.supportTicketModal.additionalInfo[adjustedLocale]
-                }
-                className="mt-1 w-full rounded border p-2"
-                onChange={(e) => setAdditionalInfo(e.target.value)}
-              />
-            </label>
-            <div className="flex items-center justify-around">
-              <div className="mt-4 px-4 py-2">
+            <div className="flex items-center">
+              <div className="px-4 py-2">
                 <Select>
                   <SelectTrigger className="w-[180px] bg-slate-100">
                     <SelectValue placeholder="Contact Reason?" />
@@ -215,55 +201,71 @@ export default function SupportTicketModal({
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <button
-                  onClick={submitButton}
-                  disabled={isLoading || submitSuccess}
-                  className={` mx-auto mt-4 w-fit rounded px-4 py-2 font-bold text-white transition-colors duration-300 ${
-                    submitSuccess
-                      ? supportTicketSetting.submitButtonSuccess
-                      : supportTicketSetting.submitButton
-                  }`}>
-                  {submitSuccess ? (
-                    <span className="flex items-center">
-                      <svg
-                        className="-ml-1 mr-3 h-6 w-6 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
+            </div>
+            <label className="mb-2 flex flex-col">
+              <span className="pl-1">
+                {texti18.supportTicketModal.info[adjustedLocale]}:
+              </span>
+              <textarea
+                name="additional-info"
+                value={additionalInfo}
+                autoFocus={name.length > 0 && email.length > 0}
+                rows={3}
+                placeholder={
+                  texti18.supportTicketModal.additionalInfo[adjustedLocale]
+                }
+                className="mt-1 w-full rounded border p-2"
+                onChange={(e) => setAdditionalInfo(e.target.value)}
+              />
+            </label>
+            <div>
+              <button
+                onClick={submitButton}
+                disabled={isLoading || submitSuccess}
+                className={` mx-auto mt-4 w-fit rounded px-4 py-2 font-bold text-white transition-colors duration-300 ${
+                  submitSuccess
+                    ? supportTicketSetting.submitButtonSuccess
+                    : supportTicketSetting.submitButton
+                }`}>
+                {submitSuccess ? (
+                  <span className="flex items-center">
+                    <svg
+                      className="-ml-1 mr-3 h-6 w-6 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true">
+                      <path d="M20.285 2l-11.285 11.567-5.286-4.745-3.714 4.161 9 8.017 15-15.426-4.715-3.574z" />
+                    </svg>
+                    {texti18.supportTicketModal.success[adjustedLocale]}
+                  </span>
+                ) : isLoading ? (
+                  <span className="flex items-center">
+                    <svg
+                      className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"></circle>
+                      <path
+                        className="opacity-75"
                         fill="currentColor"
-                        aria-hidden="true">
-                        <path d="M20.285 2l-11.285 11.567-5.286-4.745-3.714 4.161 9 8.017 15-15.426-4.715-3.574z" />
-                      </svg>
-                      {texti18.supportTicketModal.success[adjustedLocale]}
-                    </span>
-                  ) : isLoading ? (
-                    <span className="flex items-center">
-                      <svg
-                        className="-ml-1 mr-3 h-5 w-5 animate-spin text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24">
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3.002 7.938l1.272-1.272-.536-.375z"></path>
-                      </svg>
-                      {texti18.supportTicketModal.creating[adjustedLocale]}
-                    </span>
-                  ) : (
-                    <span>
-                      {texti18.supportTicketModal.submitButton[adjustedLocale]}
-                    </span>
-                  )}
-                </button>
-              </div>
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3.002 7.938l1.272-1.272-.536-.375z"></path>
+                    </svg>
+                    {texti18.supportTicketModal.creating[adjustedLocale]}
+                  </span>
+                ) : (
+                  <span>
+                    {texti18.supportTicketModal.submitButton[adjustedLocale]}
+                  </span>
+                )}
+              </button>
             </div>
           </div>
         </div>

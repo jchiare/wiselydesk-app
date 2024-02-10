@@ -21,6 +21,7 @@ type AgentMessageProps = {
   createSupportTicket?: boolean;
   bot: Bot;
   testSupportModal?: boolean;
+  contactReason?: boolean;
 };
 
 export default function AgentDiv({
@@ -35,7 +36,8 @@ export default function AgentDiv({
   conversationId,
   createSupportTicket,
   bot,
-  testSupportModal
+  testSupportModal,
+  contactReason
 }: AgentMessageProps): JSX.Element {
   const [_, buttonCreateHtml] = removeSupportButton(text);
 
@@ -70,6 +72,7 @@ export default function AgentDiv({
                     conversationId={conversationId}
                     botId={bot.id}
                     locale={locale}
+                    contactReason={contactReason}
                   />
                 )}
 

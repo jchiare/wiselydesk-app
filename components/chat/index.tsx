@@ -20,6 +20,7 @@ export type SearchParams = {
   locale: string;
   inline_sources?: boolean;
   testSupportModal?: boolean;
+  contactReason?: string;
 };
 
 type ChatProps = {
@@ -41,7 +42,8 @@ export default function Chat({
     client_api_key: clientApiKey,
     model = "gpt-4",
     inline_sources: inlineSources = false,
-    testSupportModal = false
+    testSupportModal = false,
+    contactReason
   } = searchParams;
 
   const {
@@ -101,6 +103,7 @@ export default function Chat({
             conversationId={conversationId}
             createSupportTicket={createSupportTicket}
             bot={bot}
+            contactReason={!!contactReason}
           />
         );
       })}
