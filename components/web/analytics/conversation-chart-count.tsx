@@ -75,6 +75,10 @@ export default function ConversationCountChart({
     layout: {
       padding: 20
     },
+    interaction: {
+      intersect: false,
+      mode: "index"
+    },
     plugins: {
       legend: {
         position: "bottom" as const
@@ -85,6 +89,21 @@ export default function ConversationCountChart({
         text: title,
         padding: 15,
         font: { size: 24 }
+      },
+      tooltip: {
+        filter: (tooltipItem) => tooltipItem.parsed.y !== 0,
+        callbacks: {
+          footer: (tooltipItems) => {
+            let sum = 0;
+            if (tooltipItems.length > 0) {
+              const index = tooltipItems[0].dataIndex;
+              tooltipItems[0].chart.data.datasets.forEach((dataset) => {
+                sum += dataset.data[index] as number;
+              });
+            }
+            return "Total: " + sum;
+          }
+        }
       }
     },
     scales: {
@@ -121,7 +140,7 @@ export default function ConversationCountChart({
     labels: dates,
     datasets: [
       {
-        label: "Total",
+        label: "Unactioned chat",
         data: counts,
         backgroundColor: "rgb(31,41,55)"
       },
@@ -131,7 +150,7 @@ export default function ConversationCountChart({
         backgroundColor: "rgba(75, 192, 192, 0.5)"
       },
       {
-        label: "Tickets Created",
+        label: "Tickets created",
         data: ticketCreationcounts,
         backgroundColor: "rgb(240,230,140)"
       }
