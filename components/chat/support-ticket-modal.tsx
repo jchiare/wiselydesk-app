@@ -169,7 +169,7 @@ export default function SupportTicketModal({
                 onChange={(e) => setEmail(e.target.value)}
               />
             </label>
-            <div className="flex items-center">
+            <div className="flex justify-center">
               <div className="px-4 py-2">
                 <Select>
                   <SelectTrigger className="w-[180px] bg-slate-100">
@@ -218,7 +218,7 @@ export default function SupportTicketModal({
                 onChange={(e) => setAdditionalInfo(e.target.value)}
               />
             </label>
-            <div>
+            <div className="mx-auto">
               <button
                 onClick={submitButton}
                 disabled={isLoading || submitSuccess}
