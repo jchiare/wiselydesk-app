@@ -169,39 +169,41 @@ export default function SupportTicketModal({
                 onChange={(e) => setEmail(e.target.value)}
               />
             </label>
-            <div className="flex justify-center">
-              <div className="px-4 py-2">
-                <Select>
-                  <SelectTrigger className="w-[180px] bg-slate-100">
-                    <SelectValue placeholder="Contact Reason?" />
-                  </SelectTrigger>
-                  <SelectContent className="m-2 bg-slate-100">
-                    <SelectGroup>
-                      <SelectItem
-                        className="p-2 hover:cursor-pointer hover:bg-slate-200"
-                        value="wrong-information">
-                        Wrong Information
-                      </SelectItem>
-                      <SelectItem
-                        className="p-2 hover:cursor-pointer hover:bg-slate-200"
-                        value="missing-information">
-                        Missing Information
-                      </SelectItem>
-                      <SelectItem
-                        className="p-2 hover:cursor-pointer hover:bg-slate-200"
-                        value="useless-chatbot">
-                        Useless Chatbot
-                      </SelectItem>
-                      <SelectItem
-                        className="p-2 hover:cursor-pointer hover:bg-slate-200"
-                        value="other">
-                        Other
-                      </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+            {contactReason && (
+              <div className="flex justify-center">
+                <div className="px-4 py-2">
+                  <Select>
+                    <SelectTrigger className="w-[180px] bg-slate-100">
+                      <SelectValue placeholder="Contact Reason?" />
+                    </SelectTrigger>
+                    <SelectContent className="m-2 bg-slate-100">
+                      <SelectGroup>
+                        <SelectItem
+                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                          value="wrong-information">
+                          Wrong Information
+                        </SelectItem>
+                        <SelectItem
+                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                          value="missing-information">
+                          Missing Information
+                        </SelectItem>
+                        <SelectItem
+                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                          value="useless-chatbot">
+                          Useless Chatbot
+                        </SelectItem>
+                        <SelectItem
+                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                          value="other">
+                          Other
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-            </div>
+            )}
             <label className="mb-2 flex flex-col">
               <span className="pl-1">
                 {texti18.supportTicketModal.info[adjustedLocale]}:

@@ -84,6 +84,7 @@ export default function Chat({
         isLastMessage={false}
         bot={bot}
         testSupportModal={testSupportModal}
+        contactReason={!!contactReason}
       />
       {messages.map((message, index) => {
         const isLastMessage = messages.length === index + 1;
