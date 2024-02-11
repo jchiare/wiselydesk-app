@@ -10,6 +10,6 @@ type ParamsType = {
 
 export default function AnalyticsPageRedirect({ params }: ParamsType) {
   const frequency = params.frequency ?? "daily";
-  const viewingType = params.viewingType ?? "separate";
+  const viewingType = params.viewingType ?? "stacked";
   return redirect(`/bot/${params.id}/analytics/${frequency}/${viewingType}`);
 }

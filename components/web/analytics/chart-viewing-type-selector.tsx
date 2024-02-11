@@ -50,7 +50,7 @@ export default function ChartViewingTypeSelector({
               leaveFrom="opacity-100"
               leaveTo="opacity-0">
               <Listbox.Options className="absolute z-10 mt-2 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                {["separate", "stacked"].map((viewingType) => (
+                {["stacked", "separate"].map((viewingType) => (
                   <Listbox.Option
                     key={viewingType}
                     className={({ active }) =>
