@@ -20,6 +20,7 @@ ChartJS.register(
 );
 
 import type { FrequencyType, ViewingType } from "@/components/web/analytics";
+import type { ConversationAnalyticsData } from "@/lib/web/analytics";
 
 export default function ConversationCountChart({
   frequency,
@@ -28,7 +29,7 @@ export default function ConversationCountChart({
 }: {
   frequency: FrequencyType;
   viewingType?: ViewingType;
-  conversationCounts: any;
+  conversationCounts: ConversationAnalyticsData[];
 }) {
   const title = `${
     frequency.charAt(0).toUpperCase() + frequency.slice(1)
@@ -44,6 +45,17 @@ export default function ConversationCountChart({
       padding: 20
     },
     plugins: {
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            const label = context.dataset.label || "";
+            const value = context.raw as number;
+            const total = totals[context.dataIndex];
+            const percentage = ((value / total) * 100).toFixed(0) + "%";
+            return `${label}: ${value} (${percentage})`;
+          }
+        }
+      },
       legend: {
         position: "bottom" as const
       },
@@ -75,6 +87,10 @@ export default function ConversationCountChart({
     layout: {
       padding: 20
     },
+    interaction: {
+      intersect: false,
+      mode: "index"
+    },
     plugins: {
       legend: {
         position: "bottom" as const
@@ -85,6 +101,28 @@ export default function ConversationCountChart({
         text: title,
         padding: 15,
         font: { size: 24 }
+      },
+      tooltip: {
+        filter: (tooltipItem) => tooltipItem.parsed.y !== 0,
+        callbacks: {
+          footer: (tooltipItems) => {
+            let sum = 0;
+            if (tooltipItems.length > 0) {
+              const index = tooltipItems[0].dataIndex;
+              tooltipItems[0].chart.data.datasets.forEach((dataset) => {
+                sum += dataset.data[index] as number;
+              });
+            }
+            return "Total: " + sum;
+          },
+          label: (context) => {
+            const label = context.dataset.label || "";
+            const value = context.raw as number;
+            const total = totals[context.dataIndex];
+            const percentage = ((value / total) * 100).toFixed(0) + "%";
+            return `${label}: ${value} (${percentage})`;
+          }
+        }
       }
     },
     scales: {
@@ -101,39 +139,52 @@ export default function ConversationCountChart({
     }
   };
 
-  const dates =
-    (conversationCounts && conversationCounts.map((x: any) => x.date)) || [];
-  const counts =
-    (conversationCounts &&
-      conversationCounts.map((x: any) => x.total_convo_count)) ||
-    [];
+  const totals = conversationCounts.map(
+    (conversation) =>
+      conversation.total_convo_count +
+      conversation.deflected_convo_count +
+      conversation.ticket_created_count +
+      conversation.negative_count +
+      conversation.positive_count
+  );
 
-  const deflectedCounts =
-    (conversationCounts &&
-      conversationCounts.map((x: any) => x.deflected_convo_count)) ||
-    [];
-
-  const ticketCreationcounts =
-    (conversationCounts &&
-      conversationCounts.map((x: any) => x.ticket_created_count)) ||
-    [];
   const chartData = {
-    labels: dates,
+    labels: conversationCounts.map((conversation) => conversation.date),
     datasets: [
       {
-        label: "Total",
-        data: counts,
+        label: "Regular chats",
+        data: conversationCounts.map(
+          (conversation) => conversation.total_convo_count
+        ),
         backgroundColor: "rgb(31,41,55)"
       },
       {
         label: "Deflected",
-        data: deflectedCounts,
+        data: conversationCounts.map(
+          (conversation) => conversation.deflected_convo_count
+        ),
         backgroundColor: "rgba(75, 192, 192, 0.5)"
       },
       {
-        label: "Tickets Created",
-        data: ticketCreationcounts,
+        label: "Tickets created",
+        data: conversationCounts.map(
+          (conversation) => conversation.ticket_created_count
+        ),
         backgroundColor: "rgb(240,230,140)"
+      },
+      {
+        label: "Negative chats",
+        data: conversationCounts.map(
+          (conversation) => conversation.negative_count
+        ),
+        backgroundColor: "rgb(255,99,71)"
+      },
+      {
+        label: "Positive chats",
+        data: conversationCounts.map(
+          (conversation) => conversation.positive_count
+        ),
+        backgroundColor: "rgb(144,238,144)"
       }
     ]
   };

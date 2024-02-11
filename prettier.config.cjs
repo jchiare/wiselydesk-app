@@ -6,4 +6,5 @@ module.exports = {
   trailingComma: "none",
   plugins: ["prettier-plugin-tailwindcss"],
   pluginSearchDirs: false,
+  arrowParens: "avoid"
 };
