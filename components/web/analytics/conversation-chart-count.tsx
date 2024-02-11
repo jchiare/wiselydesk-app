@@ -139,22 +139,6 @@ export default function ConversationCountChart({
     }
   };
 
-  const dates =
-    conversationCounts?.map(
-      (conversation: ConversationAnalyticsData) => conversation.date
-    ) || [];
-  const counts =
-    conversationCounts?.map(
-      (conversation: ConversationAnalyticsData) =>
-        conversation.total_convo_count
-    ) || [];
-
-  const deflectedCounts =
-    conversationCounts?.map(
-      (conversation: ConversationAnalyticsData) =>
-        conversation.deflected_convo_count
-    ) || [];
-
   const ticketCreationcounts =
     conversationCounts?.map(
       (conversation: ConversationAnalyticsData) =>
@@ -181,31 +165,41 @@ export default function ConversationCountChart({
   );
 
   const chartData = {
-    labels: dates,
+    labels: conversationCounts.map((conversation) => conversation.date),
     datasets: [
       {
         label: "Regular chats",
-        data: counts,
+        data: conversationCounts.map(
+          (conversation) => conversation.total_convo_count
+        ),
         backgroundColor: "rgb(31,41,55)"
       },
       {
         label: "Deflected",
-        data: deflectedCounts,
+        data: conversationCounts.map(
+          (conversation) => conversation.deflected_convo_count
+        ),
         backgroundColor: "rgba(75, 192, 192, 0.5)"
       },
       {
         label: "Tickets created",
-        data: ticketCreationcounts,
+        data: conversationCounts.map(
+          (conversation) => conversation.ticket_created_count
+        ),
         backgroundColor: "rgb(240,230,140)"
       },
       {
         label: "Negative chats",
-        data: negativeChatCounts,
+        data: conversationCounts.map(
+          (conversation) => conversation.negative_count
+        ),
         backgroundColor: "rgb(255,99,71)"
       },
       {
         label: "Positive chats",
-        data: positiveChatCounts,
+        data: conversationCounts.map(
+          (conversation) => conversation.positive_count
+        ),
         backgroundColor: "rgb(144,238,144)"
       }
     ]
