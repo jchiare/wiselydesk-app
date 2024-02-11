@@ -45,6 +45,17 @@ export default function ConversationCountChart({
       padding: 20
     },
     plugins: {
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            const label = context.dataset.label || "";
+            const value = context.raw as number;
+            const total = totals[context.dataIndex];
+            const percentage = ((value / total) * 100).toFixed(0) + "%";
+            return `${label}: ${value} (${percentage})`;
+          }
+        }
+      },
       legend: {
         position: "bottom" as const
       },
@@ -103,6 +114,13 @@ export default function ConversationCountChart({
               });
             }
             return "Total: " + sum;
+          },
+          label: (context) => {
+            const label = context.dataset.label || "";
+            const value = context.raw as number;
+            const total = totals[context.dataIndex];
+            const percentage = ((value / total) * 100).toFixed(0) + "%";
+            return `${label}: ${value} (${percentage})`;
           }
         }
       }
@@ -152,6 +170,15 @@ export default function ConversationCountChart({
     conversationCounts?.map(
       (conversation: ConversationAnalyticsData) => conversation.positive_count
     ) || [];
+
+  const totals = conversationCounts.map(
+    (conversation) =>
+      conversation.total_convo_count +
+      conversation.deflected_convo_count +
+      conversation.ticket_created_count +
+      conversation.negative_count +
+      conversation.positive_count
+  );
 
   const chartData = {
     labels: dates,
