@@ -139,22 +139,6 @@ export default function ConversationCountChart({
     }
   };
 
-  const ticketCreationcounts =
-    conversationCounts?.map(
-      (conversation: ConversationAnalyticsData) =>
-        conversation.ticket_created_count
-    ) || [];
-
-  const negativeChatCounts =
-    conversationCounts?.map(
-      (conversation: ConversationAnalyticsData) => conversation.negative_count
-    ) || [];
-
-  const positiveChatCounts =
-    conversationCounts?.map(
-      (conversation: ConversationAnalyticsData) => conversation.positive_count
-    ) || [];
-
   const totals = conversationCounts.map(
     (conversation) =>
       conversation.total_convo_count +
