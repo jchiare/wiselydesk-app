@@ -184,7 +184,7 @@ export default function ConversationCountChart({
     labels: dates,
     datasets: [
       {
-        label: "Unactioned chats",
+        label: "Regular chats",
         data: counts,
         backgroundColor: "rgb(31,41,55)"
       },
