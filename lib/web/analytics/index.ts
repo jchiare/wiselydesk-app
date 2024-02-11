@@ -1,10 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 
-type ConversationAnalyticsData = {
+export type ConversationAnalyticsData = {
   frequency_type: string;
   total_convo_count: number;
   deflected_convo_count: number;
   ticket_created_count: number;
+  positive_count?: number;
+  negative_count?: number;
   date: string;
 };
 
@@ -13,6 +15,8 @@ type RawConversationData = {
   deflected_convo_count: number;
   ticket_created_count: number;
   date: string;
+  negative_count: number;
+  positive_count: number;
 };
 
 export class Analytics {
@@ -47,19 +51,42 @@ export class Analytics {
       new Date(today).setDate(today.getDate() - 7) / 1000
     );
 
-    const conversations: RawConversationData[] = await this.prisma.$queryRaw`
-      SELECT
-        COUNT(id) AS total_convo_count,
-        SUM(CASE WHEN ticket_deflected = TRUE THEN 1 ELSE 0 END) AS deflected_convo_count,
-        SUM(CASE WHEN zendesk_ticket_url IS NOT NULL THEN 1 ELSE 0 END) AS ticket_created_count,
-        date_format(created_at,  '%b %e') AS date
-      FROM
-      conversation
-      WHERE
-        bot_id = ${botId} AND
-        UNIX_TIMESTAMP(created_at) >= ${sevenDaysAgo}
-      GROUP BY
-        4
+    const conversations = await this.prisma.$queryRaw<RawConversationData[]>`
+   SELECT
+    COUNT(id) AS total_convo_count,
+    SUM(CASE WHEN ticket_deflected = TRUE THEN 1 ELSE 0 END) AS deflected_convo_count,
+    SUM(CASE WHEN zendesk_ticket_url IS NOT NULL THEN 1 ELSE 0 END) AS ticket_created_count,
+    date,
+    SUM(CASE WHEN rating = 'Positive' THEN 1 ELSE 0 END) AS positive_count,
+    SUM(CASE WHEN rating = 'Negative' THEN 1 ELSE 0 END) AS negative_count
+  FROM
+  (
+    SELECT
+      c.id,
+      c.ticket_deflected,
+      c.zendesk_ticket_url,
+      date_format(c.created_at, '%b %e') AS date,
+      CASE
+        WHEN SUM(CASE WHEN m.is_helpful = 1 THEN 1 ELSE 0 END) > SUM(CASE WHEN m.is_helpful = 0 THEN 1 ELSE 0 END) THEN 'Positive'
+        WHEN SUM(CASE WHEN m.is_helpful = 1 THEN 1 ELSE 0 END) < SUM(CASE WHEN m.is_helpful = 0 THEN 1 ELSE 0 END) THEN 'Negative'
+        ELSE 'Neutral'
+      END AS rating,
+      c.bot_id bot_id,
+      c.created_at created_at
+    FROM
+      message m
+      JOIN conversation c ON m.conversation_id = c.id
+    WHERE
+      m.bot_id = ${botId} AND
+      UNIX_TIMESTAMP(m.created_at) >= ${sevenDaysAgo}
+    GROUP BY
+      c.id, 4
+  ) AS conversation
+  WHERE
+    bot_id = ${botId} AND
+    UNIX_TIMESTAMP(created_at) >= ${sevenDaysAgo}
+  GROUP BY
+    date;
     `;
 
     return conversations.map((conversation) => ({
@@ -67,6 +94,8 @@ export class Analytics {
       total_convo_count: Number(conversation.total_convo_count),
       deflected_convo_count: Number(conversation.deflected_convo_count),
       ticket_created_count: Number(conversation.ticket_created_count),
+      positive_count: Number(conversation.positive_count),
+      negative_count: Number(conversation.negative_count),
       date: conversation.date
     }));
   }
@@ -135,5 +164,44 @@ export class Analytics {
       ticket_created_count: Number(conversation.ticket_created_count),
       date: conversation.date
     }));
+  }
+
+  private createConversationTable(botId: string, createdAt: number): string {
+    return `
+    c.*,
+    CASE
+        WHEN SUM(
+            CASE
+                WHEN m.is_helpful = 1 THEN 1
+                ELSE 0
+            END
+        ) > SUM(
+            CASE
+                WHEN m.is_helpful = 0 THEN 1
+                ELSE 0
+            END
+        ) THEN 'Positive'
+        WHEN SUM(
+            CASE
+                WHEN m.is_helpful = 1 THEN 1
+                ELSE 0
+            END
+        ) < SUM(
+            CASE
+                WHEN m.is_helpful = 0 THEN 1
+                ELSE 0
+            END
+        ) THEN 'Negative'
+        ELSE 'Neutral'
+    END AS rating
+  FROM
+    message m
+    JOIN conversation c ON m.conversation_id = c.id
+  WHERE
+    m.bot_id = ${botId} 
+    AND UNIX_TIMESTAMP(m.created_at) >= ${createdAt}
+  GROUP BY
+  date
+    `;
   }
 }

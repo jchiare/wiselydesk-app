@@ -20,6 +20,7 @@ ChartJS.register(
 );
 
 import type { FrequencyType, ViewingType } from "@/components/web/analytics";
+import type { ConversationAnalyticsData } from "@/lib/web/analytics";
 
 export default function ConversationCountChart({
   frequency,
@@ -28,7 +29,7 @@ export default function ConversationCountChart({
 }: {
   frequency: FrequencyType;
   viewingType?: ViewingType;
-  conversationCounts: any;
+  conversationCounts: ConversationAnalyticsData[];
 }) {
   const title = `${
     frequency.charAt(0).toUpperCase() + frequency.slice(1)
@@ -121,26 +122,42 @@ export default function ConversationCountChart({
   };
 
   const dates =
-    (conversationCounts && conversationCounts.map((x: any) => x.date)) || [];
+    conversationCounts?.map(
+      (conversation: ConversationAnalyticsData) => conversation.date
+    ) || [];
   const counts =
-    (conversationCounts &&
-      conversationCounts.map((x: any) => x.total_convo_count)) ||
-    [];
+    conversationCounts?.map(
+      (conversation: ConversationAnalyticsData) =>
+        conversation.total_convo_count
+    ) || [];
 
   const deflectedCounts =
-    (conversationCounts &&
-      conversationCounts.map((x: any) => x.deflected_convo_count)) ||
-    [];
+    conversationCounts?.map(
+      (conversation: ConversationAnalyticsData) =>
+        conversation.deflected_convo_count
+    ) || [];
 
   const ticketCreationcounts =
-    (conversationCounts &&
-      conversationCounts.map((x: any) => x.ticket_created_count)) ||
-    [];
+    conversationCounts?.map(
+      (conversation: ConversationAnalyticsData) =>
+        conversation.ticket_created_count
+    ) || [];
+
+  const negativeChatCounts =
+    conversationCounts?.map(
+      (conversation: ConversationAnalyticsData) => conversation.negative_count
+    ) || [];
+
+  const positiveChatCounts =
+    conversationCounts?.map(
+      (conversation: ConversationAnalyticsData) => conversation.positive_count
+    ) || [];
+
   const chartData = {
     labels: dates,
     datasets: [
       {
-        label: "Unactioned chat",
+        label: "Unactioned chats",
         data: counts,
         backgroundColor: "rgb(31,41,55)"
       },
@@ -153,6 +170,16 @@ export default function ConversationCountChart({
         label: "Tickets created",
         data: ticketCreationcounts,
         backgroundColor: "rgb(240,230,140)"
+      },
+      {
+        label: "Negative chats",
+        data: negativeChatCounts,
+        backgroundColor: "rgb(255,99,71)"
+      },
+      {
+        label: "Positive chats",
+        data: positiveChatCounts,
+        backgroundColor: "rgb(144,238,144)"
       }
     ]
   };
