@@ -46,15 +46,15 @@ export default function SupportTicketModal({
     if (conversationId) {
       if (!summary) {
         fetch(`${URL}/api/conversation/${conversationId}/summarization`)
-          .then((res) => res.json())
-          .then((data) => {
+          .then(res => res.json())
+          .then(data => {
             setSummary(data["summary"]);
           });
       }
       if (!transcript) {
         fetch(`${URL}/api/conversation/${conversationId}/transcribe`)
-          .then((res) => res.json())
-          .then((data) => {
+          .then(res => res.json())
+          .then(data => {
             setTranscript(data["transcription"]);
           });
       }
@@ -153,7 +153,7 @@ export default function SupportTicketModal({
                 name="name"
                 value={name}
                 className="mt-1 w-full rounded border p-2"
-                onChange={(e) => setName(e.target.value)}
+                onChange={e => setName(e.target.value)}
               />
             </label>
             <label className="mb-2 block ">
@@ -166,44 +166,9 @@ export default function SupportTicketModal({
                 name="email"
                 value={email}
                 className="mt-1 w-full rounded border p-2"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
               />
             </label>
-            {contactReason && (
-              <div className="flex justify-center">
-                <div className="px-4 py-2">
-                  <Select>
-                    <SelectTrigger className="w-[180px] bg-slate-100">
-                      <SelectValue placeholder="Contact Reason?" />
-                    </SelectTrigger>
-                    <SelectContent className="m-2 bg-slate-100">
-                      <SelectGroup>
-                        <SelectItem
-                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
-                          value="wrong-information">
-                          Wrong Information
-                        </SelectItem>
-                        <SelectItem
-                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
-                          value="missing-information">
-                          Missing Information
-                        </SelectItem>
-                        <SelectItem
-                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
-                          value="useless-chatbot">
-                          Useless Chatbot
-                        </SelectItem>
-                        <SelectItem
-                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
-                          value="other">
-                          Other
-                        </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            )}
             <label className="mb-2 flex flex-col">
               <span className="pl-1">
                 {texti18.supportTicketModal.info[adjustedLocale]}:
@@ -217,14 +182,47 @@ export default function SupportTicketModal({
                   texti18.supportTicketModal.additionalInfo[adjustedLocale]
                 }
                 className="mt-1 w-full rounded border p-2"
-                onChange={(e) => setAdditionalInfo(e.target.value)}
+                onChange={e => setAdditionalInfo(e.target.value)}
               />
             </label>
-            <div className="mx-auto">
+            <div className="flex items-center justify-around pt-3">
+              {contactReason && (
+                <div className="">
+                  <Select>
+                    <SelectTrigger className="w-[180px] bg-slate-100">
+                      <SelectValue placeholder="Contact Reason?" />
+                    </SelectTrigger>
+                    <SelectContent className="m-2 bg-slate-100">
+                      <SelectGroup>
+                        <SelectItem
+                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                          value="wrong-information">
+                          Wrong Information
+                        </SelectItem>
+                        {/* <SelectItem
+                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                          value="missing-information">
+                          Missing Information
+                        </SelectItem> */}
+                        <SelectItem
+                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                          value="AI-could-not-solve">
+                          AI could not solve
+                        </SelectItem>
+                        <SelectItem
+                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                          value="other">
+                          Other
+                        </SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
               <button
                 onClick={submitButton}
                 disabled={isLoading || submitSuccess}
-                className={` mx-auto mt-4 w-fit rounded px-4 py-2 font-bold text-white transition-colors duration-300 ${
+                className={` w-fit rounded px-4 py-2 font-bold text-white transition-colors duration-300 ${
                   submitSuccess
                     ? supportTicketSetting.submitButtonSuccess
                     : supportTicketSetting.submitButton
