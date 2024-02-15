@@ -190,29 +190,34 @@ export default function SupportTicketModal({
                 <div className="">
                   <Select>
                     <SelectTrigger className="w-[180px] bg-slate-100">
-                      <SelectValue placeholder="Contact Reason?" />
+                      <SelectValue
+                        placeholder={`${texti18.supportTicketModal.contactReason[adjustedLocale]}?`}
+                      />
                     </SelectTrigger>
                     <SelectContent className="m-2 bg-slate-100">
                       <SelectGroup>
                         <SelectItem
                           className="p-2 hover:cursor-pointer hover:bg-slate-200"
-                          value="wrong-information">
-                          Wrong Information
-                        </SelectItem>
-                        {/* <SelectItem
-                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
                           value="missing-information">
-                          Missing Information
-                        </SelectItem> */}
+                          {
+                            texti18.supportTicketModal.missingInformation[
+                              adjustedLocale
+                            ]
+                          }
+                        </SelectItem>
                         <SelectItem
                           className="p-2 hover:cursor-pointer hover:bg-slate-200"
                           value="AI-could-not-solve">
-                          AI could not solve
+                          {
+                            texti18.supportTicketModal.aiCouldnotSolve[
+                              adjustedLocale
+                            ]
+                          }
                         </SelectItem>
                         <SelectItem
                           className="p-2 hover:cursor-pointer hover:bg-slate-200"
                           value="other">
-                          Other
+                          {texti18.supportTicketModal.other[adjustedLocale]}
                         </SelectItem>
                       </SelectGroup>
                     </SelectContent>
