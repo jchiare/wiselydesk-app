@@ -47,7 +47,7 @@ export default function ConversationCountChart({
     plugins: {
       tooltip: {
         callbacks: {
-          label: (context) => {
+          label: context => {
             const label = context.dataset.label || "";
             const value = context.raw as number;
             const total = totals[context.dataIndex];
@@ -103,19 +103,19 @@ export default function ConversationCountChart({
         font: { size: 24 }
       },
       tooltip: {
-        filter: (tooltipItem) => tooltipItem.parsed.y !== 0,
+        filter: tooltipItem => tooltipItem.parsed.y !== 0,
         callbacks: {
-          footer: (tooltipItems) => {
+          footer: tooltipItems => {
             let sum = 0;
             if (tooltipItems.length > 0) {
               const index = tooltipItems[0].dataIndex;
-              tooltipItems[0].chart.data.datasets.forEach((dataset) => {
+              tooltipItems[0].chart.data.datasets.forEach(dataset => {
                 sum += dataset.data[index] as number;
               });
             }
-            return "Total: " + sum;
+            return "Total chats: " + sum;
           },
-          label: (context) => {
+          label: context => {
             const label = context.dataset.label || "";
             const value = context.raw as number;
             const total = totals[context.dataIndex];
@@ -140,7 +140,7 @@ export default function ConversationCountChart({
   };
 
   const totals = conversationCounts.map(
-    (conversation) =>
+    conversation =>
       conversation.total_convo_count +
       conversation.deflected_convo_count +
       conversation.ticket_created_count +
@@ -149,40 +149,40 @@ export default function ConversationCountChart({
   );
 
   const chartData = {
-    labels: conversationCounts.map((conversation) => conversation.date),
+    labels: conversationCounts.map(conversation => conversation.date),
     datasets: [
       {
         label: "Regular chats",
         data: conversationCounts.map(
-          (conversation) => conversation.total_convo_count
+          conversation => conversation.total_convo_count
         ),
         backgroundColor: "rgb(31,41,55)"
       },
       {
         label: "Deflected",
         data: conversationCounts.map(
-          (conversation) => conversation.deflected_convo_count
+          conversation => conversation.deflected_convo_count
         ),
         backgroundColor: "rgba(75, 192, 192, 0.5)"
       },
       {
-        label: "Tickets created",
+        label: "Ticket-Linked chats",
         data: conversationCounts.map(
-          (conversation) => conversation.ticket_created_count
+          conversation => conversation.ticket_created_count
         ),
         backgroundColor: "rgb(240,230,140)"
       },
       {
         label: "Negative chats",
         data: conversationCounts.map(
-          (conversation) => conversation.negative_count
+          conversation => conversation.negative_count
         ),
         backgroundColor: "rgb(255,99,71)"
       },
       {
         label: "Positive chats",
         data: conversationCounts.map(
-          (conversation) => conversation.positive_count
+          conversation => conversation.positive_count
         ),
         backgroundColor: "rgb(144,238,144)"
       }
