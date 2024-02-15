@@ -13,14 +13,22 @@ type RequestBody = {
   additionalInfo: string;
   locale: string;
   name: string;
+  contactReason: string | null;
 };
 
 export const POST = async (request: NextRequest, { params }: Params) => {
   const body = await request.json();
   const { id, conversationId } = params;
 
-  const { email, summary, transcript, additionalInfo, locale, name } =
-    body as RequestBody;
+  const {
+    email,
+    summary,
+    transcript,
+    additionalInfo,
+    locale,
+    name,
+    contactReason
+  } = body as RequestBody;
 
   const prismaClient = new PrismaClient();
 
@@ -28,13 +36,19 @@ export const POST = async (request: NextRequest, { params }: Params) => {
     .findUnique({
       where: { id: Number(conversationId) }
     })
-    .then((conversation) => conversation!.public_id);
+    .then(conversation => conversation!.public_id);
 
   const zendeskClient = new ZendeskClient(id, publicConversationId);
   await zendeskClient.initialize();
 
+  const tags = ["wiselydesk"];
+
+  if (contactReason) {
+    tags.push(`wiselydesk_cr_${contactReason}`);
+  }
+
   const ticketOptions: TicketOptions = {
-    tags: ["wiselydesk"],
+    tags,
     custom_fields: [
       {
         id: 360036152652, // help center locale

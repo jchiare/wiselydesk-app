@@ -10,7 +10,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
@@ -19,14 +18,12 @@ type SupportTicketModalProps = {
   conversationId: string | undefined;
   botId: number;
   locale?: string;
-  contactReason?: boolean;
 };
 
 export default function SupportTicketModal({
   conversationId,
   botId,
-  locale,
-  contactReason
+  locale
 }: SupportTicketModalProps): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [summary, setSummary] = useState("");
@@ -40,6 +37,7 @@ export default function SupportTicketModal({
   const [isLoading, setIsLoading] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [ticketCreated, setTicketCreated] = useState(false);
+  const [contactReason, setContactReason] = useState<string | null>(null);
 
   function handleClick() {
     setIsModalOpen(true);
@@ -75,7 +73,8 @@ export default function SupportTicketModal({
       transcript,
       additionalInfo,
       locale,
-      name
+      name,
+      contactReason
     };
 
     try {
@@ -186,39 +185,43 @@ export default function SupportTicketModal({
               />
             </label>
             <div className="flex items-center justify-around pt-3">
-              {contactReason && (
-                <div className="">
-                  <Select>
-                    <SelectTrigger className="w-[180px] bg-slate-100">
-                      <SelectValue placeholder="Contact Reason?" />
-                    </SelectTrigger>
-                    <SelectContent className="m-2 bg-slate-100">
-                      <SelectGroup>
-                        <SelectItem
-                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
-                          value="wrong-information">
-                          Wrong Information
-                        </SelectItem>
-                        {/* <SelectItem
-                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
-                          value="missing-information">
-                          Missing Information
-                        </SelectItem> */}
-                        <SelectItem
-                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
-                          value="AI-could-not-solve">
-                          AI could not solve
-                        </SelectItem>
-                        <SelectItem
-                          className="p-2 hover:cursor-pointer hover:bg-slate-200"
-                          value="other">
-                          Other
-                        </SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
+              <div>
+                <Select onValueChange={value => setContactReason(value)}>
+                  <SelectTrigger className="w-[180px] bg-slate-100">
+                    <SelectValue
+                      placeholder={`${texti18.supportTicketModal.contactReason[adjustedLocale]}?`}
+                    />
+                  </SelectTrigger>
+                  <SelectContent className="m-2 bg-slate-100">
+                    <SelectGroup>
+                      <SelectItem
+                        className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                        value="missing_information">
+                        {
+                          texti18.supportTicketModal.missingInformation[
+                            adjustedLocale
+                          ]
+                        }
+                      </SelectItem>
+                      <SelectItem
+                        className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                        value="AI_could_not_solve">
+                        {
+                          texti18.supportTicketModal.aiCouldnotSolve[
+                            adjustedLocale
+                          ]
+                        }
+                      </SelectItem>
+                      <SelectItem
+                        className="p-2 hover:cursor-pointer hover:bg-slate-200"
+                        value="other">
+                        {texti18.supportTicketModal.other[adjustedLocale]}
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
               <button
                 onClick={submitButton}
                 disabled={isLoading || submitSuccess}

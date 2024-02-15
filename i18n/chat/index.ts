@@ -36,6 +36,22 @@ const BASE_TEXT = {
     de: "Antwort stornieren"
   },
   supportTicketModal: {
+    contactReason: {
+      en: "Contact Reason",
+      de: "Kontaktgrund"
+    },
+    missingInformation: {
+      en: "Missing Information",
+      de: "Fehlende Information"
+    },
+    other: {
+      en: "Other",
+      de: "Sonstiges"
+    },
+    aiCouldnotSolve: {
+      en: "AI could not solve",
+      de: "AI könnte nicht lösen"
+    },
     createButton: {
       en: "Create Support Ticket",
       de: "Support-Ticket erstellen"
@@ -97,6 +113,22 @@ const AMBOSS_TEXT = {
     de: "Antwort stornieren"
   },
   supportTicketModal: {
+    contactReason: {
+      en: "Contact Reason",
+      de: "Kontaktgrund"
+    },
+    missingInformation: {
+      en: "Missing Information",
+      de: "Fehlende Information"
+    },
+    other: {
+      en: "Other",
+      de: "Sonstiges"
+    },
+    aiCouldnotSolve: {
+      en: "AI could not solve",
+      de: "AI könnte nicht lösen"
+    },
     createButton: {
       en: "Create Support Ticket",
       de: "Support-Ticket erstellen"
