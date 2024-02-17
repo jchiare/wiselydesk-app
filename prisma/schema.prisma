@@ -39,6 +39,7 @@ model Conversation {
   ticket_deflected   Boolean?
   to_review          Boolean?
   zendesk_ticket_url String?   @db.VarChar(255)
+  livemode           Boolean   @default(false)
 
   @@unique([public_id, bot_id])
   @@index([bot_id], map: "bot_id_index")
