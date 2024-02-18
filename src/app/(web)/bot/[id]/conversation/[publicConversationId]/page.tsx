@@ -24,10 +24,13 @@ export async function generateMetadata({
   };
 }
 
-async function fetchConversation(id: string, botId: string) {
-  const res = await fetch(`${URL}/api//conversation/${id}?bot_id=${botId}`, {
-    cache: "no-cache"
-  });
+async function fetchConversation(publicConversationId: string, botId: string) {
+  const res = await fetch(
+    `${NEXTJS_BACKEND_URL}/api/bot/${botId}/public-conversation/${publicConversationId}`,
+    {
+      cache: "no-cache"
+    }
+  );
   const json = await res.json();
   return json as SingleConversationReturnType;
 }
