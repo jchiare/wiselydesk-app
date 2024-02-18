@@ -1,5 +1,10 @@
 import { JSDOM } from "jsdom";
-import { ZendeskArticle } from "@/lib/shared/services/zendesk/dto";
+import {
+  ZendeskArticle,
+  KnowledgeBaseArticle,
+  type Category,
+  type Section
+} from "@/lib/shared/services/zendesk/dto";
 import { numTokensFromString } from "@/lib/shared/services/openai/utils";
 import {
   OpenAIEmbedder,
@@ -50,25 +55,24 @@ export class ZendeskKbaParser {
 
   async enhanceArticleWithEmbedding(
     article: ZendeskArticle,
-    response: any,
-    botId: string
-  ): Promise<any> {
-    let categories;
-    if (response.categories) {
-      categories = ZendeskKbaParser.mapCategoryIdToName(response.categories);
-      const sectionsToCategories = ZendeskKbaParser.mapSectionIdToCategoryId(
-        response.sections
-      );
-      const category = sectionsToCategories.find(
-        section => section.sectionId === article.sectionId
-      )?.categoryId;
-      const categoryName = categories.find(cat => cat.categoryId === category)
-        ?.name;
-      const sectionName = ZendeskKbaParser.getSectionName(
-        article.sectionId,
-        response.sections
-      );
-    }
+    botId: string,
+    categories?: Category[],
+    sections?: Section[]
+  ): Promise<KnowledgeBaseArticle> {
+    // if (categories && sections) { in case this is needed in future
+    //   categories = ZendeskKbaParser.mapCategoryIdToName(categories);
+    //   const sectionsToCategories =
+    //     ZendeskKbaParser.mapSectionIdToCategoryId(sections);
+    //   const category = sectionsToCategories.find(
+    //     section => section.sectionId === article.sectionId
+    //   )?.categoryId;
+    //   const categoryName = categories.find(cat => cat.categoryId === category)
+    //     ?.name;
+    //   const sectionName = ZendeskKbaParser.getSectionName(
+    //     article.sectionId,
+    //     sections
+    //   );
+    // }
     const cleanedArticleBody = ZendeskKbaParser.cleanArticleBody(article.body);
     const contentEmbedding =
       await this.openAIEmbedder.createEmbedding(cleanedArticleBody);
@@ -77,14 +81,14 @@ export class ZendeskKbaParser {
       this.encodingModel
     );
     return {
-      clientArticleId: article.id,
+      client_article_id: article.id.toString(),
       title: article.title,
       content: `Article title: ${article.title}. Text: ${cleanedArticleBody}. `,
-      clientLastUpdated: article.updatedAt,
-      botId: botId,
-      contentEmbedding: contentEmbedding,
-      totalTokenCount: totalTokens,
-      htmlUrl: article.htmlUrl
+      client_last_updated: article.updatedAt,
+      bot_id: parseInt(botId, 10),
+      content_embedding: contentEmbedding.join(","),
+      total_token_count: totalTokens,
+      html_url: article.htmlUrl
     };
   }
 }

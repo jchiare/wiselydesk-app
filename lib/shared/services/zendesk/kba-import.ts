@@ -1,6 +1,12 @@
 import { ZendeskKbaParser } from "@/lib/shared/services/zendesk/kba-parser";
-import { PrismaClient, type KnowledgeBaseArticle } from "@prisma/client";
-import { ZendeskArticle } from "@/lib/shared/services/zendesk/dto";
+import { PrismaClient } from "@prisma/client";
+import {
+  ZendeskArticle,
+  type ZendeskArticlesResponse,
+  type ZendeskArticleResponse,
+  type Category,
+  type Section
+} from "@/lib/shared/services/zendesk/dto";
 
 function excludeKbWithTags(
   botId: string,
@@ -17,7 +23,7 @@ function excludeKbWithTags(
   return false;
 }
 
-class ZendeskKbaClient {
+export class ZendeskKbaImporter {
   private readonly ALL_KBAS_PATH_ENDING = "?include=categories,sections";
   botId: string;
   zendeskKbaParser: ZendeskKbaParser;
@@ -30,19 +36,20 @@ class ZendeskKbaClient {
   }
 
   async importAllKbas(): Promise<void> {
-    let zendeskHelpCentreUrl = await this.getKbaUrl();
+    let zendeskHelpCentreUrl: string | null = await this.getKbaUrl();
     let counter = 0;
 
     while (zendeskHelpCentreUrl) {
       const response = await fetch(zendeskHelpCentreUrl);
-      const data = await response.json();
+      const data = (await response.json()) as ZendeskArticlesResponse;
       zendeskHelpCentreUrl = data.next_page;
 
       for (const kbaData of data.articles) {
         const kba = new ZendeskArticle(kbaData);
         const shouldExcludeKb = excludeKbWithTags(this.botId, kba);
+
         if (!shouldExcludeKb && (await this.checkIfKbaNeedsUpdate(kba))) {
-          await this.updateKba(kba, data);
+          await this.updateKba(kba);
           console.log("Updated KBA: ", kba.id);
           counter++;
         }
@@ -120,30 +127,47 @@ class ZendeskKbaClient {
   }
 
   async importSingleKba(kbaId: string): Promise<void> {
-    const zendeskHelpCentreUrl = await this.getKbaUrl(kbaId);
-    const response = await fetch(zendeskHelpCentreUrl).then(res => res.json());
+    const zendeskHelpCentreUrl = await this.getKbaUrl();
+    const response = await fetch(zendeskHelpCentreUrl);
+    const data = (await response.json()) as ZendeskArticleResponse;
 
-    if (!response.article) {
+    if (!data.article) {
       console.error(`Article ${kbaId} not found for bot ${this.botId}`);
       return;
     }
 
-    const kba = new ZendeskArticle(response.article);
+    const kba = new ZendeskArticle(data.article);
     if (await this.checkIfKbaNeedsUpdate(kba)) {
       await this.updateKba(kba);
     }
   }
 
-  private async updateKba(kba: ZendeskArticle): Promise<void> {
-    // Assume zendeskKbaParser.format returns an object compatible with Prisma's expected input
-    const formattedKba = await this.zendeskKbaParser.format(
-      kba,
-      {},
-      this.botId.toString()
-    );
+  private async updateKba(
+    kba: ZendeskArticle,
+    category?: Category,
+    section?: Section
+  ): Promise<void> {
+    // Assuming enhanceArticleWithEmbedding returns an object suitable for Prisma operations
+    const formattedKba =
+      await this.zendeskKbaParser.enhanceArticleWithEmbedding(
+        kba,
+        this.botId.toString()
+      );
 
+    // Check if the article exists and upsert accordingly
+    const existingArticleId = await this.prisma.knowledgeBaseArticle.findFirst({
+      where: { client_article_id: kba.id.toString() },
+      select: { id: true } // Only select the id for efficiency
+    });
+
+    if (!existingArticleId) {
+      console.log(`KBA ${kba.id} not found in DB, creating new one.`);
+    }
+
+    // Since Prisma's upsert requires a unique identifier in 'where',
+    // ensure your logic aligns with Prisma's expectations for 'client_article_id'.
     await this.prisma.knowledgeBaseArticle.upsert({
-      where: { articleId: kba.id.toString() },
+      where: { id: existingArticleId ? existingArticleId.id : -1 }, // Fallback to an impossible id if not found
       update: formattedKba,
       create: formattedKba
     });

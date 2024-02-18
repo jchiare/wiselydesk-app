@@ -1,3 +1,64 @@
+import type { KnowledgeBaseArticle as PrismaKnowledgeBaseArticle } from "@prisma/client";
+
+type OptionalFields = "id" | "deleted_at" | "created_at" | "updated_at";
+
+export type KnowledgeBaseArticle = Omit<
+  PrismaKnowledgeBaseArticle,
+  OptionalFields
+> &
+  Partial<Pick<PrismaKnowledgeBaseArticle, OptionalFields>>;
+
+export type ZendeskArticlesResponse = {
+  articles: ZendeskArticle[];
+  next_page: string | null;
+  previous_page: string | null;
+  count: number;
+  categories?: Category[];
+  sections?: Section[];
+};
+
+export type ZendeskArticleResponse = {
+  article: ZendeskArticle;
+};
+
+export type ExpandedZendeskArticle = {
+  article: ZendeskArticle;
+  categories?: Category[];
+  sections?: Section[];
+};
+
+export type Category = {
+  id: number;
+  url: string;
+  html_url: string;
+  position: number;
+  created_at: Date;
+  updated_at: Date;
+  name: string;
+  description: string;
+  locale: string;
+  source_locale: string;
+  outdated: boolean;
+};
+
+export type Section = {
+  id: number;
+  url: string;
+  html_url: string;
+  category_id: number;
+  position: number;
+  sorting: string;
+  created_at: Date;
+  updated_at: Date;
+  name: string;
+  description: string;
+  locale: string;
+  source_locale: string;
+  outdated: boolean;
+  parent_section_id: number;
+  theme_template: string;
+};
+
 export class ZendeskArticle {
   id: number;
   url: string;
@@ -10,8 +71,8 @@ export class ZendeskArticle {
   voteSum: number;
   voteCount: number;
   sectionId: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
   name: string;
   title: string;
   sourceLocale: string;
@@ -37,8 +98,8 @@ export class ZendeskArticle {
     vote_sum?: number;
     vote_count?: number;
     section_id?: number;
-    created_at?: string;
-    updated_at?: string;
+    created_at?: Date;
+    updated_at?: Date;
     name?: string;
     title?: string;
     source_locale?: string;
