@@ -3,7 +3,7 @@ import { Fragment, useCallback, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import type { Bot } from "@prisma/client";
-import { URL } from "@/lib/shared/constants";
+import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 import { orgChooser } from "@/lib/shared/org-chooser";
 import { useRouter } from "next/navigation";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
@@ -14,7 +14,7 @@ function classNames(...classes: string[]) {
 }
 
 async function fetchBots(orgId: number) {
-  const res = await fetch(`${URL}/api/organization/${orgId}/bots`, {
+  const res = await fetch(`${NEXTJS_BACKEND_URL}/api/bots/${orgId}`, {
     cache: "force-cache"
   });
   const data = await res.json();
@@ -41,7 +41,7 @@ export default function BotSelection({ session }: { session: Session }) {
   // get all bots
   // and if no botId in url, set bot to first bot
   useEffect(() => {
-    fetchBots(orgId).then((fetchedBots) => {
+    fetchBots(orgId).then(fetchedBots => {
       const botId = getBotId();
       if (!botId) {
         changeSelectedBot(fetchedBots[0]);
@@ -53,7 +53,7 @@ export default function BotSelection({ session }: { session: Session }) {
   useEffect(() => {
     const botId = getBotId();
     if (botId && bots !== undefined && bots.length > 0) {
-      const foundBot = bots.find((bot) => bot.id.toString() === botId);
+      const foundBot = bots.find(bot => bot.id.toString() === botId);
       if (foundBot && foundBot !== selectedBot) {
         setSelectedBot(foundBot);
       }
