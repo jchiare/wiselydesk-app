@@ -78,7 +78,8 @@ export class Analytics {
       JOIN conversation c ON m.conversation_id = c.id
     WHERE
       m.bot_id = ${botId} AND
-      UNIX_TIMESTAMP(m.created_at) >= ${sevenDaysAgo}
+      UNIX_TIMESTAMP(m.created_at) >= ${sevenDaysAgo} AND
+      c.livemode = 1
     GROUP BY
       c.id, 4
   ) AS conversation
@@ -89,7 +90,7 @@ export class Analytics {
     date;
     `;
 
-    return conversations.map((conversation) => ({
+    return conversations.map(conversation => ({
       frequency_type: "daily",
       total_convo_count: Number(conversation.total_convo_count),
       deflected_convo_count: Number(conversation.deflected_convo_count),
@@ -138,7 +139,8 @@ export class Analytics {
         JOIN conversation c ON m.conversation_id = c.id
       WHERE
         m.bot_id = ${botId} AND
-        UNIX_TIMESTAMP(m.created_at) >= ${thirtyOneDaysAgo}
+        UNIX_TIMESTAMP(m.created_at) >= ${thirtyOneDaysAgo} AND
+        c.livemode = 1
       GROUP BY
         c.id, 4
     ) AS conversation
@@ -149,7 +151,7 @@ export class Analytics {
         4
     `;
 
-    return conversations.map((conversation) => ({
+    return conversations.map(conversation => ({
       frequency_type: "weekly",
       total_convo_count: Number(conversation.total_convo_count),
       deflected_convo_count: Number(conversation.deflected_convo_count),
@@ -194,7 +196,8 @@ export class Analytics {
         JOIN conversation c ON m.conversation_id = c.id
       WHERE
         m.bot_id = ${botId} AND
-        UNIX_TIMESTAMP(m.created_at) >= ${oneHundredTwentyDaysAgo}
+        UNIX_TIMESTAMP(m.created_at) >= ${oneHundredTwentyDaysAgo} AND
+        c.livemode = 1
       GROUP BY
         c.id, 4
     ) AS conversation
@@ -205,7 +208,7 @@ export class Analytics {
       4
     `;
 
-    return conversations.map((conversation) => ({
+    return conversations.map(conversation => ({
       frequency_type: "monthly",
       total_convo_count: Number(conversation.total_convo_count),
       deflected_convo_count: Number(conversation.deflected_convo_count),
