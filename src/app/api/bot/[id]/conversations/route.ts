@@ -61,11 +61,9 @@ function appendFilters(
 
 export const GET = async (req: Request, { params }: Params) => {
   const session = await getServerSession(authOptions);
-  //   if (!session) return redirect("/auth/signin");
-  //   console.log("orgID: ", session.user.organization_id);
+  if (!session) return redirect("/auth/signin");
 
-  //   const organizationId = parseInt(session.user.organization_id, 10);
-  const organizationId = 2;
+  const organizationId = parseInt(session.user.organization_id, 10);
   const botId = parseInt(params.id, 10);
 
   await validateBotAndOrg(botId, organizationId);
