@@ -2,7 +2,7 @@ import ConversationsTable from "@/components/web/conversations/table";
 import type { Metadata } from "next";
 import type { Conversation } from "@prisma/client";
 import { orgChooser } from "@/lib/shared/org-chooser";
-import { URL } from "@/lib/shared/constants";
+import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 import { fetchServerSession } from "@/lib/shared/auth";
 import type { FilterType } from "@/components/web/conversations/filter-conversations-table";
 
@@ -30,16 +30,22 @@ async function getConversations({
   botId: string;
   filter: string;
 }) {
-  let url = `${URL}/api/conversations?organization_id=${orgId}&bot_id=${botId}&include=users`;
+  let url = `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversations`;
 
-  if (filter.toLowerCase() === "up") {
-    url += "&is_helpful=true";
-  } else if (filter.toLowerCase() === "down") {
-    url += "&is_helpful=false";
-  } else if (filter === "review") {
-    url += "&filter=review";
-  } else if (filter === "deflected") {
-    url += "&filter=deflected";
+  switch (filter.toLowerCase()) {
+    case "up":
+      url += "?is_helpful=true";
+      break;
+    case "down":
+      url += "?is_helpful=false";
+      break;
+    case "review":
+      url += "?filter=review";
+      break;
+    case "deflected":
+      url += "?filter=deflected";
+      break;
+    // No default case needed unless you want to handle unexpected filters
   }
 
   let res;

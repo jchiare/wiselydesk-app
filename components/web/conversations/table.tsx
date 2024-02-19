@@ -1,5 +1,5 @@
 "use client";
-import { formatUnixTimestamp } from "@/lib/shared/utils";
+import { formatDateTime } from "@/lib/shared/utils";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
 import type { Conversation } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -23,7 +23,7 @@ export default function ConversationTable({ data }: { data: Conversations }) {
 
   useRefreshPage(10);
 
-  return data.conversations.map((conversation) => (
+  return data.conversations.map(conversation => (
     <tr
       key={conversation.id}
       onClick={() => goToConversation(conversation.public_id)}
@@ -50,11 +50,11 @@ export default function ConversationTable({ data }: { data: Conversations }) {
         Anonymous
       </td>
       <td className={`hidden px-3 py-4 text-sm text-gray-500 lg:table-cell `}>
-        {formatUnixTimestamp(conversation.created_at)}
+        {formatDateTime(conversation.created_at)}
       </td>
       <td
         className={`hidden overflow-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell `}>
-        {formatUnixTimestamp(conversation.created_at)}
+        {formatDateTime(conversation.created_at)}
       </td>
     </tr>
   ));
