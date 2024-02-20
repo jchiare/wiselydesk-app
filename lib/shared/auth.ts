@@ -25,7 +25,8 @@ export async function getEnvAwareServerSession(): Promise<any> {
   console.log("Getting Prod Session");
   try {
     const session = await getServerSession(authOptions);
-    if (!session) return redirect("/auth/signin");
+    console.log("session: ", session);
+    if (!session) redirect("/auth/signin");
     return session;
   } catch (e) {
     console.log("Error getting session", e);
