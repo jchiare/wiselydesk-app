@@ -1,7 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { authOptions } from "@/lib/web/next-auth-hack";
-import { getServerSession } from "next-auth/next";
-import { redirect } from "next/navigation";
+import { getEnvAwareServerSession } from "@/lib/web/next-auth-hack";
 
 const prisma = new PrismaClient();
 
@@ -60,13 +58,7 @@ function appendFilters(
 }
 
 export const GET = async (req: Request, { params }: Params) => {
-  let session;
-  if (process.env.NODE_ENV === "development") {
-    session = { user: { organization_id: "2" } };
-  } else {
-    session = await getServerSession(authOptions);
-    if (!session) return redirect("/auth/signin");
-  }
+  const session = await getEnvAwareServerSession();
 
   const organizationId = parseInt(session.user.organization_id, 10);
   const botId = parseInt(params.id, 10);
