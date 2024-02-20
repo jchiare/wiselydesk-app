@@ -23,6 +23,7 @@ export async function getAPIServerSession(): Promise<any> {
 
   try {
     const session = await getServerSession(authOptions);
+    console.log("Session", session);
     if (!session) return new Response("Unauthenticated", { status: 401 });
     return session;
   } catch (e) {
