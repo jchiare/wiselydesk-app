@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { getAPIServerSession } from "@/lib/shared/auth";
 
 const prisma = new PrismaClient();
 
