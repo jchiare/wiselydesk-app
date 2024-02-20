@@ -16,13 +16,14 @@ export async function fetchServerSessionSignIn() {
 }
 
 export async function getEnvAwareServerSession(): Promise<any> {
-  let session;
-  if (process.env.NODE_ENV === "development") {
-    console.log("Using dev session");
-    session = { user: { organization_id: "2" } };
-  } else {
-    session = await getServerSession(authOptions);
-    if (!session) return redirect("/auth/signin");
+  console.log("before before");
+  if (process?.env?.NODE_ENV === "development") {
+    console.log("Getting Dev Session");
+    return { user: { organization_id: "2" } };
   }
+
+  console.log("Getting Prod Session");
+  const session = await getServerSession(authOptions);
+  if (!session) return redirect("/auth/signin");
   return session;
 }
