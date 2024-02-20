@@ -15,18 +15,15 @@ export async function fetchServerSessionSignIn() {
   if (session) return redirect("/bot");
 }
 
-export async function getEnvAwareServerSession(): Promise<any> {
-  console.log("before before");
+export async function getAPIServerSession(): Promise<any> {
   if (process?.env?.NODE_ENV === "development") {
     console.log("Getting Dev Session");
     return { user: { organization_id: "2" } };
   }
 
-  console.log("Getting Prod Session");
   try {
     const session = await getServerSession(authOptions);
-    console.log("session: ", session);
-    if (!session) redirect("/auth/signin");
+    if (!session) return new Response("Unauthenticated", { status: 401 });
     return session;
   } catch (e) {
     console.log("Error getting session", e);
