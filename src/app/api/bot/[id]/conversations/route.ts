@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { getEnvAwareServerSession } from "@/lib/web/next-auth-hack";
+import { getEnvAwareServerSession } from "@/lib/shared/auth";
 
 const prisma = new PrismaClient();
 
@@ -58,7 +58,9 @@ function appendFilters(
 }
 
 export const GET = async (req: Request, { params }: Params) => {
+  console.log("before");
   const session = await getEnvAwareServerSession();
+  console.log("after");
 
   const organizationId = parseInt(session.user.organization_id, 10);
   const botId = parseInt(params.id, 10);

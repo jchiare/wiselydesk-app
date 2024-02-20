@@ -1,8 +1,7 @@
-import { NextAuthOptions, getServerSession } from "next-auth";
+import { NextAuthOptions } from "next-auth";
 import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
-import { redirect } from "next/navigation";
 
 const prisma = new PrismaClient();
 const EMAIL_SUBDOMAIN_REGEX = "@([^.]+)..+$";
@@ -54,14 +53,3 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/signin"
   }
 };
-
-export async function getEnvAwareServerSession(): Promise<any> {
-  let session;
-  if (process.env.NODE_ENV === "development") {
-    session = { user: { organization_id: "2" } };
-  } else {
-    session = await getServerSession(authOptions);
-    if (!session) return redirect("/auth/signin");
-  }
-  return session;
-}
