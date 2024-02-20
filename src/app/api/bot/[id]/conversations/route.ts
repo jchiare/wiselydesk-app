@@ -60,8 +60,13 @@ function appendFilters(
 }
 
 export const GET = async (req: Request, { params }: Params) => {
-  const session = await getServerSession(authOptions);
-  if (!session) return redirect("/auth/signin");
+  let session;
+  if (process.env.NODE_ENV === "development") {
+    session = { user: { organization_id: "2" } };
+  } else {
+    session = await getServerSession(authOptions);
+    if (!session) return redirect("/auth/signin");
+  }
 
   const organizationId = parseInt(session.user.organization_id, 10);
   const botId = parseInt(params.id, 10);
@@ -73,19 +78,36 @@ export const GET = async (req: Request, { params }: Params) => {
   const isHelpfulQuery = searchParams.get("is_helpful");
 
   let whereCondition: WhereConditionType = {
-    bot_id: botId,
-    ...(isHelpfulQuery !== null && { is_helpful: strToBool(isHelpfulQuery) })
+    bot_id: botId
   };
 
   whereCondition = appendFilters(whereCondition, filterQuery);
 
   try {
-    const conversations = await prisma.conversation.findMany({
+    let conversations = await prisma.conversation.findMany({
       where: whereCondition,
       orderBy: {
         created_at: "desc"
       }
     });
+
+    // hack to only get relevant conversations if is_helpful query is provided
+    if (isHelpfulQuery) {
+      const conversationIds = (
+        await prisma.message.findMany({
+          where: {
+            conversation_id: { in: conversations.map(c => c.id) },
+            is_helpful: strToBool(isHelpfulQuery)
+          },
+          select: {
+            conversation_id: true
+          }
+        })
+      ).map(m => m.conversation_id);
+
+      conversations = conversations.filter(c => conversationIds.includes(c.id));
+    }
+
     if (conversations.length === 0) {
       return new Response(
         JSON.stringify({ message: "No conversations found" }),
