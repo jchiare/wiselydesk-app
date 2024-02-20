@@ -14,20 +14,3 @@ export async function fetchServerSessionSignIn() {
   const session = await getServerSession(authOptions);
   if (session) return redirect("/bot");
 }
-
-export async function getAPIServerSession(): Promise<any> {
-  if (process?.env?.NODE_ENV === "development") {
-    console.log("Getting Dev Session");
-    return { user: { organization_id: "2" } };
-  }
-
-  try {
-    const session = await getServerSession(authOptions);
-    console.log("Session", session);
-    if (!session) return new Response("Unauthenticated", { status: 401 });
-    return session;
-  } catch (e) {
-    console.log("Error getting session", e);
-    return { user: { organization_id: "2" } };
-  }
-}

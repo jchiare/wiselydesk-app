@@ -5,7 +5,6 @@ import { orgChooser } from "@/lib/shared/org-chooser";
 import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 import { fetchServerSession } from "@/lib/shared/auth";
 import type { FilterType } from "@/components/web/conversations/filter-conversations-table";
-import { headers } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
@@ -51,7 +50,7 @@ async function getConversations({
 
   let res;
   try {
-    res = await fetch(url, { cache: "no-cache", headers: headers() });
+    res = await fetch(url, { cache: "no-cache" });
   } catch (e) {
     console.error(e);
     throw e;
