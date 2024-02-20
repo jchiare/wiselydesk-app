@@ -1,6 +1,6 @@
 import SingleConversation from "@/components/web/conversation";
 import RightBar from "@/components/web/conversation/right-bar";
-import { URL, NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
+import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 import type { SingleConversationReturnType } from "@/types/single-conversation";
 import type { Metadata } from "next/types";
 import type { Note as NoteType } from "@prisma/client";
