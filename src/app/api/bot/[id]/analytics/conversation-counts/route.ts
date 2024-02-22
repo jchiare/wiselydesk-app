@@ -19,7 +19,5 @@ export async function GET(request: Request, { params }: Params) {
     frequency
   );
 
-  console.log(conversationCounts);
-
   return Response.json({ conversationCounts }, { status: 200 });
 }

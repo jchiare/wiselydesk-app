@@ -96,39 +96,39 @@ export default function ConversationCountChart({
   };
 
   const totals = conversationCounts.map(
-    conversation =>
-      conversation.total_convo_count +
-      conversation.ticket_created_count +
-      conversation.negative_count +
-      conversation.positive_count
+    conversation => conversation.total_convo_count
   );
 
   const chartData = {
     labels: conversationCounts.map(conversation => conversation.date),
     datasets: [
       {
-        label: "Regular chats",
+        label: "Normal",
         data: conversationCounts.map(
-          conversation => conversation.total_convo_count
+          conversation =>
+            conversation.total_convo_count -
+            conversation.ticket_created_count -
+            conversation.negative_count -
+            conversation.positive_count
         ),
         backgroundColor: "rgb(31,41,55)"
       },
       {
-        label: "Ticket-Linked chats",
+        label: "Escalated",
         data: conversationCounts.map(
           conversation => conversation.ticket_created_count
         ),
         backgroundColor: "rgb(240,230,140)"
       },
       {
-        label: "Negative chats",
+        label: "Negative",
         data: conversationCounts.map(
           conversation => conversation.negative_count
         ),
         backgroundColor: "rgb(255,99,71)"
       },
       {
-        label: "Positive chats",
+        label: "Positive",
         data: conversationCounts.map(
           conversation => conversation.positive_count
         ),
