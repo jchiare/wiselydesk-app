@@ -11,7 +11,6 @@ type Conversations = {
 
 function truncateSummary(summary: string | null, truncateLength = 115): string {
   if (!summary) return "";
-  console.log(summary.length);
   return summary.length > truncateLength
     ? `${summary.slice(0, truncateLength)}...`
     : summary;
