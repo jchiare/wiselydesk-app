@@ -28,8 +28,7 @@ export class Analytics {
 
   async getConvoCounts(
     botId: string,
-    frequency: string,
-    viewingType: string
+    frequency: string
   ): Promise<ConversationAnalyticsData[]> {
     switch (frequency) {
       case "daily":
