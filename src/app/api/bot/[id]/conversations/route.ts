@@ -14,6 +14,7 @@ type WhereConditionType = {
   bot_id: number;
   ticket_deflected?: boolean;
   to_review?: boolean;
+  created_at: { gte: Date };
 };
 
 const strToBool = (value: string | null) => {
@@ -69,7 +70,10 @@ export const GET = async (req: Request, { params }: Params) => {
   const isHelpfulQuery = searchParams.get("is_helpful");
 
   let whereCondition: WhereConditionType = {
-    bot_id: botId
+    bot_id: botId,
+    created_at: {
+      gte: new Date("2023-11-15") // date AMBOSS started paying .. hacky .. need to add pagination at some point
+    }
   };
 
   whereCondition = appendFilters(whereCondition, filterQuery);
