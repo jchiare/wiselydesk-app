@@ -33,7 +33,7 @@ export default function LoadingConversations() {
         </tr>
       </thead>
       <tbody className="divide-y divide-gray-100 bg-gray-100 backdrop-blur-md">
-        {[...Array(20).keys()].map((i) => {
+        {[...Array(20).keys()].map(i => {
           return (
             <tr
               className="h-5 animate-pulse"

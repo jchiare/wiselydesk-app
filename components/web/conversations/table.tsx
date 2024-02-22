@@ -9,6 +9,14 @@ type Conversations = {
   conversations: Conversation[];
 };
 
+function truncateSummary(summary: string | null, truncateLength = 115): string {
+  if (!summary) return "";
+  console.log(summary.length);
+  return summary.length > truncateLength
+    ? `${summary.slice(0, truncateLength)}...`
+    : summary;
+}
+
 export default function ConversationTable({ data }: { data: Conversations }) {
   const router = useRouter();
   const { pathname } = useCustomQueryString();
@@ -33,7 +41,7 @@ export default function ConversationTable({ data }: { data: Conversations }) {
       </td>
       <td
         className={`w-[50%] py-4 pl-2 pr-3 text-sm font-medium text-gray-900 `}>
-        {conversation.summary}
+        {truncateSummary(conversation.summary)}
 
         <dl className="font-normal lg:hidden">
           <dt className="sr-only">ID</dt>
@@ -42,7 +50,7 @@ export default function ConversationTable({ data }: { data: Conversations }) {
           </dd>
           <dt className="sr-only  sm:hidden">Summary</dt>
           <dd className="mt-1 truncate text-gray-500 sm:hidden">
-            {conversation.summary}
+            {truncateSummary(conversation.summary)}
           </dd>
         </dl>
       </td>
