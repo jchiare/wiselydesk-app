@@ -112,11 +112,9 @@ export class Analytics {
         COUNT(id) AS total_convo_count,
         SUM(CASE WHEN ticket_deflected = TRUE THEN 1 ELSE 0 END) AS deflected_convo_count,
         SUM(CASE WHEN zendesk_ticket_url IS NOT NULL THEN 1 ELSE 0 END) AS ticket_created_count,
-        CONCAT(
-        DATE_FORMAT(created_at - INTERVAL (DAYOFWEEK(created_at) - 1) DAY, '%b %e'), 
-        ' - ', 
-        DATE_FORMAT(created_at + INTERVAL (7 - DAYOFWEEK(created_at)) DAY, '%b %e')
-        )  AS date,
+        YEARWEEK(created_at, 5) AS week_number,
+        CONCAT(DATE_FORMAT(MIN(DATE_FORMAT(created_at, '%Y-%m-%d')), '%b %e'), ' - ',
+  		    DATE_FORMAT(MAX(DATE_FORMAT(created_at, '%Y-%m-%d')), '%b %e')) as date,
         SUM(CASE WHEN rating = 'Positive' THEN 1 ELSE 0 END) AS positive_count,
         SUM(CASE WHEN rating = 'Negative' THEN 1 ELSE 0 END) AS negative_count
       FROM
@@ -125,7 +123,6 @@ export class Analytics {
         c.id,
         c.ticket_deflected,
         c.zendesk_ticket_url,
-        date_format(c.created_at, '%b %e') AS date,
         CASE
           WHEN SUM(CASE WHEN m.is_helpful = 1 THEN 1 ELSE 0 END) > SUM(CASE WHEN m.is_helpful = 0 THEN 1 ELSE 0 END) THEN 'Positive'
           WHEN SUM(CASE WHEN m.is_helpful = 1 THEN 1 ELSE 0 END) < SUM(CASE WHEN m.is_helpful = 0 THEN 1 ELSE 0 END) THEN 'Negative'
@@ -141,13 +138,13 @@ export class Analytics {
         UNIX_TIMESTAMP(m.created_at) >= ${thirtyOneDaysAgo} AND
         c.livemode = 1
       GROUP BY
-        c.id, 4
+        c.id
     ) AS conversation
       WHERE
         bot_id = ${botId} AND
         UNIX_TIMESTAMP(created_at) >= ${thirtyOneDaysAgo}
       GROUP BY
-        4
+      week_number
     `;
 
     return conversations.map(conversation => ({
