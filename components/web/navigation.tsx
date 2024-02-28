@@ -12,7 +12,7 @@ const createNavigation = (botId: string) => [
   {
     name: "Conversations",
     icon: ChatBubbleBottomCenterTextIcon,
-    href: `/bot/${botId}/conversations`,
+    href: `/bot/${botId}/conversations/all`,
     children: null
   },
   {
@@ -27,7 +27,7 @@ export default function Navigation() {
   const { getBotId, pathname } = useCustomQueryString();
   const botId = getBotId();
   const navigation = createNavigation(botId);
-  const currentItem = navigation.find((item) =>
+  const currentItem = navigation.find(item =>
     pathname.includes(item.name.toLowerCase())
   );
 
@@ -35,7 +35,7 @@ export default function Navigation() {
     <ul role="list" className="-mx-0 space-y-1">
       <li>
         <ul role="list" className="-mx-2 space-y-1">
-          {navigation.map((item) => (
+          {navigation.map(item => (
             <li key={item.name}>
               {!item?.children ? (
                 <Link

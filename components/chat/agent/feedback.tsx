@@ -1,6 +1,6 @@
 "use client";
 import { type ChatThemeSettings } from "@/lib/chat/chat-theme";
-import { URL } from "@/lib/shared/constants";
+import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 import { useState } from "react";
 
 type FeedbackProps = {
@@ -19,7 +19,7 @@ function sendFeedback({
   setPressedThumb: (arg0: string) => void;
 }) {
   setPressedThumb(isHelpful ? "up" : "down"); // Modify the state here
-  fetch(`${URL}/api/message/${id}`, {
+  fetch(`${NEXTJS_BACKEND_URL}/api/message/${id}/is-helpful`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json"
@@ -29,8 +29,8 @@ function sendFeedback({
       isHelpful
     })
   })
-    .then((res) => res.json())
-    .then((data) => {
+    .then(res => res.json())
+    .then(data => {
       // could maybe show a success message here in the UI.
     });
 }

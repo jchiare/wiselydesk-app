@@ -1,5 +1,5 @@
 "use client";
-import { formatUnixTimestamp } from "@/lib/shared/utils";
+import { formatDateTime } from "@/lib/shared/utils";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
 import type { Conversation } from "@prisma/client";
 import { useRouter } from "next/navigation";
@@ -8,6 +8,13 @@ import useRefreshPage from "@/lib/web/use-refresh-page";
 type Conversations = {
   conversations: Conversation[];
 };
+
+function truncateSummary(summary: string | null, truncateLength = 115): string {
+  if (!summary) return "";
+  return summary.length > truncateLength
+    ? `${summary.slice(0, truncateLength)}...`
+    : summary;
+}
 
 export default function ConversationTable({ data }: { data: Conversations }) {
   const router = useRouter();
@@ -23,7 +30,7 @@ export default function ConversationTable({ data }: { data: Conversations }) {
 
   useRefreshPage(10);
 
-  return data.conversations.map((conversation) => (
+  return data.conversations.map(conversation => (
     <tr
       key={conversation.id}
       onClick={() => goToConversation(conversation.public_id)}
@@ -33,7 +40,7 @@ export default function ConversationTable({ data }: { data: Conversations }) {
       </td>
       <td
         className={`w-[50%] py-4 pl-2 pr-3 text-sm font-medium text-gray-900 `}>
-        {conversation.summary}
+        {truncateSummary(conversation.summary)}
 
         <dl className="font-normal lg:hidden">
           <dt className="sr-only">ID</dt>
@@ -42,7 +49,7 @@ export default function ConversationTable({ data }: { data: Conversations }) {
           </dd>
           <dt className="sr-only  sm:hidden">Summary</dt>
           <dd className="mt-1 truncate text-gray-500 sm:hidden">
-            {conversation.summary}
+            {truncateSummary(conversation.summary)}
           </dd>
         </dl>
       </td>
@@ -50,11 +57,11 @@ export default function ConversationTable({ data }: { data: Conversations }) {
         Anonymous
       </td>
       <td className={`hidden px-3 py-4 text-sm text-gray-500 lg:table-cell `}>
-        {formatUnixTimestamp(conversation.created_at)}
+        {formatDateTime(conversation.created_at)}
       </td>
       <td
         className={`hidden overflow-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell `}>
-        {formatUnixTimestamp(conversation.created_at)}
+        {formatDateTime(conversation.created_at)}
       </td>
     </tr>
   ));

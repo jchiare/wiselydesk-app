@@ -50,7 +50,7 @@ const BASE_TEXT = {
     },
     aiCouldnotSolve: {
       en: "AI could not solve",
-      de: "AI könnte nicht lösen"
+      de: "AI konnte nicht lösen"
     },
     createButton: {
       en: "Create Support Ticket",
@@ -127,7 +127,7 @@ const AMBOSS_TEXT = {
     },
     aiCouldnotSolve: {
       en: "AI could not solve",
-      de: "AI könnte nicht lösen"
+      de: "AI konnte nicht lösen"
     },
     createButton: {
       en: "Create Support Ticket",

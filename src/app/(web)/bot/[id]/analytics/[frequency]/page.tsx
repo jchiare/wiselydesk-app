@@ -1,15 +1,33 @@
-import { redirect } from "next/navigation";
+import Analytics, { type FrequencyType } from "@/components/web/analytics";
+import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 
-type ParamsType = {
+type AnalyticsProps = {
   params: {
     id: number;
-    frequency: string;
-    viewingType: string;
+    frequency: FrequencyType;
   };
 };
 
-export default function AnalyticsPageRedirect({ params }: ParamsType) {
-  const frequency = params.frequency ?? "daily";
-  const viewingType = params.viewingType ?? "stacked";
-  return redirect(`/bot/${params.id}/analytics/${frequency}/${viewingType}`);
+async function fetchConversationCounts(
+  botId: number,
+  frequency: FrequencyType
+) {
+  const res = await fetch(
+    `${NEXTJS_BACKEND_URL}/api/bot/${botId}/analytics/conversation-counts?frequency=${frequency}`,
+    { cache: "no-cache" }
+  );
+  return await res.json();
+}
+
+export default async function AnalyticsFrequencyPage({
+  params
+}: AnalyticsProps) {
+  const { id: botId, frequency } = params;
+  const { conversationCounts } = await fetchConversationCounts(
+    botId,
+    frequency
+  );
+  return (
+    <Analytics frequency={frequency} conversationCounts={conversationCounts} />
+  );
 }
