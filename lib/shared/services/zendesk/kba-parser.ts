@@ -80,15 +80,17 @@ export class ZendeskKbaParser {
       cleanedArticleBody,
       this.encodingModel
     );
+
     return {
       client_article_id: article.id.toString(),
       title: article.title,
       content: `Article title: ${article.title}. Text: ${cleanedArticleBody}. `,
       client_last_updated: article.updatedAt,
       bot_id: parseInt(botId, 10),
-      content_embedding: contentEmbedding.join(","),
+      content_embedding: "[" + contentEmbedding.join(",") + "]",
       total_token_count: totalTokens,
-      html_url: article.htmlUrl
+      html_url: article.htmlUrl,
+      updated_at: new Date()
     };
   }
 }

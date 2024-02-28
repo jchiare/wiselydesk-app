@@ -17,6 +17,7 @@ export class OpenAIEmbedder {
       const result = await this.openai.embeddings.create({
         model: this.model,
         input: text
+        // dimensions: 1536
       });
       return result.data[0].embedding;
     } catch (error) {
