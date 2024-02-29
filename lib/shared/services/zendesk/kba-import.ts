@@ -1,26 +1,22 @@
 import { ZendeskKbaParser } from "@/lib/shared/services/zendesk/kba-parser";
 import { PrismaClient } from "@prisma/client";
 import {
-  ZendeskArticle,
-  type ZendeskArticlesResponse,
-  type ZendeskArticleResponse,
+  ExternalZendeskArticle,
+  type ExternalZendeskArticlesResponse,
+  type ExternalZendeskArticleResponse,
   type Category,
   type Section
 } from "@/lib/shared/services/zendesk/dto";
 
 function excludeKbWithTags(
   botId: string,
-  kb: any,
+  kb: ExternalZendeskArticle,
   tags: string[] = ["ios-whitelist", "android-whitelist"]
 ): boolean {
-  if (botId === "3" || botId === "4") {
-    for (const label of kb.label_names) {
-      if (tags.includes(label.toLowerCase())) {
-        return true;
-      }
-    }
-  }
-  return false;
+  return (
+    ["3", "4"].includes(botId) &&
+    kb.labelNames.some(label => tags.includes(label.toLowerCase()))
+  );
 }
 
 export class ZendeskKbaImporter {
@@ -41,13 +37,14 @@ export class ZendeskKbaImporter {
 
     while (zendeskHelpCentreUrl) {
       const response = await fetch(zendeskHelpCentreUrl);
-      const data = (await response.json()) as ZendeskArticlesResponse;
+      const data = (await response.json()) as ExternalZendeskArticlesResponse;
       zendeskHelpCentreUrl = data.next_page;
 
       for (const kbaData of data.articles) {
-        const kba = new ZendeskArticle(kbaData);
+        const kba = new ExternalZendeskArticle(kbaData);
         const shouldExcludeKb = excludeKbWithTags(this.botId, kba);
 
+        console.log("Processing KBA: ", kba.id);
         if (!shouldExcludeKb && (await this.checkIfKbaNeedsUpdate(kba))) {
           await this.updateKba(kba);
           console.log("Updated KBA: ", kba.id);
@@ -108,7 +105,9 @@ export class ZendeskKbaImporter {
       );
     }
   }
-  private async checkIfKbaNeedsUpdate(kba: ZendeskArticle): Promise<boolean> {
+  private async checkIfKbaNeedsUpdate(
+    kba: ExternalZendeskArticle
+  ): Promise<boolean> {
     const existingArticle = await this.prisma.knowledgeBaseArticle.findFirst({
       where: { client_article_id: kba.id.toString() }
     });
@@ -129,21 +128,21 @@ export class ZendeskKbaImporter {
   async importSingleKba(kbaId: string): Promise<void> {
     const zendeskHelpCentreUrl = await this.getKbaUrl();
     const response = await fetch(zendeskHelpCentreUrl);
-    const data = (await response.json()) as ZendeskArticleResponse;
+    const data = (await response.json()) as ExternalZendeskArticleResponse;
 
     if (!data.article) {
       console.error(`Article ${kbaId} not found for bot ${this.botId}`);
       return;
     }
 
-    const kba = new ZendeskArticle(data.article);
+    const kba = new ExternalZendeskArticle(data.article);
     if (await this.checkIfKbaNeedsUpdate(kba)) {
       await this.updateKba(kba);
     }
   }
 
   private async updateKba(
-    kba: ZendeskArticle,
+    kba: ExternalZendeskArticle,
     category?: Category,
     section?: Section
   ): Promise<void> {

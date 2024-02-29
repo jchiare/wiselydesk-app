@@ -1,6 +1,6 @@
 import { JSDOM } from "jsdom";
 import {
-  ZendeskArticle,
+  ExternalZendeskArticle,
   KnowledgeBaseArticle,
   type Category,
   type Section
@@ -54,7 +54,7 @@ export class ZendeskKbaParser {
   }
 
   async enhanceArticleWithEmbedding(
-    article: ZendeskArticle,
+    article: ExternalZendeskArticle,
     botId: string,
     categories?: Category[],
     sections?: Section[]

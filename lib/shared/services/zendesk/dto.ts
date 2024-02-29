@@ -8,8 +8,8 @@ export type KnowledgeBaseArticle = Omit<
 > &
   Partial<Pick<PrismaKnowledgeBaseArticle, OptionalFields>>;
 
-export type ZendeskArticlesResponse = {
-  articles: ZendeskArticle[];
+export type ExternalZendeskArticlesResponse = {
+  articles: ExternalZendeskArticle[];
   next_page: string | null;
   previous_page: string | null;
   count: number;
@@ -17,12 +17,12 @@ export type ZendeskArticlesResponse = {
   sections?: Section[];
 };
 
-export type ZendeskArticleResponse = {
-  article: ZendeskArticle;
+export type ExternalZendeskArticleResponse = {
+  article: ExternalZendeskArticle;
 };
 
-export type ExpandedZendeskArticle = {
-  article: ZendeskArticle;
+export type ExpandedExternalZendeskArticle = {
+  article: ExternalZendeskArticle;
   categories?: Category[];
   sections?: Section[];
 };
@@ -59,7 +59,7 @@ export type Section = {
   theme_template: string;
 };
 
-export class ZendeskArticle {
+export class ExternalZendeskArticle {
   id: number;
   url: string;
   htmlUrl: string;
