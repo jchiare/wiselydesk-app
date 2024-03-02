@@ -136,6 +136,15 @@ export class ZendeskKbaImporter {
       ? new Date(existingArticle.updated_at)
       : new Date(existingArticle.created_at);
 
+    console.log(
+      "KBA updated at: ",
+      kbaUpdatedAt,
+      " Last updated at: ",
+      lastUpdated,
+      " for KBA: ",
+      kba.id
+    );
+
     return kbaUpdatedAt > lastUpdated;
   }
 
