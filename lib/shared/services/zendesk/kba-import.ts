@@ -70,6 +70,20 @@ export class ZendeskKbaImporter {
     return zendeskHelpCentreUrl + this.ALL_KBAS_PATH_ENDING;
   }
 
+  private async getSingleKbaUrl(kbaId: string): Promise<string> {
+    const zendeskHelpCentreUrl = await this.prisma.bot
+      .findUnique({ where: { id: parseInt(this.botId, 10) } })
+      .then(bot => bot?.zendesk_kba_endpoint);
+
+    if (!zendeskHelpCentreUrl) {
+      throw new Error(
+        `Zendesk_kba_endpoint is not set for botId ${this.botId}`
+      );
+    }
+
+    return `${zendeskHelpCentreUrl}/${kbaId}${this.ALL_KBAS_PATH_ENDING}`;
+  }
+
   async deleteSingleKbaUncertainBot(
     kbaId: string,
     botIds: number[]
@@ -126,7 +140,8 @@ export class ZendeskKbaImporter {
   }
 
   async importSingleKba(kbaId: string): Promise<void> {
-    const zendeskHelpCentreUrl = await this.getKbaUrl();
+    const zendeskHelpCentreUrl = await this.getSingleKbaUrl(kbaId);
+
     const response = await fetch(zendeskHelpCentreUrl);
     const data = (await response.json()) as ExternalZendeskArticleResponse;
 
