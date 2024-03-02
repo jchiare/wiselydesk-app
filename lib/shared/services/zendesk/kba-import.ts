@@ -162,10 +162,7 @@ export class ZendeskKbaImporter {
     }
 
     const kba = new ExternalZendeskArticle(data.article);
-    if (await this.checkIfKbaNeedsUpdate(kba)) {
-      console.log("Updating KBA: ", kba.id);
-      await this.updateKba(kba);
-    }
+    await this.updateKba(kba);
   }
 
   private async updateKba(
