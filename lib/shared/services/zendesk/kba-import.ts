@@ -142,7 +142,9 @@ export class ZendeskKbaImporter {
       " Last updated at: ",
       lastUpdated,
       " for KBA: ",
-      kba.id
+      kba.id,
+      " true or false: ",
+      kbaUpdatedAt > lastUpdated
     );
 
     return kbaUpdatedAt > lastUpdated;
