@@ -82,10 +82,12 @@ async function handleWebhookPayload(
   const zendeskClient = new ZendeskKbaImporter(botId.toString());
   switch (webhookType) {
     case PUBLISHED_EVENT_TYPE:
+      console.log("Updating KBA: ", articleId, " for bot: ", botId);
       await zendeskClient.importSingleKba(articleId);
       return { status: 200 };
 
     case UNPUBLISHED_EVENT_TYPE:
+      console.log("Deleting KBA: ", articleId, " for bot: ", botId);
       await zendeskClient.deleteSingleKba(articleId);
       return { status: 200 };
 
