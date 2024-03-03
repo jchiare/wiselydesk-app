@@ -46,22 +46,25 @@ export async function POST(req: Request) {
   const articleId = webhookPayload.detail.id;
 
   try {
-    const bot = await prismaClient.bot.findFirst({
-      where: {
-        zendesk_account_id: webhookAccountId
-      },
-      select: {
-        id: true
-      }
-    });
-    if (!bot) {
+    const botIds = await (
+      await prismaClient.bot.findMany({
+        where: {
+          zendesk_account_id: webhookAccountId
+        },
+        select: {
+          id: true
+        }
+      })
+    )?.map(bot => bot.id);
+
+    if (!botIds || botIds.length === 0) {
       return Response.json({ message: "No bot found" }, { status: 500 });
     }
 
     const webhookResult = await handleWebhookPayload(
       webhookPayload.type,
       articleId,
-      bot.id
+      botIds
     );
 
     return Response.json(webhookResult);
@@ -77,8 +80,12 @@ const UNPUBLISHED_EVENT_TYPE = "zen:event-type:article.unpublished";
 async function handleWebhookPayload(
   webhookType: string,
   articleId: string,
-  botId: number
+  botIds: number[]
 ) {
+  let botId = botIds[0];
+  if (botIds.length > 1) {
+    botId = await handleMultipleBots(articleId);
+  }
   const zendeskClient = new ZendeskKbaImporter(botId.toString());
   switch (webhookType) {
     case PUBLISHED_EVENT_TYPE:
@@ -100,4 +107,19 @@ async function handleWebhookPayload(
       );
       return { message: "Unhandled event type", status: 400 };
   }
+}
+
+async function handleMultipleBots(kbaId: string): Promise<number> {
+  const botId = await prismaClient.knowledgeBaseArticle.findFirst({
+    where: { client_article_id: kbaId },
+    select: {
+      bot_id: true
+    }
+  });
+  if (!botId) {
+    throw new Error(
+      `Article with client_article_id ${kbaId} not found for any bot`
+    );
+  }
+  return botId.bot_id;
 }
