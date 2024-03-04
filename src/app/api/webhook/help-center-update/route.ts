@@ -46,16 +46,15 @@ export async function POST(req: Request) {
   const articleId = webhookPayload.detail.id;
 
   try {
-    const botIds = await (
-      await prismaClient.bot.findMany({
-        where: {
-          zendesk_account_id: webhookAccountId
-        },
-        select: {
-          id: true
-        }
-      })
-    )?.map(bot => bot.id);
+    const bots = await prismaClient.bot.findMany({
+      where: {
+        zendesk_account_id: webhookAccountId
+      },
+      select: {
+        id: true
+      }
+    });
+    const botIds = bots?.map(bot => bot.id);
 
     if (!botIds || botIds.length === 0) {
       return Response.json({ message: "No bot found" }, { status: 500 });
@@ -67,7 +66,12 @@ export async function POST(req: Request) {
       botIds
     );
 
-    return Response.json(webhookResult);
+    return Response.json(
+      {
+        message: webhookResult.message
+      },
+      { status: webhookResult.status }
+    );
   } catch (error) {
     console.error("Error processing webhook:", error);
     return Response.json({ error: "Internal Server Error" }, { status: 500 });
@@ -89,14 +93,18 @@ async function handleWebhookPayload(
   const zendeskClient = new ZendeskKbaImporter(botId.toString());
   switch (webhookType) {
     case PUBLISHED_EVENT_TYPE:
-      console.log("Updating KBA: ", articleId, " for bot: ", botId);
       await zendeskClient.importSingleKba(articleId);
-      return { status: 200 };
+      return {
+        message: `Updated kbaId ${articleId} for botId ${botId}`,
+        status: 200
+      };
 
     case UNPUBLISHED_EVENT_TYPE:
-      console.log("Deleting KBA: ", articleId, " for bot: ", botId);
       await zendeskClient.deleteSingleKba(articleId);
-      return { status: 200 };
+      return {
+        message: `Deleted kbaId ${articleId} for botId ${botId}`,
+        status: 200
+      };
 
     default:
       console.error(
