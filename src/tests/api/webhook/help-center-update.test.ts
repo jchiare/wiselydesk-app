@@ -3,6 +3,16 @@ import httpMocks from "node-mocks-http";
 import { POST } from "@/src/app/api/webhook/help-center-update/route";
 jest.mock("@prisma/client");
 
+jest.mock("@/lib/shared/services/openai/embeddings", () => {
+  return {
+    OpenAIEmbedder: jest.fn().mockImplementation(() => {
+      return {
+        createEmbedding: jest.fn().mockResolvedValue([0.2, 0.3, 0.4])
+      };
+    })
+  };
+});
+
 const PUBLISHED_WEBHOOK_PAYLOAD = {
   account_id: 9251815,
   detail: {
