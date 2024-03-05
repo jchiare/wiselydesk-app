@@ -93,8 +93,8 @@ export class ZendeskClient {
       });
 
       if (response.ok) {
-        const responseData = await response.json();
-        return responseData as ZendeskTicket;
+        const responseData = (await response.json()) as ZendeskTicket;
+        return responseData;
       } else {
         console.log("Failed to create ticket:", await response.text());
       }
@@ -108,16 +108,6 @@ export class ZendeskClient {
       throw new Error("Subdomain is not initialized");
     }
     return `https://${this.subdomain}.zendesk.com/agent/tickets/${ticketId}`;
-  }
-
-  private formatSummary(summary: string): string {
-    // Split the text into lines based on the hyphen and space "- ".
-    const lines = summary.split("- ");
-
-    // Filter lines that start with a hyphen and join them with <br>.
-    const formattedLines = lines.map((line) => line.trim()).join("<br> - ");
-
-    return formattedLines;
   }
 
   private formatTranscript(transcript: string): string | null {

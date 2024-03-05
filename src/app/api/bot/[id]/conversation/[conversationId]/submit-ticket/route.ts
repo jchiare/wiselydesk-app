@@ -1,5 +1,4 @@
 import { ZendeskClient, type TicketOptions } from "@/lib/chat/zendesk";
-import { NextResponse, NextRequest } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
 type Params = {
@@ -13,10 +12,10 @@ type RequestBody = {
   additionalInfo: string;
   locale: string;
   name: string;
-  contactReason: string | null;
+  contactReason: string;
 };
 
-export const POST = async (request: NextRequest, { params }: Params) => {
+export const POST = async (request: Request, { params }: Params) => {
   const body = await request.json();
   const { id, conversationId } = params;
 
@@ -70,10 +69,19 @@ export const POST = async (request: NextRequest, { params }: Params) => {
   );
 
   if (zendeskSupportTicket) {
-    console.log(zendeskSupportTicket.ticket);
     const zendeskTicketUrl = zendeskClient.generateAgentTicketUrl(
       zendeskSupportTicket.ticket.id
     );
+
+    await prismaClient.escalation.create({
+      data: {
+        bot_id: parseInt(id, 10),
+        conversation_id: parseInt(conversationId, 10),
+        reason: contactReason,
+        external_identifier: zendeskTicketUrl,
+        public_conversation_id: publicConversationId
+      }
+    });
 
     await prismaClient.conversation.update({
       where: { id: Number(conversationId) },
@@ -81,5 +89,5 @@ export const POST = async (request: NextRequest, { params }: Params) => {
     });
   }
 
-  return NextResponse.json({ ticket: zendeskSupportTicket });
+  return Response.json({ ticket: zendeskSupportTicket });
 };
