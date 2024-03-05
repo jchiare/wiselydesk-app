@@ -33,6 +33,20 @@ const PUBLISHED_WEBHOOK_PAYLOAD = {
   zendesk_event_version: "2022-11-06"
 };
 
+const UNPUBLISHED_WEBHOOK_PAYLOAD = {
+  account_id: 9251815,
+  detail: {
+    brand_id: "360002395532",
+    id: "360044239752"
+  },
+  event: {},
+  id: "01HQR6ZH8QVSJRWHKKX2GMQ5CS",
+  subject: "zen:article:360044239752",
+  time: "2024-02-28T15:57:53.280810797Z",
+  type: "zen:event-type:article.unpublished",
+  zendesk_event_version: "2022-11-06"
+};
+
 describe("Zendesk KBA Webhook ", () => {
   it("should update KBA", async () => {
     const req = httpMocks.createRequest({
@@ -66,24 +80,16 @@ describe("Zendesk KBA Webhook ", () => {
     );
     expect(res.status).toBe(200);
   });
-  it.skip("should delete KBA", async () => {
+  it("should delete KBA", async () => {
     const req = httpMocks.createRequest({
       method: "POST",
       url: "/api/webhook/help-center-update",
       headers: {
         "x-wiselydesk-zendesk-account-id": "9251815"
       },
-      body: PUBLISHED_WEBHOOK_PAYLOAD
+      body: UNPUBLISHED_WEBHOOK_PAYLOAD
     });
-    req.json = jest.fn().mockResolvedValue(PUBLISHED_WEBHOOK_PAYLOAD);
-
-    nock("http://fake.com:")
-      .get("/360032829291")
-      .query({ include: "categories,sections" })
-      .reply(200, {
-        article: { id: "360032829291", title: "Test Article" }, // Mock response data
-        next_page: null // Indicate no more pages
-      });
+    req.json = jest.fn().mockResolvedValue(UNPUBLISHED_WEBHOOK_PAYLOAD);
 
     // @ts-expect-error it's a test ..
     req.headers.get = (headerName: string) =>
@@ -94,8 +100,27 @@ describe("Zendesk KBA Webhook ", () => {
 
     const responseMessage = await res.text();
     expect(responseMessage).toBe(
-      '{"message":"Updated kbaId 360032829291 for botId 1"}'
+      '{"message":"Deleted kbaId 360044239752 for botId 1"}'
     );
     expect(res.status).toBe(200);
+  });
+  it("400 for header", async () => {
+    const req = httpMocks.createRequest({
+      method: "POST",
+      url: "/api/webhook/help-center-update",
+      headers: {
+        "x-wiselydesk-zendesk-account-ida": "92518125"
+      },
+      body: UNPUBLISHED_WEBHOOK_PAYLOAD
+    });
+    req.json = jest.fn().mockResolvedValue(UNPUBLISHED_WEBHOOK_PAYLOAD);
+
+    // @ts-expect-error it's a test ..
+    req.headers.get = (headerName: string) =>
+      req.headers[headerName.toLowerCase()];
+
+    // @ts-expect-error it's a test
+    const res = await POST(req);
+    expect(res.status).toBe(400);
   });
 });
