@@ -26,7 +26,6 @@ export default function SupportTicketModal({
   locale
 }: SupportTicketModalProps): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [summary, setSummary] = useState("");
   const [transcript, setTranscript] = useState("");
   const [additionalInfo, setAdditionalInfo] = useLocalStorage<string>(
     "savedAdditionalInfo",
@@ -42,13 +41,6 @@ export default function SupportTicketModal({
   function handleClick() {
     setIsModalOpen(true);
     if (conversationId) {
-      if (!summary) {
-        fetch(`${URL}/api/conversation/${conversationId}/summarization`)
-          .then(res => res.json())
-          .then(data => {
-            setSummary(data["summary"]);
-          });
-      }
       if (!transcript) {
         fetch(`${URL}/api/conversation/${conversationId}/transcribe`)
           .then(res => res.json())
@@ -69,7 +61,6 @@ export default function SupportTicketModal({
     setIsLoading(true);
     const formData = {
       email,
-      summary,
       transcript,
       additionalInfo,
       locale,
