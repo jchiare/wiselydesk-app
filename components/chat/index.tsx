@@ -11,6 +11,8 @@ import { useScrollToBottom } from "@/lib/chat/hooks/use-scroll-to-bottom";
 import Input from "@/components/chat/user/input";
 import CancelResponse from "@/components/chat/cancel-response";
 import type { Bot } from "@prisma/client";
+import { useEffect } from "react";
+import * as Sentry from "@sentry/nextjs";
 
 export type SearchParams = {
   german_source?: string;
@@ -62,6 +64,14 @@ export default function Chat({
     account,
     inlineSources
   });
+
+  useEffect(() => {
+    const scope = Sentry.getCurrentScope();
+    if (scope) {
+      scope.setTag("conversationId", conversationId);
+      scope.setTag("botId", bot.id);
+    }
+  }, [conversationId, bot]);
 
   const messagesEndRef = useScrollToBottom({
     messages,
