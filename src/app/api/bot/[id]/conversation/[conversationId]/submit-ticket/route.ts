@@ -77,7 +77,7 @@ export const POST = async (request: Request, { params }: Params) => {
       data: {
         bot_id: parseInt(id, 10),
         conversation_id: parseInt(conversationId, 10),
-        reason: contactReason,
+        reason: contactReason || "no_reason_given",
         external_identifier: zendeskTicketUrl,
         public_conversation_id: publicConversationId
       }
