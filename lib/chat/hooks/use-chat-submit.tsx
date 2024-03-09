@@ -49,7 +49,7 @@ export const useChatSubmit = ({
 
     const controller = new AbortController();
 
-    fetchEventSource(`${URL}/api/conversation`, {
+    fetchEventSource(`/api/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -73,6 +73,7 @@ export const useChatSubmit = ({
       },
       openWhenHidden: true,
       onmessage(mes: any) {
+        console.log("message received", mes);
         const event = mes.event as string | undefined;
 
         if (event === "closing_connection") {
@@ -95,10 +96,10 @@ export const useChatSubmit = ({
         }
 
         const newStreamingResponse = assistantStreamingResponse + lastMessage;
-        setAssistantStreamingResponse((a) => a + newStreamingResponse);
+        setAssistantStreamingResponse(a => a + newStreamingResponse);
       },
       onclose() {
-        console.log("Closing SSE connection");
+        console.log("Closing SSE connection!");
         clearStreamingResponse();
         controller.abort();
       },
@@ -127,7 +128,7 @@ export const useChatSubmit = ({
 
     if (assistantStreamingResponse) {
       // Update the last AI message with the streaming response
-      setMessages((prevMessages) => {
+      setMessages(prevMessages => {
         const lastAssistantAnswer = prevMessages.slice(-1)[0];
         lastAssistantAnswer.text = assistantStreamingResponse;
         return [
