@@ -5,7 +5,7 @@ const openai = new OpenAI();
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
-// export const runtime = "edge";
+export const runtime = "edge";
 
 export async function POST(req: Request) {
   const response = await openai.chat.completions.create({
@@ -53,9 +53,15 @@ async function* makeIterator(
   for await (const chunk of response.toReadableStream()) {
     const textChunk = decoder.decode(chunk, { stream: true });
     try {
-      const parsedChunk = JSON.parse(textChunk);
-      const text = parsedChunk.choices[0]?.delta?.content || "";
-      yield encoder.encode(text);
+      const jsonChunk = JSON.parse(
+        textChunk
+      ) as OpenAI.Chat.Completions.ChatCompletionChunk;
+
+      const skipChunk = shouldSkipChunk(jsonChunk);
+      if (!skipChunk) {
+        const text = parseSSEMessageChunk(jsonChunk);
+        yield encoder.encode(text);
+      }
     } catch (error) {
       console.error("Error parsing JSON from chunk", error);
     }
@@ -66,4 +72,18 @@ async function* makeIterator(
     console.log("remaing text??");
     yield encoder.encode(remainingText);
   }
+}
+
+function shouldSkipChunk(
+  chunk: OpenAI.Chat.Completions.ChatCompletionChunk
+): boolean {
+  const content = chunk.choices[0]?.delta?.content;
+  return content === "" || content === undefined;
+}
+
+function parseSSEMessageChunk(
+  chunk: OpenAI.Chat.Completions.ChatCompletionChunk
+): string {
+  const text = JSON.stringify({ text: chunk.choices[0]?.delta?.content || "" });
+  return `id: ${new Date()}\nevent: message\ndata: ${text}\n\n`;
 }
