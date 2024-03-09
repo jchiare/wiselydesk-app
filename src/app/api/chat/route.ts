@@ -72,6 +72,9 @@ async function* makeIterator(
     console.log("remaing text??");
     yield encoder.encode(remainingText);
   }
+
+  const finalSSEResponse = createFinalSSEResponse();
+  yield encoder.encode(finalSSEResponse);
 }
 
 function shouldSkipChunk(
@@ -85,5 +88,14 @@ function parseSSEMessageChunk(
   chunk: OpenAI.Chat.Completions.ChatCompletionChunk
 ): string {
   const text = JSON.stringify({ text: chunk.choices[0]?.delta?.content || "" });
-  return `id: ${new Date()}\nevent: message\ndata: ${text}\n\n`;
+  return `id: ${Date.now()}\nevent: message\ndata: ${text}\n\n`;
+}
+
+function createFinalSSEResponse(): string {
+  const data = JSON.stringify({
+    sources: [],
+    conversation_id: "",
+    message_id: ""
+  });
+  return `id: ${Date.now()}\nevent: closing_connection\ndata: ${data}\n\n`;
 }
