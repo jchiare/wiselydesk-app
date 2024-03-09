@@ -1,0 +1,124 @@
+import { isConversationLivemode } from "@/lib/chat/conversation/livemode";
+import { getStaticBotText } from "@/lib/chat/conversation/static-bot-text";
+import { PrismaClient, type Conversation } from "@prisma/client";
+
+type Payload = {
+  text: string;
+  conversationId: number | undefined;
+  apiResponseCost?: number;
+  finished?: boolean;
+  sources?: string;
+};
+
+export class ConversationService {
+  private prisma: PrismaClient;
+  private isProductionTesting: boolean;
+  private conversationId: number | undefined;
+  private botId: number;
+
+  constructor(
+    prismaClient: PrismaClient,
+    isProductionTesting: boolean,
+    botId: number
+  ) {
+    this.prisma = prismaClient;
+    this.isProductionTesting = isProductionTesting;
+    this.botId = botId;
+  }
+
+  public getConversationId(): number {
+    if (!this.conversationId) {
+      throw new Error("Conversation ID is undefined");
+    }
+    return this.conversationId;
+  }
+
+  async getOrCreateConversation(
+    userInput: string,
+    conversationId: number | undefined
+  ): Promise<void> {
+    if (this.isProductionTesting) {
+      this.conversationId = 1;
+      return;
+    }
+
+    if (conversationId !== undefined) {
+      // should probably verify the convoId is valid for the bot and time
+      this.conversationId = conversationId;
+      return;
+    }
+
+    const newConversationId = (await this.createConversation(userInput)).id;
+    console.log("newConversationId", newConversationId);
+    this.conversationId = newConversationId;
+
+    // create welcome message since it's a new conversation
+    await this.createWelcomeMessage();
+  }
+
+  private async createConversation(userInput: string): Promise<Conversation> {
+    const publicID = await this.getNewPublicIdByBotId(this.botId);
+
+    const conversation = await this.prisma.conversation.create({
+      data: {
+        bot_id: this.botId,
+        public_id: publicID,
+        user_id: 3,
+        livemode: isConversationLivemode(userInput, this.botId)
+      }
+    });
+    return conversation;
+  }
+
+  async createMessage({
+    text,
+    index,
+    finished,
+    sources,
+    apiResponseCost
+  }: {
+    text: string;
+    index: number;
+    finished?: boolean;
+    sources?: string;
+    apiResponseCost?: number;
+  }): Promise<void> {
+    console.log(this.conversationId);
+    await this.prisma.message.create({
+      data: {
+        text,
+        conversation_id: this.conversationId!,
+        from_user_id: 3,
+        to_user_id: 3,
+        bot_id: this.botId,
+        index: index,
+        api_response_cost: apiResponseCost,
+        finished,
+        sources
+      }
+    });
+  }
+
+  private async createWelcomeMessage(): Promise<void> {
+    const welcomeMessage = getStaticBotText(this.botId);
+    const welcomeMessageData = {
+      text: welcomeMessage.welcome_message,
+      index: 0
+    };
+    await this.createMessage(welcomeMessageData);
+  }
+
+  private async getNewPublicIdByBotId(botId: number): Promise<number> {
+    const botConversationCount = await this.prisma.conversation.aggregate({
+      _max: {
+        public_id: true
+      },
+      where: {
+        bot_id: botId
+      }
+    });
+
+    const maxPublicId = botConversationCount._max.public_id ?? 0;
+    return maxPublicId + 1;
+  }
+}

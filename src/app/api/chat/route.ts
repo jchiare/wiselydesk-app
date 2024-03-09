@@ -1,15 +1,67 @@
 import OpenAI from "openai";
+import {
+  parsePayload,
+  parseBotId,
+  removeWiselyDeskTestingKeyword
+} from "@/lib/chat/conversation/parse-payload";
+import { ConversationService } from "@/lib/chat/conversation";
+import { PrismaClient } from "@prisma/client";
+import { KbaSearch } from "@/lib/shared/services/openai/rag";
+
 import type { Stream } from "openai/streaming";
 
+const prisma = new PrismaClient();
 const openai = new OpenAI();
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
-export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
+  const payload = await req.json();
+  const {
+    model,
+    messages,
+    userInput: uncheckedUserInput,
+    clientApiKey,
+    clientSentConversationId
+  } = parsePayload(payload);
+
+  const botId = parseBotId(clientApiKey);
+
+  const [userInput, updatedMessages, isProductionTesting] =
+    removeWiselyDeskTestingKeyword(messages, uncheckedUserInput);
+
+  const conversationService = new ConversationService(
+    prisma,
+    isProductionTesting,
+    botId
+  );
+
+  console.log("hello: ", clientSentConversationId);
+
+  const conversationId = await conversationService.getOrCreateConversation(
+    userInput,
+    clientSentConversationId
+  );
+
+  // add user input
+  await conversationService.createMessage({
+    text: userInput,
+    index: updatedMessages.length - 1,
+    finished: false
+  });
+
+  console.log(
+    `Received message for conversation ${conversationId} on bot ${botId}`
+  );
+
+  const kbaSearchClient = new KbaSearch(botId, prisma);
+  const topMatchingArticles = kbaSearchClient.getTopKArticlesObject(userInput);
+  console.log(topMatchingArticles);
+
   const response = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
+    model,
     messages: [{ role: "user", content: "Say this is a testing 3 times" }],
     stream: true
   });
