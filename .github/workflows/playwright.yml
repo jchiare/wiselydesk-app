@@ -12,6 +12,7 @@ jobs:
       MY_ENV_VAR: DATABASE_URL
       ANOTHER_ENV_VAR: fake_url
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     steps:
       - uses: actions/checkout@v4
