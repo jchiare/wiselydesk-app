@@ -7,6 +7,7 @@ import {
 import { ConversationService } from "@/lib/chat/conversation";
 import { PrismaClient } from "@prisma/client";
 import { KbaSearch } from "@/lib/shared/services/openai/rag";
+import { getSystemMessagePrompt } from "@/lib/chat/prompts/system-prompts";
 
 import type { Stream } from "openai/streaming";
 
@@ -45,15 +46,17 @@ export async function POST(req: Request) {
     clientSentConversationId
   );
 
+  const conversationId = conversationService.getConversationId();
+
   // add user input
-  await conversationService.createMessage({
+  const message = await conversationService.createMessage({
     text: userInput,
-    index: updatedMessages.length - 1,
+    index: updatedMessages.length,
     finished: false
   });
 
   console.log(
-    `Received message for conversation ${conversationService.getConversationId()} on bot ${botId}`
+    `Received message for conversation ${conversationId} on bot ${botId}`
   );
 
   console.log(
@@ -65,20 +68,39 @@ export async function POST(req: Request) {
   const kbaSearchClient = new KbaSearch(botId, prisma);
   const topMatchingArticles =
     await kbaSearchClient.getTopKArticlesObject(userInput);
-  // console.log("top route: ", topMatchingArticles);
+
   console.log(
     `Took ${((Date.now() - startTime) / 1000).toFixed(
       4
     )} seconds to get top articles`
   );
 
+  const { content, sources } =
+    kbaSearchClient.createContextFromTopMatchingArticles(
+      topMatchingArticles,
+      4
+    );
+
+  const systemMessage = getSystemMessagePrompt(botId, content);
+  const formattedSystemMessage: OpenAI.ChatCompletionMessageParam = {
+    role: "system",
+    content: systemMessage
+  };
+
   const response = await openai.chat.completions.create({
     model,
-    messages: [{ role: "user", content: "Say this is a testing 3 times" }],
+    messages: [formattedSystemMessage, ...updatedMessages],
     stream: true
   });
 
-  const iterator = makeIterator(response);
+  const iterator = makeIterator(
+    response,
+    sources,
+    conversationId,
+    message.id,
+    conversationService,
+    updatedMessages.length + 1
+  );
   const stream = iteratorToStream(iterator);
 
   return new Response(stream, {
@@ -111,8 +133,15 @@ function iteratorToStream(
 }
 
 async function* makeIterator(
-  response: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>
+  response: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>,
+  sources: string[],
+  conversationId: number,
+  messageId: number,
+  conversationService: ConversationService,
+  assistantMessageIndex: number
 ): AsyncGenerator<Uint8Array, void, undefined> {
+  let fullResponse = "";
+
   // @ts-expect-error - TS doesn't know about the toReadableStream method well
   for await (const chunk of response.toReadableStream()) {
     const textChunk = decoder.decode(chunk, { stream: true });
@@ -124,6 +153,7 @@ async function* makeIterator(
       const skipChunk = shouldSkipChunk(jsonChunk);
       if (!skipChunk) {
         const text = parseSSEMessageChunk(jsonChunk);
+        fullResponse += jsonChunk.choices[0]?.delta?.content || "";
         yield encoder.encode(text);
       }
     } catch (error) {
@@ -133,11 +163,23 @@ async function* makeIterator(
 
   const remainingText = decoder.decode();
   if (remainingText) {
-    console.log("remaing text??");
+    fullResponse += remainingText;
     yield encoder.encode(remainingText);
   }
 
-  const finalSSEResponse = createFinalSSEResponse();
+  const finalSSEResponse = createFinalSSEResponse(
+    sources,
+    conversationId,
+    messageId
+  );
+
+  await conversationService.createMessage({
+    text: fullResponse,
+    index: assistantMessageIndex,
+    finished: true,
+    sources: sources.join(",")
+  });
+
   yield encoder.encode(finalSSEResponse);
 }
 
@@ -155,11 +197,15 @@ function parseSSEMessageChunk(
   return `id: ${Date.now()}\nevent: message\ndata: ${text}\n\n`;
 }
 
-function createFinalSSEResponse(): string {
+function createFinalSSEResponse(
+  sources: string[],
+  conversationId: number,
+  messageId: number
+): string {
   const data = JSON.stringify({
-    sources: [],
-    conversation_id: "",
-    message_id: ""
+    sources,
+    conversation_id: conversationId,
+    message_id: messageId
   });
   return `id: ${Date.now()}\nevent: closing_connection\ndata: ${data}\n\n`;
 }

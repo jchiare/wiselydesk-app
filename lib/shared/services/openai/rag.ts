@@ -7,6 +7,19 @@ interface ExtendedKnowledgeBaseArticle
   content_embedding: number[];
 }
 
+type ArticleEmbeddings = {
+  title: string;
+  content: string;
+  tokens: number;
+  distance: number;
+  source: string;
+};
+
+type ContextEmbeddings = {
+  content: string;
+  sources: string[];
+};
+
 export class KbaSearch {
   private botId: number;
   private prisma: PrismaClient;
@@ -38,6 +51,46 @@ export class KbaSearch {
     return topMatchingArticlesObject;
   }
 
+  createContextFromTopMatchingArticles(
+    topMatchingArticles: ArticleEmbeddings[],
+    n: number,
+    createInlineSources: boolean = true
+  ): ContextEmbeddings {
+    const content: string[] = [];
+    const sources: string[] = [];
+    const distanceUpperBound = 0.5;
+
+    for (const article of topMatchingArticles) {
+      console.log(`distance: ${article.distance}`);
+      if (article.distance > distanceUpperBound) {
+        content.push(this.createContent(article, createInlineSources));
+        sources.push(article.source);
+      }
+    }
+
+    if (sources.length === 0 && topMatchingArticles.length > 0) {
+      console.log(`No articles with distance ${distanceUpperBound} found`);
+      const firstArticle = topMatchingArticles[0];
+      content.push(this.createContent(firstArticle, createInlineSources));
+      sources.push(firstArticle.source);
+    }
+
+    return {
+      content: content.slice(0, n).join(" "),
+      sources: sources.slice(0, n)
+    };
+  }
+
+  private createContent(
+    article: ArticleEmbeddings,
+    createInlineSources: boolean
+  ): string {
+    if (createInlineSources) {
+      return `${article.content} -- Url: (${article.source})`;
+    }
+    return article.content;
+  }
+
   private async getDbArticles(): Promise<ExtendedKnowledgeBaseArticle[]> {
     const articles = await this.prisma.knowledgeBaseArticle.findMany({
       where: { bot_id: this.botId }
@@ -60,7 +113,7 @@ export class KbaSearch {
     articles: ExtendedKnowledgeBaseArticle[],
     queryEmbedding: number[],
     n: number
-  ): any[] {
+  ): ArticleEmbeddings[] {
     const embeddings = articles.map(article => article.content_embedding);
 
     const mostSimilarArticles = this.openAiEmbedder.getTopKSimilarities(

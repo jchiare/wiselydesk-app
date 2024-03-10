@@ -1,6 +1,6 @@
 import { isConversationLivemode } from "@/lib/chat/conversation/livemode";
 import { getStaticBotText } from "@/lib/chat/conversation/static-bot-text";
-import { PrismaClient, type Conversation } from "@prisma/client";
+import { PrismaClient, type Conversation, type Message } from "@prisma/client";
 
 type Payload = {
   text: string;
@@ -52,7 +52,7 @@ export class ConversationService {
     this.conversationId = newConversationId;
 
     // create welcome message since it's a new conversation
-    this.createWelcomeMessage();
+    await this.createWelcomeMessage();
   }
 
   private async createConversation(userInput: string): Promise<Conversation> {
@@ -95,8 +95,8 @@ export class ConversationService {
     finished?: boolean;
     sources?: string;
     apiResponseCost?: number;
-  }): Promise<void> {
-    await this.prisma.message.create({
+  }): Promise<Message> {
+    return await this.prisma.message.create({
       data: {
         text,
         conversation_id: this.conversationId!,
