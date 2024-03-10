@@ -18,6 +18,8 @@ const decoder = new TextDecoder();
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
+  const startTime = Date.now();
+
   const payload = await req.json();
   const {
     model,
@@ -38,9 +40,7 @@ export async function POST(req: Request) {
     botId
   );
 
-  console.log("hello: ", clientSentConversationId);
-
-  const conversationId = await conversationService.getOrCreateConversation(
+  await conversationService.getOrCreateConversation(
     userInput,
     clientSentConversationId
   );
@@ -53,12 +53,24 @@ export async function POST(req: Request) {
   });
 
   console.log(
-    `Received message for conversation ${conversationId} on bot ${botId}`
+    `Received message for conversation ${conversationService.getConversationId()} on bot ${botId}`
+  );
+
+  console.log(
+    `Took ${((Date.now() - startTime) / 1000).toFixed(
+      4
+    )} seconds to create initial conversation and messages`
   );
 
   const kbaSearchClient = new KbaSearch(botId, prisma);
-  const topMatchingArticles = kbaSearchClient.getTopKArticlesObject(userInput);
-  console.log(topMatchingArticles);
+  const topMatchingArticles =
+    await kbaSearchClient.getTopKArticlesObject(userInput);
+  // console.log("top route: ", topMatchingArticles);
+  console.log(
+    `Took ${((Date.now() - startTime) / 1000).toFixed(
+      4
+    )} seconds to get top articles`
+  );
 
   const response = await openai.chat.completions.create({
     model,

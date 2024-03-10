@@ -49,15 +49,21 @@ export class ConversationService {
     }
 
     const newConversationId = (await this.createConversation(userInput)).id;
-    console.log("newConversationId", newConversationId);
     this.conversationId = newConversationId;
 
     // create welcome message since it's a new conversation
-    await this.createWelcomeMessage();
+    this.createWelcomeMessage();
   }
 
   private async createConversation(userInput: string): Promise<Conversation> {
+    const startTime = Date.now();
+
     const publicID = await this.getNewPublicIdByBotId(this.botId);
+    console.log(
+      `Took ${((Date.now() - startTime) / 1000).toFixed(
+        4
+      )} seconds to get new public ID`
+    );
 
     const conversation = await this.prisma.conversation.create({
       data: {
@@ -67,6 +73,13 @@ export class ConversationService {
         livemode: isConversationLivemode(userInput, this.botId)
       }
     });
+
+    console.log(
+      `Took ${((Date.now() - startTime) / 1000).toFixed(
+        4
+      )} seconds to get create new conversation`
+    );
+
     return conversation;
   }
 
@@ -83,7 +96,6 @@ export class ConversationService {
     sources?: string;
     apiResponseCost?: number;
   }): Promise<void> {
-    console.log(this.conversationId);
     await this.prisma.message.create({
       data: {
         text,
