@@ -70,7 +70,8 @@ export class ConversationService {
         bot_id: this.botId,
         public_id: publicID,
         user_id: 3,
-        livemode: isConversationLivemode(userInput, this.botId)
+        livemode: isConversationLivemode(userInput, this.botId),
+        summary: userInput.slice(0, 255)
       }
     });
 
@@ -115,7 +116,8 @@ export class ConversationService {
     const welcomeMessage = getStaticBotText(this.botId);
     const welcomeMessageData = {
       text: welcomeMessage.welcome_message,
-      index: 0
+      index: 0,
+      finished: true
     };
     await this.createMessage(welcomeMessageData);
   }

@@ -7,17 +7,17 @@ const baseURL = `http://localhost:${PORT}`;
 export default defineConfig({
   timeout: 30 * 1000,
   testDir: "e2e",
-  fullyParallel: true,
-  outputDir: "test-results/",
+  fullyParallel: false,
+  outputDir: "playwright-report/",
   forbidOnly: !!process.env.CI,
-  workers: process.env.CI ? 2 : "75%",
+  workers: 1,
   expect: {
     timeout: 10 * 1000
   },
 
   webServer: [
     {
-      command: "npm run dev",
+      command: "npm run dev:e2e",
       url: baseURL,
       reuseExistingServer: !process.env.CI,
       timeout: 31 * 1000,

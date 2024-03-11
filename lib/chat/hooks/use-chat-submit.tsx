@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import ChatMessage from "@/lib/chat/chat-message";
 import { transformChatMessageToOpenAi } from "@/lib/chat/openai-chat-message";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 
 type UseChatSubmitParams = {
   initialMessages: ChatMessage[];
@@ -48,7 +49,7 @@ export const useChatSubmit = ({
 
     const controller = new AbortController();
 
-    fetchEventSource(`/api/chat`, {
+    fetchEventSource(`${NEXTJS_BACKEND_URL}/api/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -65,6 +66,7 @@ export const useChatSubmit = ({
       }),
       signal: controller.signal,
       async onopen() {
+        console.log("HSAFGDFAGAF: ", NEXTJS_BACKEND_URL);
         console.log("Opened SSE connection");
         if (aiResponseDone) {
           setAiResponseDone(false);
