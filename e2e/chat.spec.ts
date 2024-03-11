@@ -6,8 +6,18 @@ const source = "1. How can I become an AMBOSS mem";
 
 test("should navigate to the chat page for amboss en", async ({ page }) => {
   // Start from the index page (the baseURL is set via the webServer in the playwright.config.ts)
+  page.on("console", msg => {
+    if (msg.type() === "error") {
+      console.log(`Console error: ${msg.text()}`);
+    }
+  });
+
+  // Listen for uncaught exceptions within the page
+  page.on("pageerror", error => {
+    console.log(`Page error: ${error.message}`);
+  });
   await page.goto(
-    "/chat/amboss?locale=en&client_api_key=hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE&model=gpt-3.5-turbo"
+    "/chat/amboss?locale=en&client_api_key=7xwzrEf1Fr1_sFIv5c5D6Uqpyzocn2oXrnkl1DnaByQ&model=gpt-3.5-turbo"
   );
   // Welcome message loaded
   await expect(page.getByRole("paragraph")).toContainText(
@@ -17,7 +27,7 @@ test("should navigate to the chat page for amboss en", async ({ page }) => {
   // Ask a question
   await page
     .getByPlaceholder("Ask me your questions!")
-    .fill("how many apples do I get");
+    .fill("This is from a test");
 
   // Press Enter
   await page.keyboard.press("Enter");
@@ -38,8 +48,19 @@ test("should navigate to the chat page for amboss en", async ({ page }) => {
 
 test("should navigate to the chat page for amboss de", async ({ page }) => {
   // Start from the index page (the baseURL is set via the webServer in the playwright.config.ts)
+  page.on("console", msg => {
+    if (msg.type() === "error") {
+      console.log(`Console error: ${msg.text()}`);
+    }
+  });
+
+  // Listen for uncaught exceptions within the page
+  page.on("pageerror", error => {
+    console.log(`Page error: ${error.message}`);
+  });
+
   await page.goto(
-    "/chat/amboss?locale=de&client_api_key=hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE&create_support_ticket=true"
+    "/chat/amboss?locale=de&client_api_key=7xwzrEf1Fr1_sFIv5c5D6Uqpyzocn2oXrnkl1DnaByQ&model=gpt-3.5-turbo"
   );
   // Welcome message loaded
   await expect(page.getByRole("paragraph")).toContainText(
@@ -49,7 +70,7 @@ test("should navigate to the chat page for amboss de", async ({ page }) => {
   // Ask a question
   await page
     .getByPlaceholder("Wie kann ich dir helfen?")
-    .fill("how many apples do I get");
+    .fill("This is from a test");
 
   // Press Enter
   await page.keyboard.press("Enter");

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ChatMessage from "@/lib/chat/chat-message";
 import { transformChatMessageToOpenAi } from "@/lib/chat/openai-chat-message";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
-import { URL } from "@/lib/shared/constants";
+import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 
 type UseChatSubmitParams = {
   initialMessages: ChatMessage[];
@@ -49,7 +49,7 @@ export const useChatSubmit = ({
 
     const controller = new AbortController();
 
-    fetchEventSource(`${URL}/api/conversation`, {
+    fetchEventSource(`${NEXTJS_BACKEND_URL}/api/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -78,7 +78,7 @@ export const useChatSubmit = ({
         if (event === "closing_connection") {
           console.log("Server has no more messages. Closing SSE connection.");
           clearStreamingResponse();
-          const serverData = JSON.parse(mes.data.replaceAll("'", '"')) as any;
+          const serverData = JSON.parse(mes.data);
           setSources(serverData.sources);
           if (!conversationId) {
             setConversationId(serverData.conversation_id);
@@ -88,17 +88,14 @@ export const useChatSubmit = ({
           return controller.abort();
         }
 
-        const data = JSON.parse(mes.data);
-        let lastMessage = data.text as string | undefined;
-        if (lastMessage?.includes("<NEWLINE>")) {
-          lastMessage = lastMessage.replaceAll("<NEWLINE>", "\n");
-        }
-
-        const newStreamingResponse = assistantStreamingResponse + lastMessage;
-        setAssistantStreamingResponse((a) => a + newStreamingResponse);
+        const message = JSON.parse(mes.data).text;
+        const newStreamingResponse = assistantStreamingResponse + message;
+        setAssistantStreamingResponse(
+          response => response + newStreamingResponse
+        );
       },
       onclose() {
-        console.log("Closing SSE connection");
+        console.log("Closing SSE connection!");
         clearStreamingResponse();
         controller.abort();
       },
@@ -127,7 +124,7 @@ export const useChatSubmit = ({
 
     if (assistantStreamingResponse) {
       // Update the last AI message with the streaming response
-      setMessages((prevMessages) => {
+      setMessages(prevMessages => {
         const lastAssistantAnswer = prevMessages.slice(-1)[0];
         lastAssistantAnswer.text = assistantStreamingResponse;
         return [

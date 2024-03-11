@@ -25,10 +25,11 @@ const server = http.createServer((req, res) => {
   }, 1000);
 });
 
+const PORT = 5000;
 server.listen(5000, "localhost", () =>
-  console.log("Started E2E backend server on port 5000")
+  console.log(`Started E2E backend server on port ${PORT}`)
 );
 
-server.listen(5000, "0.0.0.0", () =>
-  console.log("Started E2E backend server on port 5000")
-);
+// server.listen(3000, "0.0.0.0", () =>
+//   console.log("Started E2E backend server on port 3000")
+// );
