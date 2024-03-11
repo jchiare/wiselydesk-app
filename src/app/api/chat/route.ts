@@ -10,6 +10,7 @@ import { KbaSearch } from "@/lib/shared/services/openai/rag";
 import { getSystemMessagePrompt } from "@/lib/chat/prompts/system-prompts";
 
 import type { Stream } from "openai/streaming";
+import { buildSources } from "@/lib/chat/sources";
 
 const prisma = new PrismaClient();
 const openai = new OpenAI();
@@ -170,7 +171,8 @@ async function* makeIterator(
   const finalSSEResponse = createFinalSSEResponse(
     sources,
     conversationId,
-    messageId
+    messageId,
+    fullResponse
   );
 
   await conversationService.createMessage({
@@ -200,8 +202,11 @@ function parseSSEMessageChunk(
 function createFinalSSEResponse(
   sources: string[],
   conversationId: number,
-  messageId: number
+  messageId: number,
+  fullResponse: string
 ): string {
+  sources = buildSources(fullResponse, sources, true);
+
   const data = JSON.stringify({
     sources,
     conversation_id: conversationId,
