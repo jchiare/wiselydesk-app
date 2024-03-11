@@ -66,7 +66,6 @@ export const useChatSubmit = ({
       }),
       signal: controller.signal,
       async onopen() {
-        console.log("HSAFGDFAGAF: ", NEXTJS_BACKEND_URL);
         console.log("Opened SSE connection");
         if (aiResponseDone) {
           setAiResponseDone(false);
