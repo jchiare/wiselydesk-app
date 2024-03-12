@@ -53,7 +53,7 @@ export async function POST(req: Request) {
   const message = await conversationService.createMessage({
     text: userInput,
     index: updatedMessages.length,
-    finished: false
+    finished: true
   });
 
   console.log(
@@ -168,18 +168,25 @@ async function* makeIterator(
     yield encoder.encode(remainingText);
   }
 
+  // save AI response before finishing to display in web app if
+  // user quits mid-conversation
+  const aiResponseMessage = await conversationService.createMessage({
+    text: "",
+    index: assistantMessageIndex,
+    finished: false
+  });
+
+  const formattedSources = buildSources(fullResponse, sources, true);
   const finalSSEResponse = createFinalSSEResponse(
-    sources,
+    formattedSources,
     conversationId,
-    messageId,
-    fullResponse
+    messageId
   );
 
-  await conversationService.createMessage({
+  await conversationService.updateMessage(aiResponseMessage.id, {
     text: fullResponse,
-    index: assistantMessageIndex,
     finished: true,
-    sources: sources.join(",")
+    sources: formattedSources.length === 0 ? null : formattedSources.join(", ")
   });
 
   yield encoder.encode(finalSSEResponse);
@@ -202,11 +209,8 @@ function parseSSEMessageChunk(
 function createFinalSSEResponse(
   sources: string[],
   conversationId: number,
-  messageId: number,
-  fullResponse: string
+  messageId: number
 ): string {
-  sources = buildSources(fullResponse, sources, true);
-
   const data = JSON.stringify({
     sources,
     conversation_id: conversationId,

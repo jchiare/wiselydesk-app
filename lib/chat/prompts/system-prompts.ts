@@ -1,7 +1,8 @@
 import {
   ambossEnglishContextPromptGpt4SupportTicket,
   ambossGermanContextPromptGpt4SupportTicket,
-  georgiaCookiesContextPrompt
+  georgiaCookiesContextPrompt,
+  georgiaCookiesContextPromptGpt4SupportTicket
 } from "@/lib/chat/prompts/model";
 
 export function getSystemMessagePrompt(
@@ -24,6 +25,12 @@ export function getSystemMessagePrompt(
     return ambossGermanContextPromptGpt4SupportTicket(
       context,
       createInlineSources
+    );
+  }
+  if (createInlineSources) {
+    return georgiaCookiesContextPromptGpt4SupportTicket(
+      context,
+      createSupportTicket
     );
   }
 
