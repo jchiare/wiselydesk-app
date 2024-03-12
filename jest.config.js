@@ -13,5 +13,6 @@ module.exports = {
         // other ts-jest options...
       }
     ]
-  }
+  },
+  testPathIgnorePatterns: ["<rootDir>/src/tests/e2e/"]
 };

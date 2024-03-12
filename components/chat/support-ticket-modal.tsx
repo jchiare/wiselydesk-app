@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { URL, NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 import { useLocalStorage } from "@/lib/chat/hooks/use-local-storage";
 import { getChatThemeByBotId } from "@/lib/chat/chat-theme";
-import { textByBotId } from "@/i18n/chat";
+import { textByBotId } from "@/lib/i18n/chat";
 
 import {
   Select,

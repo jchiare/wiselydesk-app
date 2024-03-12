@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import getText from "@/i18n/chat";
+import getText from "@/lib/i18n/chat";
 
 type AiWarningProps = {
   locale: "en" | "de";

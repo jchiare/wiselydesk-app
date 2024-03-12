@@ -1,4 +1,4 @@
-import getText from "@/i18n/chat";
+import getText from "@/lib/i18n/chat";
 
 type CancelResponseProps = {
   aiResponseDone: boolean;
