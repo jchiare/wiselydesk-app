@@ -17,6 +17,8 @@ const openai = new OpenAI();
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
+export const maxDuration = 75;
+
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
