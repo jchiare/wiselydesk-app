@@ -7,8 +7,10 @@ type Payload = {
   conversationId: number | undefined;
   apiResponseCost?: number;
   finished?: boolean;
-  sources?: string;
+  sources: string | null;
 };
+
+type UpdateMessagePayload = Omit<Payload, "conversationId">;
 
 export class ConversationService {
   private prisma: PrismaClient;
@@ -108,6 +110,24 @@ export class ConversationService {
         api_response_cost: apiResponseCost,
         finished,
         sources
+      }
+    });
+  }
+
+  async updateMessage(
+    messageId: number,
+    payload: UpdateMessagePayload
+  ): Promise<void> {
+    if (this.isProductionTesting) {
+      return;
+    }
+    await this.prisma.message.update({
+      where: { id: messageId },
+      data: {
+        text: payload.text,
+        finished: payload.finished,
+        sources: payload.sources,
+        api_response_cost: payload.apiResponseCost
       }
     });
   }
