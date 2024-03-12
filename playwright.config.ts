@@ -6,7 +6,7 @@ const baseURL = `http://localhost:${PORT}`;
 // Reference: https://playwright.dev/docs/test-configuration
 export default defineConfig({
   timeout: 30 * 1000,
-  testDir: "e2e",
+  testDir: "src/tests/e2e",
   fullyParallel: false,
   outputDir: "playwright-report/",
   forbidOnly: !!process.env.CI,
