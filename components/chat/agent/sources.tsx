@@ -55,7 +55,7 @@ export default function Sources({
   account,
   aiResponseDone
 }: SourcesProps): JSX.Element | undefined {
-  if (!sources || !aiResponseDone) return;
+  if (!sources || sources.length === 0 || !aiResponseDone) return;
   return (
     <div className=" ml-auto mt-6 w-fit rounded-lg bg-slate-600 p-4 text-[0.8rem] leading-5 sm:text-sm">
       <p style={{ marginTop: "0.25em", marginBottom: "0.25em" }}>
