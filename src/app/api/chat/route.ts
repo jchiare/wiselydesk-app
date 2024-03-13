@@ -5,7 +5,7 @@ import {
   removeWiselyDeskTestingKeyword
 } from "@/lib/chat/conversation/parse-payload";
 import { ConversationService } from "@/lib/chat/conversation";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, type Message } from "@prisma/client";
 import { KbaSearch } from "@/lib/shared/services/openai/rag";
 import { getSystemMessagePrompt } from "@/lib/chat/prompts/system-prompts";
 
@@ -96,13 +96,21 @@ export async function POST(req: Request) {
     stream: true
   });
 
+  // save AI response before finishing to display in web app if
+  // user quits mid-conversation
+  const aiResponseMessage = await conversationService.createMessage({
+    text: "",
+    index: updatedMessages.length + 1,
+    finished: false
+  });
+
   const iterator = makeIterator(
     response,
     sources,
     conversationId,
     message.id,
     conversationService,
-    updatedMessages.length + 1
+    aiResponseMessage
   );
   const stream = iteratorToStream(iterator);
 
@@ -141,7 +149,7 @@ async function* makeIterator(
   conversationId: number,
   messageId: number,
   conversationService: ConversationService,
-  assistantMessageIndex: number
+  aiResponseMessage: Message
 ): AsyncGenerator<Uint8Array, void, undefined> {
   let fullResponse = "";
 
@@ -169,14 +177,6 @@ async function* makeIterator(
     fullResponse += remainingText;
     yield encoder.encode(remainingText);
   }
-
-  // save AI response before finishing to display in web app if
-  // user quits mid-conversation
-  const aiResponseMessage = await conversationService.createMessage({
-    text: "",
-    index: assistantMessageIndex,
-    finished: false
-  });
 
   const formattedSources = buildSources(fullResponse, sources, true);
   const finalSSEResponse = createFinalSSEResponse(
