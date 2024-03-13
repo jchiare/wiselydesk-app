@@ -96,10 +96,10 @@ export class ZendeskClient {
         const responseData = (await response.json()) as ZendeskTicket;
         return responseData;
       } else {
-        console.log("Failed to create ticket:", await response.text());
+        throw new Error(`Failed to create ticket: ${await response.text()}`);
       }
     } catch (error) {
-      console.error("Error creating ticket:", error);
+      throw new Error(`Failed to create ticket: ${error}`);
     }
   }
 
