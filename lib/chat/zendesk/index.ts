@@ -74,10 +74,8 @@ export class ZendeskClient {
     const ticket = this.createTicketObject(data, options);
     const url = `https://${this.subdomain}.zendesk.com/api/v2/tickets.json`;
     // todo fix at some point ..
-    const username =
-      process.env.NODE_ENV === "development"
-        ? "jay.gch93+daspu@gmail.com/token"
-        : "jay@wiselydesk.com/token";
+
+    const username = this.getUsername();
     const base64Credentials = btoa(`${username}:${this.apiToken}`);
 
     const headers = new Headers({
@@ -101,6 +99,15 @@ export class ZendeskClient {
     } catch (error) {
       throw new Error(`Failed to create ticket: ${error}`);
     }
+  }
+
+  private getUsername(): string {
+    if (this.botId === "1") {
+      return "jay.gch93+daspu@gmail.com/token";
+    }
+    return process.env.NODE_ENV === "development"
+      ? "jay.gch93+daspu@gmail.com/token"
+      : "jay@wiselydesk.com/token";
   }
 
   public generateAgentTicketUrl(ticketId: number): string {
