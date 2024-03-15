@@ -58,6 +58,12 @@ export default function SupportTicketModal({
   }
 
   async function submitButton() {
+    if (!isValidEmail(email)) {
+      alert("Please enter a valid email address");
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     const formData = {
       email,
@@ -155,6 +161,7 @@ export default function SupportTicketModal({
                 autoFocus={name.length > 0 && email.length === 0}
                 name="email"
                 value={email}
+                required
                 className="mt-1 w-full rounded border p-2"
                 onChange={e => setEmail(e.target.value)}
               />
@@ -266,4 +273,9 @@ export default function SupportTicketModal({
       )}
     </div>
   );
+}
+
+function isValidEmail(email: string) {
+  const regex = /^[^@]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return regex.test(email) && /[a-zA-Z]/.test(email);
 }
