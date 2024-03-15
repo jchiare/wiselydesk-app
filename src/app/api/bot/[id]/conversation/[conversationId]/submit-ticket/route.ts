@@ -73,20 +73,32 @@ export const POST = async (request: Request, { params }: Params) => {
       zendeskSupportTicket.ticket.id
     );
 
-    await prismaClient.escalation.create({
-      data: {
-        bot_id: parseInt(id, 10),
-        conversation_id: parseInt(conversationId, 10),
-        reason: contactReason || "no_reason_given",
-        external_identifier: zendeskTicketUrl,
-        public_conversation_id: publicConversationId
-      }
+    // would be better to put this in cache at some point
+    const conversation = await prismaClient.conversation.findFirst({
+      where: {
+        id: Number(conversationId)
+      },
+      select: { livemode: true }
     });
 
-    await prismaClient.conversation.update({
-      where: { id: Number(conversationId) },
-      data: { zendesk_ticket_url: zendeskTicketUrl }
-    });
+    const isConversationLivemode = !!conversation?.livemode;
+
+    await prismaClient.$transaction([
+      prismaClient.escalation.create({
+        data: {
+          bot_id: parseInt(id, 10),
+          conversation_id: parseInt(conversationId, 10),
+          reason: contactReason || "no_reason_given",
+          external_identifier: zendeskTicketUrl,
+          public_conversation_id: publicConversationId,
+          livemode: isConversationLivemode
+        }
+      }),
+      prismaClient.conversation.update({
+        where: { id: Number(conversationId) },
+        data: { zendesk_ticket_url: zendeskTicketUrl }
+      })
+    ]);
   }
 
   return Response.json({ ticket: zendeskSupportTicket });

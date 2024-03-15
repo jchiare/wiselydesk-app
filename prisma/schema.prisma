@@ -181,6 +181,7 @@ model Escalation {
   updated_at             DateTime? @db.DateTime(0)
   deleted_at             DateTime? @db.DateTime(0)
   external_identifier    String?   @db.Text
+  livemode               Boolean?
 
   @@index([conversation_id], map: "idx_conversation_id")
   @@map("escalation")
