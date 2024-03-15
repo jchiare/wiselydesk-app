@@ -1,23 +1,17 @@
 export default function Loading() {
   return (
-    <div className="mx-auto mt-40 flex justify-center">
-      <svg
-        className="h-12 w-12 animate-spin"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24">
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"></circle>
-        <path
-          className="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 1.37.259 2.678.725 3.874l.326-.962z"></path>
-      </svg>
+    <div className="animate-pulse">
+      <div className="mx-auto mt-20 max-w-5xl space-y-6 p-4">
+        <div className="mx-auto h-6 w-1/3 rounded bg-gray-300"></div>
+        <div className="space-y-4">
+          <div className="h-96 rounded bg-gray-300"></div>
+          <div className="flex justify-center space-x-2">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div key={index} className="h-4 w-24 rounded bg-gray-300"></div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
