@@ -64,7 +64,8 @@ export class Analytics {
         from escalation 
         where 
           bot_id = ${botId} AND
-          UNIX_TIMESTAMP(created_at) >= ${sevenDaysAgo}
+          UNIX_TIMESTAMP(created_at) >= ${sevenDaysAgo} and
+          livemode = 1
         group by 
           1, 2;
     `;
