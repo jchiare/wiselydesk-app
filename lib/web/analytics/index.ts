@@ -80,59 +80,32 @@ export class Analytics {
   async getWeeklyEscalationCounts(
     botId: string,
     today: Date
-  ): Promise<ConversationAnalyticsData[]> {
+  ): Promise<EscalationAnalyticsData[]> {
     const jan1st2024 = Math.floor(
       new Date("2024-01-01T00:00:00Z").getTime() / 1000
     );
 
-    const conversations = await this.prisma.$queryRaw<RawConversationData[]>`
-      SELECT
-        COUNT(id) AS total_convo_count,
-        SUM(CASE WHEN ticket_deflected = TRUE THEN 1 ELSE 0 END) AS deflected_convo_count,
-        SUM(CASE WHEN zendesk_ticket_url IS NOT NULL THEN 1 ELSE 0 END) AS ticket_created_count,
-        YEARWEEK(created_at, 5) AS week_number,
+    const escalations = await this.prisma.$queryRaw<RawEscalationData[]>`
+    select 
+      reason, 
+      YEARWEEK(created_at, 5) AS week_number,
         CONCAT(DATE_FORMAT(MIN(DATE_FORMAT(created_at, '%Y-%m-%d')), '%b %e'), ' - ',
-  		    DATE_FORMAT(MAX(DATE_FORMAT(created_at, '%Y-%m-%d')), '%b %e')) as date,
-        SUM(CASE WHEN rating = 'Positive' THEN 1 ELSE 0 END) AS positive_count,
-        SUM(CASE WHEN rating = 'Negative' THEN 1 ELSE 0 END) AS negative_count
-      FROM
-        (
-      SELECT
-        c.id,
-        c.ticket_deflected,
-        c.zendesk_ticket_url,
-        CASE
-          WHEN SUM(CASE WHEN m.is_helpful = 1 THEN 1 ELSE 0 END) > SUM(CASE WHEN m.is_helpful = 0 THEN 1 ELSE 0 END) THEN 'Positive'
-          WHEN SUM(CASE WHEN m.is_helpful = 1 THEN 1 ELSE 0 END) < SUM(CASE WHEN m.is_helpful = 0 THEN 1 ELSE 0 END) THEN 'Negative'
-          ELSE 'Neutral'
-        END AS rating,
-        c.bot_id bot_id,
-        c.created_at created_at
-      FROM
-        message m
-        JOIN conversation c ON m.conversation_id = c.id
-      WHERE
-        m.bot_id = ${botId} AND
-        UNIX_TIMESTAMP(m.created_at) >= ${jan1st2024} AND
-        c.livemode = 1
-      GROUP BY
-        c.id
-    ) AS conversation
-      WHERE
-        bot_id = ${botId} AND
-        UNIX_TIMESTAMP(created_at) >= ${jan1st2024}
-      GROUP BY
-      week_number
-    `;
+  		    DATE_FORMAT(MAX(DATE_FORMAT(created_at, '%Y-%m-%d')), '%b %e')) as date,, 
+      count(id) "count" 
+    from escalation 
+    where 
+      bot_id = ${botId} AND
+      UNIX_TIMESTAMP(created_at) >= ${jan1st2024} and
+      livemode = 1
+    group by 
+      1, 2;
+`;
 
-    return conversations.map(conversation => ({
+    return escalations.map(escalation => ({
       frequency_type: "weekly",
-      total_convo_count: Number(conversation.total_convo_count),
-      deflected_convo_count: Number(conversation.deflected_convo_count),
-      ticket_created_count: Number(conversation.ticket_created_count),
-      positive_count: Number(conversation.positive_count),
-      negative_count: Number(conversation.negative_count),
-      date: conversation.date
+      count: Number(escalation.count),
+      reason: escalation.reason,
+      date: escalation.date
     }));
   }
   async getMonthlyEscalationCounts(
