@@ -53,7 +53,7 @@ export default function SingleConversationLoading() {
           />
         </div>
       </div>
-      <div className="h-screen min-w-[350px] max-w-[350px] border-2 border-y-0 border-gray-300 bg-gray-200">
+      <div className="h-screen min-w-[350px] max-w-[350px] border-2 border-y-0 border-gray-300 bg-gray-200 blur-sm">
         <RightBar
           conversationId={123}
           botId="123"
