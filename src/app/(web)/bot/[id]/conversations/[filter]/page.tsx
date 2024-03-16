@@ -39,11 +39,8 @@ async function getConversations({
     case "down":
       url += "?is_helpful=false";
       break;
-    case "review":
-      url += "?filter=review";
-      break;
-    case "deflected":
-      url += "?filter=deflected";
+    case "escalated":
+      url += "?filter=escalated";
       break;
     // No default case needed unless you want to handle unexpected filters
   }

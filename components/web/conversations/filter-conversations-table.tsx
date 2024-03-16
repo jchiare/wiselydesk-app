@@ -3,7 +3,7 @@ import ThumbsUpDown from "@/components/web/thumbs-up-down";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
 import Link from "next/link";
 
-export type FilterType = "all" | "up" | "down" | "deflected" | "review";
+export type FilterType = "all" | "up" | "down" | "escalated";
 
 function colorActiveButton(filter: FilterType, activeFilter?: FilterType) {
   return activeFilter && activeFilter === filter
@@ -42,44 +42,24 @@ export default function ConversationsTableFilter({
         </span>
       </Link>
       <Link
-        className={`${colorActiveButton("deflected", filter)} group relative`}
-        href={changeFilter("deflected")}>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={3}
-            d="M5 13l4 4L19 7"
-          />
-        </svg>
-        <span className="absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 transform rounded bg-black p-1 text-xs text-white group-hover:block">
-          Deflected
-        </span>
-      </Link>
-
-      <Link
-        className={`${colorActiveButton("review", filter)} group relative`}
-        href={changeFilter("review")}>
+        className={`${colorActiveButton("escalated", filter)} group relative`}
+        href={changeFilter("escalated")}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
-          strokeWidth={1.5}
+          strokeWidth="1.5"
           stroke="currentColor"
           className="h-6 w-6">
           <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"
           />
         </svg>
+
         <span className="absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 transform rounded bg-black p-1 text-xs text-white group-hover:block">
-          Review
+          Escalated
         </span>
       </Link>
     </div>

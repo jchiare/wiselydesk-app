@@ -30,6 +30,16 @@ export default function ConversationTable({ data }: { data: Conversations }) {
 
   useRefreshPage(10);
 
+  if (!data.conversations || data.conversations.length === 0) {
+    return (
+      <tr>
+        <td colSpan={5} className="px-3 py-4 text-sm text-gray-900 ">
+          No conversations found
+        </td>
+      </tr>
+    );
+  }
+
   return data.conversations.map(conversation => (
     <tr
       key={conversation.id}
