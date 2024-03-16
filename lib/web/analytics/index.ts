@@ -90,7 +90,7 @@ export class Analytics {
       reason, 
       YEARWEEK(created_at, 5) AS week_number,
         CONCAT(DATE_FORMAT(MIN(DATE_FORMAT(created_at, '%Y-%m-%d')), '%b %e'), ' - ',
-  		    DATE_FORMAT(MAX(DATE_FORMAT(created_at, '%Y-%m-%d')), '%b %e')) as date,, 
+  		    DATE_FORMAT(MAX(DATE_FORMAT(created_at, '%Y-%m-%d')), '%b %e')) as date,
       count(id) "count" 
     from escalation 
     where 
