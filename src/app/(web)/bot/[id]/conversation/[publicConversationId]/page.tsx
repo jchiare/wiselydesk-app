@@ -62,6 +62,8 @@ export default async function SingleConversationPage({
 
   const notes = await fetchNotes(conversation.conversation.id, params.id);
 
+  console.log(conversation.conversation.id);
+
   return (
     <div className="flex">
       <div className="mr-[300px] px-4 py-10 sm:px-6 lg:px-16 lg:py-10">
