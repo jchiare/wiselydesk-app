@@ -1,24 +1,37 @@
-import ChartFrequencySelector from "@/components/web/analytics/chart-frequency-selector";
 import ConversationCountChart from "@/components/web/analytics/conversation-chart-count";
+import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 
 export type FrequencyType = "daily" | "weekly" | "monthly";
+export type FilterType = "conversation" | "escalation";
 
-export default function Analytics({
+async function fetchConversationCounts(
+  botId: number,
+  frequency: FrequencyType
+) {
+  const res = await fetch(
+    `${NEXTJS_BACKEND_URL}/api/bot/${botId}/analytics/conversation-counts?frequency=${frequency}`,
+    { cache: "no-cache" }
+  );
+  return await res.json();
+}
+
+export default async function Analytics({
   frequency,
-  conversationCounts
+  filter,
+  botId
 }: {
   frequency: FrequencyType;
-  conversationCounts: any;
+  filter: FilterType;
+  botId: number;
 }) {
+  const { conversationCounts } = await fetchConversationCounts(
+    botId,
+    frequency
+  );
   return (
-    <div className="mt-2">
-      <div className="flex gap-2">
-        <ChartFrequencySelector frequency={frequency} />
-      </div>
-      <ConversationCountChart
-        frequency={frequency}
-        conversationCounts={conversationCounts}
-      />
-    </div>
+    <ConversationCountChart
+      frequency={frequency}
+      conversationCounts={conversationCounts}
+    />
   );
 }

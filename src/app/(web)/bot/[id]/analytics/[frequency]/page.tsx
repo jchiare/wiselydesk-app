@@ -1,33 +1,36 @@
-import Analytics, { type FrequencyType } from "@/components/web/analytics";
-import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
+import Analytics, {
+  type FilterType,
+  type FrequencyType
+} from "@/components/web/analytics";
+import ChartFrequencySelector from "@/components/web/analytics/chart-frequency-selector";
 
 type AnalyticsProps = {
   params: {
     id: number;
     frequency: FrequencyType;
   };
+  searchParams: {
+    filter: FilterType;
+  };
 };
 
-async function fetchConversationCounts(
-  botId: number,
-  frequency: FrequencyType
-) {
-  const res = await fetch(
-    `${NEXTJS_BACKEND_URL}/api/bot/${botId}/analytics/conversation-counts?frequency=${frequency}`,
-    { cache: "no-cache" }
-  );
-  return await res.json();
-}
-
 export default async function AnalyticsFrequencyPage({
-  params
+  params,
+  searchParams
 }: AnalyticsProps) {
   const { id: botId, frequency } = params;
-  const { conversationCounts } = await fetchConversationCounts(
-    botId,
-    frequency
-  );
+  const { filter } = searchParams;
+
+  if (!filter) {
+    return <div>Filter is required</div>;
+  }
+
   return (
-    <Analytics frequency={frequency} conversationCounts={conversationCounts} />
+    <div className="mt-2">
+      <div className="flex gap-2">
+        <ChartFrequencySelector frequency={frequency} />
+      </div>
+      <Analytics frequency={frequency} filter={filter} botId={botId} />
+    </div>
   );
 }

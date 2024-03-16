@@ -5,9 +5,17 @@ type ParamsType = {
     id: number;
     frequency: string;
   };
+  searchParams: {
+    filter: string;
+  };
 };
 
-export default function AnalyticsPageRedirect({ params }: ParamsType) {
+export default function AnalyticsPageRedirect({
+  params,
+  searchParams
+}: ParamsType) {
   const frequency = params.frequency ?? "daily";
-  return redirect(`/bot/${params.id}/analytics/${frequency}`);
+  return redirect(
+    `/bot/${params.id}/analytics/${frequency}?filter=${searchParams.filter}`
+  );
 }
