@@ -59,7 +59,6 @@ export default function SingleConversationLoading() {
           botId="123"
           ticketDeflected={null}
           toReview={null}
-          notes={[]}
           userId={123}
           publicConversationId={"hello"}
           zendeskTicketUrl={null}
