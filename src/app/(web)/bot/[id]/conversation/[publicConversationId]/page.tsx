@@ -3,7 +3,6 @@ import RightBar from "@/components/web/conversation/right-bar";
 import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 import type { SingleConversationReturnType } from "@/types/single-conversation";
 import type { Metadata } from "next/types";
-import type { Note as NoteType } from "@prisma/client";
 import { fetchServerSession } from "@/lib/shared/auth";
 
 export const dynamic = "force-dynamic";
@@ -35,18 +34,6 @@ async function fetchConversation(publicConversationId: string, botId: string) {
   return json as SingleConversationReturnType;
 }
 
-async function fetchNotes(publicConversationId: number, botId: string) {
-  const res = await fetch(
-    `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversation/${publicConversationId}/notes`,
-    {
-      cache: "no-cache"
-    }
-  );
-
-  const json = await res.json();
-  return json.notes as NoteType[];
-}
-
 export default async function SingleConversationPage({
   params
 }: {
@@ -60,10 +47,6 @@ export default async function SingleConversationPage({
     params.id
   );
 
-  const notes = await fetchNotes(conversation.conversation.id, params.id);
-
-  console.log(conversation.conversation.id);
-
   return (
     <div className="flex">
       <div className="mr-[300px] px-4 py-10 sm:px-6 lg:px-16 lg:py-10">
@@ -71,7 +54,6 @@ export default async function SingleConversationPage({
       </div>
       <div className="fixed right-0 h-screen min-w-[350px] max-w-[350px] border-2 border-y-0 border-gray-300 bg-gray-200">
         <RightBar
-          notes={notes}
           toReview={conversation.conversation.to_review}
           ticketDeflected={conversation.conversation.ticket_deflected}
           conversationId={conversation.conversation.id}

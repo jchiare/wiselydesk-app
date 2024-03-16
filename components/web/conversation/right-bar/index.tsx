@@ -3,10 +3,22 @@ import Note from "@/components/web/conversation/right-bar/notes";
 import TicketDeflected from "@/components/web/conversation/right-bar/ticket-deflection-checkbox";
 import ToReview from "@/components/web/conversation/right-bar/to-review-checkbox";
 import Link from "next/link";
+import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 
-export default function RightBar({
+async function fetchNotes(publicConversationId: number, botId: string) {
+  const res = await fetch(
+    `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversation/${publicConversationId}/notes`,
+    {
+      cache: "no-cache"
+    }
+  );
+
+  const json = await res.json();
+  return json.notes as NoteType[];
+}
+
+export default async function RightBar({
   isLoading,
-  notes,
   ticketDeflected,
   toReview,
   conversationId,
@@ -16,7 +28,6 @@ export default function RightBar({
   zendeskTicketUrl
 }: {
   isLoading?: boolean;
-  notes?: NoteType[];
   ticketDeflected: boolean | null;
   toReview: boolean | null;
   conversationId: number;
@@ -25,6 +36,8 @@ export default function RightBar({
   publicConversationId: string;
   zendeskTicketUrl: string | null;
 }) {
+  const notes = await fetchNotes(conversationId, botId);
+
   return (
     <div className="flex h-full flex-col justify-between space-y-4">
       <div className="flex-grow space-y-4 px-4 py-6">
@@ -63,5 +76,3 @@ export default function RightBar({
     </div>
   );
 }
-
-//
