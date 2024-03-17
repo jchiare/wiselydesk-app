@@ -19,5 +19,5 @@ export async function GET(request: Request, { params }: Params) {
     frequency
   );
 
-  return Response.json({ analytics: { escalations } }, { status: 200 });
+  return Response.json({ data: { escalations } }, { status: 200 });
 }

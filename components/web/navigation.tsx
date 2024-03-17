@@ -18,7 +18,7 @@ const createNavigation = (botId: string) => [
   {
     name: "Analytics",
     icon: ChartBarSquareIcon,
-    href: `/bot/${botId}/analytics/daily`,
+    href: `/bot/${botId}/analytics/conversations/daily`,
     children: null
   }
 ];
@@ -27,9 +27,12 @@ export default function Navigation() {
   const { getBotId, pathname } = useCustomQueryString();
   const botId = getBotId();
   const navigation = createNavigation(botId);
-  const currentItem = navigation.find(item =>
-    pathname.includes(item.name.toLowerCase())
-  );
+
+  const currentItem = navigation.find(item => {
+    const thirdPathSegment = pathname.split("/")[3].toLowerCase();
+
+    return thirdPathSegment.includes(item.name.toLowerCase().slice(0, -1));
+  });
 
   return (
     <ul role="list" className="-mx-0 space-y-1">

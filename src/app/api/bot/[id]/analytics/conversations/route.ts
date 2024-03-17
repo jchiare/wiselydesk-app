@@ -14,10 +14,7 @@ export async function GET(request: Request, { params }: Params) {
   }
 
   const analyticsService = new AnalyticsService();
-  const conversationCounts = await analyticsService.getConvoCounts(
-    botId,
-    frequency
-  );
+  const conversations = await analyticsService.getConvoCounts(botId, frequency);
 
-  return Response.json({ conversationCounts }, { status: 200 });
+  return Response.json({ data: { conversations } }, { status: 200 });
 }

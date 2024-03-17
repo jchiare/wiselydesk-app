@@ -1,24 +1,28 @@
-import ChartFrequencySelector from "@/components/web/analytics/chart-frequency-selector";
-import ConversationCountChart from "@/components/web/analytics/conversation-chart-count";
+import ConversationCountChart from "@/components/web/analytics/conversation-chart";
+import EscalationChart from "@/components/web/analytics/escalation-chart";
+import type { AnalyticsData } from "@/src/app/(web)/bot/[id]/analytics/[filter]/[frequency]/page";
 
 export type FrequencyType = "daily" | "weekly" | "monthly";
+export type FilterType = "conversations" | "escalations";
 
-export default function Analytics({
+export default async function Analytics({
   frequency,
-  conversationCounts
+  data
 }: {
   frequency: FrequencyType;
-  conversationCounts: any;
+  data: AnalyticsData["data"];
 }) {
-  return (
-    <div className="mt-2">
-      <div className="flex gap-2">
-        <ChartFrequencySelector frequency={frequency} />
-      </div>
+  if (data.escalations) {
+    return (
+      <EscalationChart frequency={frequency} escalations={data.escalations} />
+    );
+  } else if (data.conversations) {
+    return (
       <ConversationCountChart
         frequency={frequency}
-        conversationCounts={conversationCounts}
+        conversationCounts={data.conversations}
       />
-    </div>
-  );
+    );
+  }
+  return <div> Error data not correct</div>;
 }
