@@ -18,8 +18,18 @@ const createNavigation = (botId: string) => [
   {
     name: "Analytics",
     icon: ChartBarSquareIcon,
-    href: `/bot/${botId}/analytics/conversations/daily`,
-    children: null
+    children: [
+      {
+        name: "Conversations",
+        icon: ChartBarSquareIcon,
+        href: `/bot/${botId}/analytics/conversations/daily`
+      },
+      {
+        name: "Escalations",
+        icon: ChartBarSquareIcon,
+        href: `/bot/${botId}/analytics/escalations/daily`
+      }
+    ]
   }
 ];
 
@@ -28,11 +38,17 @@ export default function Navigation() {
   const botId = getBotId();
   const navigation = createNavigation(botId);
 
-  const currentItem = navigation.find(item => {
-    const thirdPathSegment = pathname.split("/")[3].toLowerCase();
+  const pathSegments = pathname
+    .split("/")
+    .map(segment => segment.toLowerCase());
+  const thirdPathSegment = pathSegments[3];
+  const fourthPathSegment = pathSegments[4];
 
-    return thirdPathSegment.includes(item.name.toLowerCase().slice(0, -1));
-  });
+  const currentItem = findCurrentItem(
+    navigation,
+    thirdPathSegment,
+    fourthPathSegment
+  );
 
   return (
     <ul role="list" className="-mx-0 space-y-1">
@@ -64,4 +80,26 @@ export default function Navigation() {
       </li>
     </ul>
   );
+}
+
+function findCurrentItem(
+  navigation: any,
+  thirdPathSegment: string,
+  fourthPathSegment: string
+) {
+  for (const item of navigation) {
+    if (thirdPathSegment === "analytics") {
+      const matchingChild = item.children?.find((child: any) =>
+        child.href.includes(fourthPathSegment)
+      );
+      if (matchingChild) {
+        return matchingChild;
+      }
+    } else if (
+      thirdPathSegment.includes(item.name.toLowerCase().slice(0, -1))
+    ) {
+      return item;
+    }
+  }
+  return null;
 }

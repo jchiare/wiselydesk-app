@@ -10,8 +10,12 @@ export default function SideNavDisclosure({
   item: any;
   currentItem: any;
 }): JSX.Element {
+  const isChildSelected = item.children?.some(
+    (child: any) => child.href === currentItem?.href
+  );
+
   return (
-    <Disclosure as="div">
+    <Disclosure as="div" defaultOpen={isChildSelected}>
       {({ open }) => (
         <>
           <Disclosure.Button
@@ -37,7 +41,7 @@ export default function SideNavDisclosure({
           <Disclosure.Panel as="ul" className="mt-1 px-2">
             {
               // @ts-expect-error .. there will be children eventually
-              item.children.map((subItem) => (
+              item.children.map(subItem => (
                 <li key={subItem.name}>
                   {/* 44px */}
                   <Disclosure.Button
