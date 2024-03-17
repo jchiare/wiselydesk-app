@@ -18,7 +18,7 @@ const createNavigation = (botId: string) => [
   {
     name: "Analytics",
     icon: ChartBarSquareIcon,
-    href: `/bot/${botId}/analytics/daily`,
+    href: `/bot/${botId}/analytics/conversations/daily`,
     children: null
   }
 ];
@@ -30,6 +30,8 @@ export default function Navigation() {
   const currentItem = navigation.find(item =>
     pathname.includes(item.name.toLowerCase())
   );
+
+  console.log("currentItem", currentItem);
 
   return (
     <ul role="list" className="-mx-0 space-y-1">

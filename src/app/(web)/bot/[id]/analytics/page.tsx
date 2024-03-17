@@ -1,21 +1,16 @@
+import type { FilterType } from "@/components/web/analytics";
 import { redirect } from "next/navigation";
 
 type ParamsType = {
   params: {
     id: number;
     frequency: string;
-  };
-  searchParams: {
-    filter: string;
+    filter: FilterType;
   };
 };
 
-export default function AnalyticsPageRedirect({
-  params,
-  searchParams
-}: ParamsType) {
+export default function AnalyticsPageRedirect({ params }: ParamsType) {
   const frequency = params.frequency ?? "daily";
-  return redirect(
-    `/bot/${params.id}/analytics/${frequency}?filter=${searchParams.filter}`
-  );
+  const defaultFilter = params.filter ?? "conversations";
+  return redirect(`/bot/${params.id}/analytics/${defaultFilter}/${frequency}`);
 }

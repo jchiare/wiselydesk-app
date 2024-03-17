@@ -1,37 +1,28 @@
-import ConversationCountChart from "@/components/web/analytics/conversation-chart-count";
-import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
+import ConversationCountChart from "@/components/web/analytics/conversation-chart";
+import EscalationChart from "@/components/web/analytics/escalation-chart";
+import type { AnalyticsData } from "@/src/app/(web)/bot/[id]/analytics/[filter]/[frequency]/page";
 
 export type FrequencyType = "daily" | "weekly" | "monthly";
-export type FilterType = "conversation" | "escalation";
-
-async function fetchConversationCounts(
-  botId: number,
-  frequency: FrequencyType
-) {
-  const res = await fetch(
-    `${NEXTJS_BACKEND_URL}/api/bot/${botId}/analytics/conversation-counts?frequency=${frequency}`,
-    { cache: "no-cache" }
-  );
-  return await res.json();
-}
+export type FilterType = "conversations" | "escalations";
 
 export default async function Analytics({
   frequency,
-  filter,
-  botId
+  data
 }: {
   frequency: FrequencyType;
-  filter: FilterType;
-  botId: number;
+  data: AnalyticsData["data"];
 }) {
-  const { conversationCounts } = await fetchConversationCounts(
-    botId,
-    frequency
-  );
-  return (
-    <ConversationCountChart
-      frequency={frequency}
-      conversationCounts={conversationCounts}
-    />
-  );
+  if (data.escalations) {
+    return (
+      <EscalationChart frequency={frequency} escalations={data.escalations} />
+    );
+  } else if (data.conversations) {
+    return (
+      <ConversationCountChart
+        frequency={frequency}
+        conversationCounts={data.conversations}
+      />
+    );
+  }
+  return <div> Error data not correct</div>;
 }

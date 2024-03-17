@@ -21,8 +21,8 @@ export default function ChartFrequencySelector({
     const segments = pathname.split("/");
     const analyticsIndex = segments.indexOf("analytics");
 
-    if (analyticsIndex !== -1) {
-      segments[analyticsIndex + 1] = newFrequency;
+    if (analyticsIndex !== -2) {
+      segments[analyticsIndex + 2] = newFrequency;
       const newPath = segments.join("/");
       router.push(newPath);
     }
@@ -50,7 +50,7 @@ export default function ChartFrequencySelector({
               leaveFrom="opacity-100"
               leaveTo="opacity-0">
               <Listbox.Options className="absolute z-10 mt-2 max-h-60 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                {["daily", "weekly", "monthly"].map((frequency) => (
+                {["daily", "weekly", "monthly"].map(frequency => (
                   <Listbox.Option
                     key={frequency}
                     className={({ active }) =>
