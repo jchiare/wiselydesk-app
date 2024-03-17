@@ -1,4 +1,11 @@
 import { PrismaClient } from "@prisma/client";
+import {
+  startOfYear,
+  addWeeks,
+  startOfWeek,
+  endOfWeek,
+  format
+} from "date-fns";
 
 export type ConversationAnalyticsData = {
   frequency_type: string;
@@ -85,28 +92,36 @@ export class Analytics {
       new Date("2024-01-01T00:00:00Z").getTime() / 1000
     );
 
+    console.log(botId);
+    console.log(jan1st2024);
+
     const escalations = await this.prisma.$queryRaw<RawEscalationData[]>`
-    select 
-      reason, 
-      YEARWEEK(created_at, 5) AS week_number,
-        CONCAT(DATE_FORMAT(MIN(DATE_FORMAT(created_at, '%Y-%m-%d')), '%b %e'), ' - ',
-  		    DATE_FORMAT(MAX(DATE_FORMAT(created_at, '%Y-%m-%d')), '%b %e')) as date,
-      count(id) "count" 
-    from escalation 
-    where 
+    SELECT 
+        count(id) "count",
+        reason,
+        YEARWEEK(created_at, 5) AS date
+    FROM 
+        escalation 
+    WHERE 
       bot_id = ${botId} AND
       UNIX_TIMESTAMP(created_at) >= ${jan1st2024} and
       livemode = 1
-    group by 
-      1, 2;
-`;
+    GROUP BY
+      2, 3;
+      `;
 
-    return escalations.map(escalation => ({
+    console.log("escalations: ", escalations);
+
+    const form = escalations.map(escalation => ({
       frequency_type: "weekly",
       count: Number(escalation.count),
       reason: escalation.reason,
-      date: escalation.date
+      date: getStartAndEndOfWeek(escalation.date)
     }));
+
+    console.log(form);
+
+    return form;
   }
   async getMonthlyEscalationCounts(
     botId: string,
@@ -326,4 +341,21 @@ export class Analytics {
       date: conversation.date
     }));
   }
+}
+
+function getStartAndEndOfWeek(yearWeekNumber: string) {
+  const year = parseInt(`${yearWeekNumber}`.slice(0, 4), 10);
+  const weekNumber = parseInt(`${yearWeekNumber}`.slice(4, 6), 10);
+
+  const firstDayOfYear = startOfYear(new Date(year, 0));
+
+  const weekStartDate = addWeeks(firstDayOfYear, weekNumber - 1);
+
+  const startOfWeekDate = startOfWeek(weekStartDate, { weekStartsOn: 1 });
+  const endOfWeekDate = endOfWeek(weekStartDate, { weekStartsOn: 1 });
+
+  const formattedStartOfWeekDate = format(startOfWeekDate, "MMM dd");
+  const formattedEndOfWeekDate = format(endOfWeekDate, "MMM dd");
+
+  return `${formattedStartOfWeekDate} - ${formattedEndOfWeekDate}`;
 }

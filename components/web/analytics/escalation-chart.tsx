@@ -70,13 +70,6 @@ export default function EscalationChart({
               });
             }
             return "Total escalations: " + sum;
-          },
-          label: context => {
-            const label = context.dataset.label || "";
-            const value = context.raw as number;
-            const total = totals[context.dataIndex];
-            const percentage = ((value / total) * 100).toFixed(0) + "%";
-            return `${label}: ${value} (${percentage})`;
           }
         }
       }
@@ -95,74 +88,28 @@ export default function EscalationChart({
     }
   };
 
-  const totals = escalations.map(escalation => escalation.count);
-  const uniqueReasons = new Set(
-    escalations.map(escalation => escalation.reason)
+  const uniqueReasons = Array.from(
+    new Set(escalations.map(escalation => escalation.reason))
   );
-  const uniqueDates = new Set(escalations.map(escalation => escalation.date));
+  const uniqueDates = Array.from(
+    new Set(escalations.map(escalation => escalation.date))
+  );
 
-  let datasets: { label: string; data: number[]; backgroundColor: string }[] =
-    [];
-  //   for (const reason of uniqueReasons) {
-  //     const escalationsForReason = escalations.filter(
-  //       escalation => escalation.reason === reason
-  //     );
+  console.log("uniqueDates: ", uniqueDates);
 
-  //     console.log("escalationsForReason len: ", escalationsForReason.length);
+  let datasets = uniqueReasons.map(reason => ({
+    label: reason,
+    data: new Array(uniqueDates.length).fill(0),
+    backgroundColor: getBackgroundColor(reason)
+  }));
 
-  //     const dataObject = {
-  //       label: reason,
-  //       data: escalationsForReason.map(escalation => escalation.count > 0 ?? 0),
-  //       backgroundColor: getBackgroundColor(reason)
-  //     };
-
-  //     datasets.push(dataObject);
-  //   }
-
-  for (const date of uniqueDates) {
-    const escalationsForDate = escalations.filter(
-      escalation => escalation.date === date
-    );
-
-    for (const reason of uniqueReasons) {
-      const specificEscalation = escalationsForDate.find(
-        escalation => escalation.reason === reason
-      );
-
-      if (specificEscalation === undefined) {
-        const foundEscalation = datasets.find(data => data.label === reason);
-        if (foundEscalation) {
-          foundEscalation.data.push(0);
-        } else {
-          datasets.push({
-            label: reason,
-            data: [0],
-            backgroundColor: getBackgroundColor(reason)
-          });
-        }
-      }
-    }
-
-    for (const specificEscalation of escalationsForDate) {
-      console.log("specificEscalation: ", specificEscalation);
-      if (
-        datasets.find(data => data.label === specificEscalation.reason) ===
-        undefined
-      ) {
-        datasets.push({
-          label: specificEscalation.reason,
-          data: [specificEscalation.count ?? 0],
-          backgroundColor: getBackgroundColor(specificEscalation.reason)
-        });
-      } else {
-        datasets
-          .find(data => data.label === specificEscalation.reason)
-          ?.data.push(specificEscalation.count ?? 0);
-      }
+  for (const escalation of escalations) {
+    const dateIndex = uniqueDates.indexOf(escalation.date);
+    const dataset = datasets.find(d => d.label === escalation.reason);
+    if (dataset && dateIndex !== -1) {
+      dataset.data[dateIndex] = escalation.count;
     }
   }
-
-  console.log("datasets: ", datasets);
 
   const chartData = {
     labels: [...uniqueDates],
