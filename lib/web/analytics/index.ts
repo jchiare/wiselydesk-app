@@ -92,9 +92,6 @@ export class Analytics {
       new Date("2024-01-01T00:00:00Z").getTime() / 1000
     );
 
-    console.log(botId);
-    console.log(jan1st2024);
-
     const escalations = await this.prisma.$queryRaw<RawEscalationData[]>`
     SELECT 
         count(id) "count",
@@ -110,25 +107,19 @@ export class Analytics {
       2, 3;
       `;
 
-    console.log("escalations: ", escalations);
-
-    const form = escalations.map(escalation => ({
+    return escalations.map(escalation => ({
       frequency_type: "weekly",
       count: Number(escalation.count),
       reason: escalation.reason,
       date: getStartAndEndOfWeek(escalation.date)
     }));
-
-    console.log(form);
-
-    return form;
   }
   async getMonthlyEscalationCounts(
     botId: string,
     today: Date
   ): Promise<EscalationAnalyticsData[]> {
-    const oct1st2023 = Math.floor(
-      new Date("202310-01T00:00:00Z").getTime() / 1000
+    const nov152023 = Math.floor(
+      new Date("2023-11-15T00:00:00Z").getTime() / 1000
     );
 
     const escalations = await this.prisma.$queryRaw<RawEscalationData[]>`
@@ -139,7 +130,7 @@ export class Analytics {
         from escalation 
         where 
           bot_id = ${botId} AND
-          UNIX_TIMESTAMP(created_at) >= ${oct1st2023} and
+          UNIX_TIMESTAMP(created_at) >= ${nov152023} and
           livemode = 1
         group by 
           1, 2;

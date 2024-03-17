@@ -95,8 +95,6 @@ export default function EscalationChart({
     new Set(escalations.map(escalation => escalation.date))
   );
 
-  console.log("uniqueDates: ", uniqueDates);
-
   let datasets = uniqueReasons.map(reason => ({
     label: reason,
     data: new Array(uniqueDates.length).fill(0),

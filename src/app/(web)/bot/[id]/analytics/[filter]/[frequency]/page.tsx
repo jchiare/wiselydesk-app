@@ -42,7 +42,6 @@ export default async function AnalyticsFrequencyPage({
   const { id: botId, frequency, filter } = params;
   const { data } = await fetchAnalyticsData(botId, frequency, filter);
 
-  console.log(data);
   return (
     <div className="mt-2">
       <div className="flex gap-2">
