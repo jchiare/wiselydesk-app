@@ -2,32 +2,20 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
-import type { Bot } from "@prisma/client";
-import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
-import { orgChooser } from "@/lib/shared/org-chooser";
+
 import { useRouter } from "next/navigation";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
-import { Session } from "next-auth";
+
+import type { Bot } from "@prisma/client";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-async function fetchBots(orgId: number) {
-  const res = await fetch(`${NEXTJS_BACKEND_URL}/api/bots/${orgId}`, {
-    cache: "force-cache"
-  });
-  const data = await res.json();
-  return data.bots;
-}
-
-export default function BotSelection({ session }: { session: Session }) {
+export default function BotSelection({ bots }: { bots: Bot[] }) {
   const router = useRouter();
   const { changeBotById, getBotId } = useCustomQueryString();
-  const [bots, setBots] = useState<Bot[] | undefined>([]);
   const [selectedBot, setSelectedBot] = useState<Bot | null>(null);
-
-  const orgId = orgChooser(session);
 
   const changeSelectedBot = useCallback(
     (bot: Bot) => {
@@ -37,18 +25,6 @@ export default function BotSelection({ session }: { session: Session }) {
     },
     [setSelectedBot, changeBotById, router]
   );
-
-  // get all bots
-  // and if no botId in url, set bot to first bot
-  useEffect(() => {
-    fetchBots(orgId).then(fetchedBots => {
-      const botId = getBotId();
-      if (!botId) {
-        changeSelectedBot(fetchedBots[0]);
-      }
-      setBots(fetchedBots);
-    });
-  }, [orgId]);
 
   useEffect(() => {
     const botId = getBotId();
