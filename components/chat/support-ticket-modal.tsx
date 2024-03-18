@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { URL, NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
+import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 import { useLocalStorage } from "@/lib/chat/hooks/use-local-storage";
 import { getChatThemeByBotId } from "@/lib/chat/chat-theme";
 import { textByBotId } from "@/lib/i18n/chat";
@@ -42,7 +42,9 @@ export default function SupportTicketModal({
     setIsModalOpen(true);
     if (conversationId) {
       if (!transcript) {
-        fetch(`${URL}/api/conversation/${conversationId}/transcribe`)
+        fetch(
+          `${NEXTJS_BACKEND_URL}/api/conversation/${conversationId}/transcribe`
+        )
           .then(res => res.json())
           .then(data => {
             setTranscript(data["transcription"]);
