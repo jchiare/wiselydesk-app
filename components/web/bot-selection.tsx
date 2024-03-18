@@ -2,10 +2,8 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
-
 import { useRouter } from "next/navigation";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
-
 import type { Bot } from "@prisma/client";
 
 function classNames(...classes: string[]) {
@@ -33,6 +31,9 @@ export default function BotSelection({ bots }: { bots: Bot[] }) {
       if (foundBot && foundBot !== selectedBot) {
         setSelectedBot(foundBot);
       }
+    } else {
+      // default to first bot if none chosen
+      changeSelectedBot(bots[0]);
     }
   }, [bots]);
 
