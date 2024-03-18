@@ -96,7 +96,7 @@ function findCurrentItem(
         return matchingChild;
       }
     } else if (
-      thirdPathSegment.includes(item.name.toLowerCase().slice(0, -1))
+      thirdPathSegment?.includes(item.name.toLowerCase().slice(0, -1))
     ) {
       return item;
     }
