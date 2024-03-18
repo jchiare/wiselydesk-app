@@ -12,23 +12,23 @@ export default function LoadingConversations() {
           </th>
           <th
             scope="col"
-            className="py-3.5 pl-2 pr-3 text-left text-sm font-semibold text-gray-900">
+            className="py-3.5 pl-1 pr-3 text-left text-sm font-semibold text-gray-900">
             Summary
           </th>
           <th
             scope="col"
             className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
-            User
+            Escalated Reason
           </th>
           <th
             scope="col"
             className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
-            First Message At
+            Rating
           </th>
           <th
             scope="col"
             className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-            Last Message At
+            First Message At
           </th>
         </tr>
       </thead>
@@ -43,7 +43,7 @@ export default function LoadingConversations() {
                 animationDuration: "1s"
               }}>
               <td className="rounded-md bg-gray-200 px-3 py-4 ">
-                <span className="blur-sm">{20 - i}</span>
+                <span className="blur-sm">{2000 - i}</span>
               </td>
               <td className="w-[50%] rounded-md bg-gray-200 py-4 pl-2 pr-3">
                 <span className="blur-sm">{generateRandomLorem()}</span>

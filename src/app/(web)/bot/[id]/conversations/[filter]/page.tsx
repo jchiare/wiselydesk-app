@@ -87,17 +87,17 @@ export default async function ConversationsPage({
           <th
             scope="col"
             className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
-            User
+            Escalated Reason
+          </th>
+          <th
+            scope="col"
+            className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
+            Rating
           </th>
           <th
             scope="col"
             className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
             First Message At
-          </th>
-          <th
-            scope="col"
-            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-            Last Message At
           </th>
         </tr>
       </thead>

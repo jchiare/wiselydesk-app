@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, type Conversation } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -8,6 +8,12 @@ type Params = {
     id: string;
   };
 };
+
+type ConversationExtended = Conversation & {
+  escalatedReason?: string;
+  rating?: string;
+};
+export type ConversationDTO = { conversations: ConversationExtended[] };
 
 const strToBool = (value: string | null) => {
   if (value === "true") return true;
@@ -53,48 +59,80 @@ export const GET = async (req: Request, { params }: Params) => {
   const isHelpfulQuery = searchParams.get("is_helpful");
 
   try {
-    let conversations = await prisma.conversation.findMany({
-      where: {
-        bot_id: botId,
-        created_at: {
-          gte: new Date("2023-11-15") // date AMBOSS started paying .. hacky .. need to add pagination at some point
+    let conversations: ConversationExtended[] =
+      await prisma.conversation.findMany({
+        where: {
+          bot_id: botId,
+          created_at: {
+            gte: new Date("2023-11-15") // date AMBOSS started paying .. hacky .. need to add pagination at some point
+          }
+        },
+        orderBy: {
+          created_at: "desc"
         }
-      },
-      orderBy: {
-        created_at: "desc"
-      }
+      });
+
+    const ratingsObjects = (
+      await prisma.message.findMany({
+        where: {
+          conversation_id: { in: conversations.map(c => c.id) },
+          is_helpful: strToBool(isHelpfulQuery)
+        },
+        select: {
+          conversation_id: true,
+          is_helpful: true
+        }
+      })
+    ).map(m => {
+      return { conversationId: m.conversation_id, isHelpful: m.is_helpful };
     });
 
-    // hack to only get relevant conversations if is_helpful query is provided
-    if (isHelpfulQuery) {
-      const conversationIds = (
-        await prisma.message.findMany({
-          where: {
-            conversation_id: { in: conversations.map(c => c.id) },
-            is_helpful: strToBool(isHelpfulQuery)
-          },
-          select: {
-            conversation_id: true
-          }
-        })
-      ).map(m => m.conversation_id);
+    for (const ratingsObject of ratingsObjects) {
+      const conversation = conversations.find(
+        c => c.id === ratingsObject.conversationId
+      );
+      if (conversation && ratingsObject.isHelpful !== null) {
+        conversation.rating = ratingsObject.isHelpful ? "Positive" : "Negative";
+      }
+    }
 
-      conversations = conversations.filter(c => conversationIds.includes(c.id));
+    if (isHelpfulQuery) {
+      conversations = conversations.filter(c =>
+        ratingsObjects
+          .map(ratingObject => ratingObject.conversationId)
+          .includes(c.id)
+      );
+    }
+
+    const escalatedObjects = (
+      await prisma.escalation.findMany({
+        where: {
+          conversation_id: { in: conversations.map(c => c.id) }
+        },
+        select: {
+          conversation_id: true,
+          reason: true
+        }
+      })
+    ).map(m => {
+      return { conversationId: m.conversation_id, reason: m.reason };
+    });
+
+    for (const escalatedObject of escalatedObjects) {
+      const conversation = conversations.find(
+        c => c.id === escalatedObject.conversationId
+      );
+      if (conversation) {
+        conversation.escalatedReason = escalatedObject.reason;
+      }
     }
 
     if (isEscalatedQuery) {
-      const conversationIds = (
-        await prisma.escalation.findMany({
-          where: {
-            conversation_id: { in: conversations.map(c => c.id) }
-          },
-          select: {
-            conversation_id: true
-          }
-        })
-      ).map(m => m.conversation_id);
-
-      conversations = conversations.filter(c => conversationIds.includes(c.id));
+      conversations = conversations.filter(c =>
+        escalatedObjects
+          .map(escalatedObject => escalatedObject.conversationId)
+          .includes(c.id)
+      );
     }
 
     if (conversations.length === 0) {

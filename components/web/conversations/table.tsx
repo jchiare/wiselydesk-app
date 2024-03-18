@@ -4,6 +4,7 @@ import useCustomQueryString from "@/lib/web/use-custom-query-string";
 import type { Conversation } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import useRefreshPage from "@/lib/web/use-refresh-page";
+import type { ConversationDTO } from "@/src/app/api/bot/[id]/conversations/route";
 
 type Conversations = {
   conversations: Conversation[];
@@ -16,7 +17,7 @@ function truncateSummary(summary: string | null, truncateLength = 115): string {
     : summary;
 }
 
-export default function ConversationTable({ data }: { data: Conversations }) {
+export default function ConversationTable({ data }: { data: ConversationDTO }) {
   const router = useRouter();
   const { pathname } = useCustomQueryString();
 
@@ -64,10 +65,10 @@ export default function ConversationTable({ data }: { data: Conversations }) {
         </dl>
       </td>
       <td className={`hidden px-3 py-4 text-sm text-gray-500 sm:table-cell `}>
-        Anonymous
+        {conversation.escalatedReason}
       </td>
       <td className={`hidden px-3 py-4 text-sm text-gray-500 lg:table-cell `}>
-        {formatDateTime(conversation.created_at)}
+        {conversation.rating}
       </td>
       <td
         className={`hidden overflow-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell `}>
