@@ -13,32 +13,33 @@ function classNames(...classes: string[]) {
 export default function BotSelection({ bots }: { bots: Bot[] }) {
   const router = useRouter();
   const { changeBotById, getBotId } = useCustomQueryString();
-  const [selectedBot, setSelectedBot] = useState<Bot | null>(null);
+
+  const botId = getBotId();
+  let bot = bots.find(bot => bot.id.toString() === botId);
+  if (!bot) {
+    bot = bots[0];
+  }
 
   const changeSelectedBot = useCallback(
     (bot: Bot) => {
-      setSelectedBot(bot);
       const newPath = changeBotById(bot.id);
       router.push(newPath);
     },
-    [setSelectedBot, changeBotById, router]
+    [changeBotById, router]
   );
 
   useEffect(() => {
     const botId = getBotId();
-    if (botId && bots !== undefined && bots.length > 0) {
-      const foundBot = bots.find(bot => bot.id.toString() === botId);
-      if (foundBot && foundBot !== selectedBot) {
-        setSelectedBot(foundBot);
-      }
-    } else {
-      // default to first bot if none chosen
+    const bot = bots.find(bot => bot.id.toString() === botId);
+    if (!bot) {
       changeSelectedBot(bots[0]);
+    } else {
+      changeSelectedBot(bot);
     }
-  }, [bots]);
+  }, [bots, changeSelectedBot, getBotId]);
 
   return (
-    <Listbox value={selectedBot ?? false} onChange={changeSelectedBot}>
+    <Listbox value={bot} onChange={changeSelectedBot}>
       {({ open }) => (
         <>
           <Listbox.Label className="block pt-6 text-center font-medium leading-6 text-white">
@@ -46,9 +47,7 @@ export default function BotSelection({ bots }: { bots: Bot[] }) {
           </Listbox.Label>
           <div className="relative mt-2 w-full">
             <Listbox.Button className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6">
-              <span className="block truncate">
-                {selectedBot?.name ?? "Choose a bot"}
-              </span>
+              <span className="block truncate">{bot?.name}</span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronDownIcon
                   className="h-5 w-5 text-gray-400"
