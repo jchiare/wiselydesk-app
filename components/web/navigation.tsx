@@ -8,12 +8,18 @@ import { concatClassNames } from "@/lib/shared/utils";
 import Link from "next/link";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
 
+export type NavigationItem = {
+  name: string;
+  icon: any;
+  href?: string;
+  children?: NavigationItem[];
+};
+
 const createNavigation = (botId: string) => [
   {
     name: "Conversations",
     icon: ChatBubbleBottomCenterTextIcon,
-    href: `/bot/${botId}/conversations/all`,
-    children: null
+    href: `/bot/${botId}/conversations/all`
   },
   {
     name: "Analytics",
