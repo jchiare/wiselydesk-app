@@ -46,7 +46,7 @@ export default function SideNavDisclosure({
             leave="transition duration-75 ease-out"
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0">
-            <Disclosure.Panel as="ul" className="mt-1 px-2" static={true}>
+            <Disclosure.Panel as="ul" className="mt-1 px-2" unmount={true}>
               {item.children?.map((subItem: NavigationItem) => (
                 <li key={subItem.name}>
                   {/* 44px */}

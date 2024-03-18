@@ -4,15 +4,19 @@ import BotSelection from "@/components/web/bot-selection";
 import { Session } from "next-auth";
 import Navigation from "@/components/web/navigation";
 
+import { type Bot } from "@prisma/client";
+
 export default async function SideNav({
-  session
+  session,
+  bots
 }: {
   session: Session;
+  bots: Bot[];
 }): Promise<JSX.Element> {
   return (
     <div className="flex w-56 grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-gray-800 px-6">
       <div className="flex h-16 flex-col items-center">
-        <BotSelection session={session} />
+        <BotSelection bots={bots} />
       </div>
       <div className="mt-[20px] flex" aria-hidden="true">
         <div className="w-full border-t border-gray-300" />
