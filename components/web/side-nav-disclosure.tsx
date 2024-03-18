@@ -15,7 +15,7 @@ export default function SideNavDisclosure({
   );
 
   return (
-    <Disclosure as="div" defaultOpen={isChildSelected}>
+    <Disclosure as="div" defaultOpen={isChildSelected} key={currentItem?.href}>
       {({ open }) => (
         <>
           <Disclosure.Button
@@ -45,7 +45,7 @@ export default function SideNavDisclosure({
             leave="transition duration-75 ease-out"
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0">
-            <Disclosure.Panel as="ul" className="mt-1 px-2">
+            <Disclosure.Panel as="ul" className="mt-1 px-2" static={true}>
               {
                 // @ts-expect-error .. there will be children eventually
                 item.children.map(subItem => (
