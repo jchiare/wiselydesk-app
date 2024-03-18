@@ -1,6 +1,6 @@
 "use client";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import { Disclosure } from "@headlessui/react";
+import { Disclosure, Transition } from "@headlessui/react";
 import { concatClassNames } from "@/lib/shared/utils";
 
 export default function SideNavDisclosure({
@@ -38,28 +38,36 @@ export default function SideNavDisclosure({
               aria-hidden="true"
             />
           </Disclosure.Button>
-          <Disclosure.Panel as="ul" className="mt-1 px-2">
-            {
-              // @ts-expect-error .. there will be children eventually
-              item.children.map(subItem => (
-                <li key={subItem.name}>
-                  {/* 44px */}
-                  <Disclosure.Button
-                    as="a"
-                    href={subItem.href}
-                    className={concatClassNames(
-                      // @ts-ignore
-                      subItem.href === currentItem?.href
-                        ? "bg-gray-700"
-                        : "hover:bg-gray-700",
-                      "block rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-gray-400"
-                    )}>
-                    {subItem.name}
-                  </Disclosure.Button>
-                </li>
-              ))
-            }
-          </Disclosure.Panel>
+          <Transition
+            enter="transition duration-100 ease-out"
+            enterFrom="transform scale-95 opacity-0"
+            enterTo="transform scale-100 opacity-100"
+            leave="transition duration-75 ease-out"
+            leaveFrom="transform scale-100 opacity-100"
+            leaveTo="transform scale-95 opacity-0">
+            <Disclosure.Panel as="ul" className="mt-1 px-2">
+              {
+                // @ts-expect-error .. there will be children eventually
+                item.children.map(subItem => (
+                  <li key={subItem.name}>
+                    {/* 44px */}
+                    <Disclosure.Button
+                      as="a"
+                      href={subItem.href}
+                      className={concatClassNames(
+                        // @ts-ignore
+                        subItem.href === currentItem?.href
+                          ? "bg-gray-700"
+                          : "hover:bg-gray-700",
+                        "block rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-gray-400"
+                      )}>
+                      {subItem.name}
+                    </Disclosure.Button>
+                  </li>
+                ))
+              }
+            </Disclosure.Panel>
+          </Transition>
         </>
       )}
     </Disclosure>
