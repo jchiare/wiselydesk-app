@@ -1,4 +1,4 @@
-import { formatConversationTime } from "@/lib/shared/utils";
+import { formatDateTime } from "@/lib/shared/utils";
 import Link from "next/link";
 import renderMessage from "@/lib/shared/services/render-message";
 import ThumbsUpDown from "@/components/web/thumbs-up-down";
@@ -74,8 +74,6 @@ export default function AgentMessage({
   isFinished: boolean;
   isLoading?: boolean;
 }): JSX.Element {
-  sentTime = formatConversationTime(sentTime);
-
   return (
     <div className="flex items-end">
       <div className="mx-2 my-1 max-w-[60%]">
@@ -117,10 +115,10 @@ export default function AgentMessage({
             )}
           </div>
           <p
-            className={`text-end text-xs text-gray-400 ${
+            className={`mt-1 text-end text-xs text-gray-400 ${
               isLoading ? "blur-sm" : ""
             }`}>
-            {sentTime.toString()}
+            {formatDateTime(sentTime)}
           </p>
         </div>
         {sources && (

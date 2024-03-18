@@ -1,11 +1,3 @@
-export function formatConversationTime(time: any) {
-  // remove leading 0 from sentTime
-  if (time.charAt(0) === "0") {
-    time = time.slice(1);
-  }
-  return time;
-}
-
 export function concatClassNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
