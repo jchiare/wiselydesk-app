@@ -5,14 +5,14 @@ import {
   removeWiselyDeskTestingKeyword
 } from "@/lib/chat/conversation/parse-payload";
 import { ConversationService } from "@/lib/chat/conversation";
-import { PrismaClient, type Message } from "@prisma/client";
+import prisma from "@/lib/prisma";
+import { type Message } from "@prisma/client";
 import { KbaSearch } from "@/lib/shared/services/openai/rag";
 import { getSystemMessagePrompt } from "@/lib/chat/prompts/system-prompts";
 
 import type { Stream } from "openai/streaming";
 import { buildSources } from "@/lib/chat/sources";
 
-const prisma = new PrismaClient();
 const openai = new OpenAI();
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();

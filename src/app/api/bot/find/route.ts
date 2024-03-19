@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
-
-const prismaClient = new PrismaClient();
 
 export const POST = async (request: NextRequest) => {
   const body = await request.json();
@@ -20,7 +18,7 @@ export const POST = async (request: NextRequest) => {
   const bot =
     process.env.APP_ENV === "test"
       ? { jon: "doe" }
-      : await prismaClient.bot.findFirst({
+      : await prisma.bot.findFirst({
           where: { client_api_key: clientApiKey }
         });
 

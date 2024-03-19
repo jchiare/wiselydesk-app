@@ -1,6 +1,5 @@
-import { PrismaClient, type Conversation } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
+import { type Conversation } from "@prisma/client";
 
 type Params = {
   params: {

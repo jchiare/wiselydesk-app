@@ -1,9 +1,8 @@
 import { NextAuthOptions } from "next-auth";
 import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
-const prisma = new PrismaClient();
 const EMAIL_SUBDOMAIN_REGEX = "@([^.]+)..+$";
 const AMBOSS_ORG_ID = 4;
 const AMBOSS_SECOND_EMAIL = "medicuja";

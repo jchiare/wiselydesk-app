@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
+import type { PrismaClient } from "@prisma/client";
 import {
   startOfYear,
   addWeeks,
@@ -39,7 +40,7 @@ export class Analytics {
   private prisma: PrismaClient;
 
   constructor() {
-    this.prisma = new PrismaClient();
+    this.prisma = prisma;
   }
 
   async getEscalationCounts(botId: string, frequency: string) {
