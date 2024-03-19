@@ -1,14 +1,9 @@
 "use client";
 import { formatDateTime } from "@/lib/shared/utils";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
-import type { Conversation } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import useRefreshPage from "@/lib/web/use-refresh-page";
 import type { ConversationDTO } from "@/src/app/api/bot/[id]/conversations/route";
-
-type Conversations = {
-  conversations: Conversation[];
-};
 
 function truncateSummary(summary: string | null, truncateLength = 115): string {
   if (!summary) return "";

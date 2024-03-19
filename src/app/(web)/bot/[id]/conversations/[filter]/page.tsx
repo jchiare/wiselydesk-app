@@ -1,10 +1,10 @@
 import ConversationsTable from "@/components/web/conversations/table";
-import type { Metadata } from "next";
-import type { Conversation } from "@prisma/client";
 import { orgChooser } from "@/lib/shared/org-chooser";
 import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 import { fetchServerSession } from "@/lib/shared/auth";
 import type { FilterType } from "@/components/web/conversations/filter-conversations-table";
+import type { Metadata } from "next";
+import type { ConversationDTO } from "@/src/app/api/bot/[id]/conversations/route";
 
 export const dynamic = "force-dynamic";
 
@@ -13,22 +13,19 @@ export const metadata: Metadata = {
   description: "View your bots conversations"
 };
 
-type Conversations = {
-  conversations: Conversation[];
-};
 type ParamsProps = {
   id: string;
   filter: FilterType;
 };
 
 async function getConversations({
-  orgId,
   botId,
-  filter
+  filter,
+  page
 }: {
-  orgId: number;
   botId: string;
   filter: string;
+  page: string;
 }) {
   let url = `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversations`;
 
@@ -45,6 +42,9 @@ async function getConversations({
     // No default case needed unless you want to handle unexpected filters
   }
 
+  const params = new URLSearchParams(url);
+  params.set("page", page);
+
   let res;
   try {
     res = await fetch(url, { cache: "no-cache" });
@@ -52,22 +52,25 @@ async function getConversations({
     console.error(e);
     throw e;
   }
-  return res!.json() as Promise<Conversations>;
+  return res!.json() as Promise<ConversationDTO>;
 }
 
 export default async function ConversationsPage({
-  params
+  params,
+  searchParams
 }: {
   params: ParamsProps;
+  searchParams: { page: string };
 }) {
   const { filter = "all", id: botId } = params;
-  const session = await fetchServerSession();
+  // const session = await fetchServerSession();
 
-  const orgId = orgChooser(session);
+  // const orgId = orgChooser(session);
+  const currentPage = searchParams?.page || "1";
   const data = await getConversations({
-    orgId,
     botId,
-    filter
+    filter,
+    page: currentPage
   });
 
   return (

@@ -13,7 +13,10 @@ type ConversationExtended = Conversation & {
   escalatedReason?: string;
   rating?: string;
 };
-export type ConversationDTO = { conversations: ConversationExtended[] };
+export type ConversationDTO = {
+  conversations: ConversationExtended[];
+  totalConversations: number;
+};
 
 const strToBool = (value: string | null) => {
   if (value === "true") return true;
@@ -58,6 +61,10 @@ export const GET = async (req: Request, { params }: Params) => {
 
   const isHelpfulQuery = searchParams.get("is_helpful");
 
+  const page = parseInt(searchParams.get("page") || "1", 10);
+  const limit = parseInt(searchParams.get("limit") || "10", 10);
+  const skip = (page - 1) * limit;
+
   try {
     let conversations: ConversationExtended[] =
       await prisma.conversation.findMany({
@@ -69,8 +76,19 @@ export const GET = async (req: Request, { params }: Params) => {
         },
         orderBy: {
           created_at: "desc"
-        }
+        },
+        skip,
+        take: limit
       });
+
+    const totalConversations = await prisma.conversation.count({
+      where: {
+        bot_id: botId,
+        created_at: {
+          gte: new Date("2023-11-15")
+        }
+      }
+    });
 
     const ratingsObjects = (
       await prisma.message.findMany({
@@ -142,7 +160,7 @@ export const GET = async (req: Request, { params }: Params) => {
       );
     }
 
-    return Response.json({ conversations });
+    return Response.json({ conversations, totalConversations });
   } catch (error) {
     console.error("Error fetching conversations:", error);
     return new Response(JSON.stringify({ message: "Internal Server Error" }), {
