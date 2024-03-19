@@ -12,6 +12,7 @@ import { getSystemMessagePrompt } from "@/lib/chat/prompts/system-prompts";
 
 import type { Stream } from "openai/streaming";
 import { buildSources } from "@/lib/chat/sources";
+import { inputCost, outputCost } from "@/lib/shared/services/openai/cost";
 
 const openai = new OpenAI();
 const encoder = new TextEncoder();
@@ -89,19 +90,23 @@ export async function POST(req: Request) {
     role: "system",
     content: systemMessage
   };
+  const formattedMessages = [formattedSystemMessage, ...updatedMessages];
 
   const response = await openai.chat.completions.create({
     model,
-    messages: [formattedSystemMessage, ...updatedMessages],
+    messages: formattedMessages,
     stream: true
   });
+
+  const inputAiCost = inputCost(JSON.stringify(formattedMessages), model);
 
   // save AI response before finishing to display in web app if
   // user quits mid-conversation
   const aiResponseMessage = await conversationService.createMessage({
     text: "",
     index: updatedMessages.length + 1,
-    finished: false
+    finished: false,
+    apiResponseCost: inputAiCost
   });
 
   const iterator = makeIterator(
@@ -110,7 +115,9 @@ export async function POST(req: Request) {
     conversationId,
     message.id,
     conversationService,
-    aiResponseMessage
+    aiResponseMessage,
+    model,
+    inputAiCost
   );
   const stream = iteratorToStream(iterator);
 
@@ -149,7 +156,9 @@ async function* makeIterator(
   conversationId: number,
   messageId: number,
   conversationService: ConversationService,
-  aiResponseMessage: Message
+  aiResponseMessage: Message,
+  model: string,
+  inputAiCost: number
 ): AsyncGenerator<Uint8Array, void, undefined> {
   let fullResponse = "";
 
@@ -188,7 +197,8 @@ async function* makeIterator(
   await conversationService.updateMessage(aiResponseMessage.id, {
     text: fullResponse,
     finished: true,
-    sources: formattedSources.length === 0 ? null : formattedSources.join(", ")
+    sources: formattedSources.length === 0 ? null : formattedSources.join(", "),
+    apiResponseCost: inputAiCost + outputCost(fullResponse, model)
   });
 
   yield encoder.encode(finalSSEResponse);
