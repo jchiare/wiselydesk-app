@@ -93,7 +93,7 @@ export const POST = async (request: Request, { params }: Params) => {
       }),
       prisma.conversation.update({
         where: { id: Number(conversationId) },
-        data: { zendesk_ticket_url: zendeskTicketUrl }
+        data: { zendesk_ticket_url: zendeskTicketUrl, escalated: true }
       })
     ]);
   }

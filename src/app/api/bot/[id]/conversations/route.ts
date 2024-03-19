@@ -10,15 +10,8 @@ type Params = {
 
 type ConversationExtended = Conversation & {
   escalatedReason?: string;
-  rating?: string;
 };
 export type ConversationDTO = { conversations: ConversationExtended[] };
-
-const strToBool = (value: string | null) => {
-  if (value === "true") return true;
-  if (value === "false") return false;
-  return null;
-};
 
 async function validateBotAndOrg(botId: number, organizationId: number) {
   if (!botId || !organizationId) {
@@ -42,6 +35,38 @@ async function validateBotAndOrg(botId: number, organizationId: number) {
   }
 }
 
+async function getConversations(
+  botId: number,
+  isEscalatedQuery: boolean | null,
+  isHelpfulQuery: string | null
+): Promise<ConversationExtended[]> {
+  // Construct the where clause conditionally
+  const whereClause: any = {
+    bot_id: botId,
+    created_at: {
+      gte: new Date("2023-11-15")
+    }
+  };
+
+  if (isEscalatedQuery) {
+    whereClause.escalated = isEscalatedQuery;
+  }
+
+  if (isHelpfulQuery !== null) {
+    whereClause.rating = isHelpfulQuery === "true" ? true : false;
+  }
+
+  const conversations: ConversationExtended[] =
+    await prisma.conversation.findMany({
+      where: whereClause,
+      orderBy: {
+        created_at: "desc"
+      }
+    });
+
+  return conversations;
+}
+
 export const GET = async (req: Request, { params }: Params) => {
   const session = { user: { organization_id: "2" } }; // hack for now .. implement server token validation at some time
 
@@ -58,80 +83,22 @@ export const GET = async (req: Request, { params }: Params) => {
   const isHelpfulQuery = searchParams.get("is_helpful");
 
   try {
-    let conversations: ConversationExtended[] =
-      await prisma.conversation.findMany({
-        where: {
-          bot_id: botId,
-          created_at: {
-            gte: new Date("2023-11-15") // date AMBOSS started paying .. hacky .. need to add pagination at some point
-          }
-        },
-        orderBy: {
-          created_at: "desc"
-        }
-      });
-
-    const ratingsObjects = (
-      await prisma.message.findMany({
-        where: {
-          conversation_id: { in: conversations.map(c => c.id) },
-          is_helpful: strToBool(isHelpfulQuery)
-        },
-        select: {
-          conversation_id: true,
-          is_helpful: true
-        }
-      })
-    ).map(m => {
-      return { conversationId: m.conversation_id, isHelpful: m.is_helpful };
-    });
-
-    for (const ratingsObject of ratingsObjects) {
-      const conversation = conversations.find(
-        c => c.id === ratingsObject.conversationId
-      );
-      if (conversation && ratingsObject.isHelpful !== null) {
-        conversation.rating = ratingsObject.isHelpful ? "Positive" : "Negative";
-      }
-    }
-
-    if (isHelpfulQuery) {
-      conversations = conversations.filter(c =>
-        ratingsObjects
-          .map(ratingObject => ratingObject.conversationId)
-          .includes(c.id)
-      );
-    }
-
-    const escalatedObjects = (
-      await prisma.escalation.findMany({
-        where: {
-          conversation_id: { in: conversations.map(c => c.id) }
-        },
-        select: {
-          conversation_id: true,
-          reason: true
-        }
-      })
-    ).map(m => {
-      return { conversationId: m.conversation_id, reason: m.reason };
-    });
-
-    for (const escalatedObject of escalatedObjects) {
-      const conversation = conversations.find(
-        c => c.id === escalatedObject.conversationId
-      );
-      if (conversation) {
-        conversation.escalatedReason = escalatedObject.reason;
-      }
-    }
+    const conversations = await getConversations(
+      botId,
+      isEscalatedQuery,
+      isHelpfulQuery
+    );
 
     if (isEscalatedQuery) {
-      conversations = conversations.filter(c =>
-        escalatedObjects
-          .map(escalatedObject => escalatedObject.conversationId)
-          .includes(c.id)
-      );
+      for (const conversation of conversations) {
+        const escalation = await prisma.escalation.findFirst({
+          where: { conversation_id: conversation.id }
+        });
+
+        if (escalation) {
+          conversation.escalatedReason = escalation.reason;
+        }
+      }
     }
 
     if (conversations.length === 0) {
