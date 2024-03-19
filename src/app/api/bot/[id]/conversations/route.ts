@@ -89,13 +89,15 @@ export const GET = async (req: Request, { params }: Params) => {
       isHelpfulQuery
     );
 
-    for (const conversation of conversations) {
-      const escalation = await prisma.escalation.findFirst({
-        where: { conversation_id: conversation.id }
-      });
+    if (isEscalatedQuery) {
+      for (const conversation of conversations) {
+        const escalation = await prisma.escalation.findFirst({
+          where: { conversation_id: conversation.id }
+        });
 
-      if (escalation) {
-        conversation.escalatedReason = escalation.reason;
+        if (escalation) {
+          conversation.escalatedReason = escalation.reason;
+        }
       }
     }
 
