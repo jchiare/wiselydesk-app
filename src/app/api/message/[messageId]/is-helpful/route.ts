@@ -3,11 +3,11 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 type ParamsType = {
-  params: { messageId: string; conversationId: string };
+  params: { messageId: string };
 };
 
 export async function PUT(req: Request, { params }: ParamsType) {
-  const { messageId, conversationId } = params;
+  const { messageId } = params;
   const body = await req.json();
   const isHelpful = body.isHelpful;
 
@@ -22,6 +22,11 @@ export async function PUT(req: Request, { params }: ParamsType) {
     const updatedMessage = await prisma.message.update({
       where: { id: parseInt(messageId, 10) },
       data: { is_helpful: isHelpful }
+    });
+
+    await prisma.conversation.update({
+      where: { id: updatedMessage.conversation_id },
+      data: { rating: isHelpful }
     });
 
     return Response.json({ message: updatedMessage });

@@ -68,7 +68,11 @@ export default function ConversationTable({ data }: { data: ConversationDTO }) {
         {conversation.escalatedReason}
       </td>
       <td className={`hidden px-3 py-4 text-sm text-gray-500 lg:table-cell `}>
-        {conversation.rating}
+        {conversation.rating === null
+          ? ""
+          : conversation.rating
+          ? "Positive"
+          : "Negative"}
       </td>
       <td
         className={`hidden overflow-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell `}>
