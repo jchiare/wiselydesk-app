@@ -1,6 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import renderMessage from "@/lib/shared/services/render-message";
 import type { ZendeskTicket } from "@/types/zendesk-ticket";
+import type { PrismaClient } from "@prisma/client";
 
 export type TicketOptions = {
   priority?: string;
@@ -22,19 +23,23 @@ export class ZendeskClient {
   private conversationId: number;
   private apiToken?: string;
   private subdomain?: string;
-  private prismaClient: PrismaClient;
+  private prisma: PrismaClient;
 
-  constructor(botId: string, conversationId: number, prisma?: PrismaClient) {
+  constructor(
+    botId: string,
+    conversationId: number,
+    prismaClient?: PrismaClient
+  ) {
     this.botId = botId;
     this.conversationId = conversationId;
-    this.prismaClient = prisma ?? new PrismaClient();
+    this.prisma = prismaClient ?? prisma;
   }
   public async initialize(): Promise<void> {
     await this.setApiTokenAndSubdomain();
   }
 
   private async setApiTokenAndSubdomain(): Promise<void> {
-    const bot = await this.prismaClient.bot.findUnique({
+    const bot = await this.prisma.bot.findUnique({
       where: { id: Number(this.botId) }
     });
 

@@ -1,5 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-
+import prisma from "@/lib/prisma";
+import type { PrismaClient } from "@prisma/client";
 export class TranscriptionService {
   private conversationId: string;
   private messages: string[] | null;
@@ -8,7 +8,7 @@ export class TranscriptionService {
   constructor(conversationId: string, prismaClient?: PrismaClient) {
     this.conversationId = conversationId;
     this.messages = null;
-    this.prisma = prismaClient || new PrismaClient();
+    this.prisma = prismaClient || prisma;
   }
 
   public async transcribe(): Promise<string> {

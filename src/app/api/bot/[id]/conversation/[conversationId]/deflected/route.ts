@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
-
-const prismaClient = new PrismaClient();
 
 type Params = {
   params: { id: string; conversationId: string };
@@ -22,7 +20,7 @@ export const PATCH = async (request: NextRequest, { params }: Params) => {
   }
 
   try {
-    const updatedConversation = await prismaClient.conversation.update({
+    const updatedConversation = await prisma.conversation.update({
       where: {
         public_id_bot_id: {
           public_id: Number(conversationId),

@@ -19,11 +19,11 @@ export class ConversationService {
   private botId: number;
 
   constructor(
-    prismaClient: PrismaClient,
+    prisma: PrismaClient,
     isProductionTesting: boolean,
     botId: number
   ) {
-    this.prisma = prismaClient;
+    this.prisma = prisma;
     this.isProductionTesting = isProductionTesting;
     this.botId = botId;
   }

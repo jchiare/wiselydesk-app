@@ -1,8 +1,6 @@
 import Note from "@/components/web/conversation/right-bar/notes";
 import Link from "next/link";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export default async function RightBar({
   isLoading,

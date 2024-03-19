@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import { NextResponse, NextRequest } from "next/server";
-
-const prismaClient = new PrismaClient();
 
 type Params = {
   params: { id: string; conversationId: string };
@@ -18,7 +16,7 @@ export async function GET(request: NextRequest, { params }: Params) {
     );
   }
 
-  const notes = await prismaClient.note.findMany({
+  const notes = await prisma.note.findMany({
     where: {
       conversation_id: Number(conversationId)
     }
@@ -40,7 +38,7 @@ export const POST = async (request: NextRequest, { params }: Params) => {
     );
   }
 
-  const newNote = await prismaClient.note.create({
+  const newNote = await prisma.note.create({
     data: {
       user_id: userId,
       content,

@@ -1,7 +1,5 @@
 import { ZendeskKbaImporter } from "@/lib/shared/services/zendesk/kba-import";
-import { PrismaClient } from "@prisma/client";
-
-const prismaClient = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export type ZendeskWebhookPayload = {
   account_id: number;
@@ -46,7 +44,7 @@ export async function POST(req: Request) {
   const articleId = webhookPayload.detail.id;
 
   try {
-    const bots = await prismaClient.bot.findMany({
+    const bots = await prisma.bot.findMany({
       where: {
         zendesk_account_id: webhookAccountId
       },
@@ -118,7 +116,7 @@ async function handleWebhookPayload(
 }
 
 async function handleMultipleBots(kbaId: string): Promise<number> {
-  const botId = await prismaClient.knowledgeBaseArticle.findFirst({
+  const botId = await prisma.knowledgeBaseArticle.findFirst({
     where: { client_article_id: kbaId },
     select: {
       bot_id: true
