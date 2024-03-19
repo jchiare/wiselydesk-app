@@ -1,5 +1,5 @@
 import { ZendeskKbaParser } from "@/lib/shared/services/zendesk/kba-parser";
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import {
   ExternalZendeskArticle,
   type ExternalZendeskArticlesResponse,
@@ -7,6 +7,7 @@ import {
   type Category,
   type Section
 } from "@/lib/shared/services/zendesk/dto";
+import type { PrismaClient } from "@prisma/client";
 
 function excludeKbWithTags(
   botId: string,
@@ -28,7 +29,7 @@ export class ZendeskKbaImporter {
   constructor(botId: string, zendeskKbaParser?: ZendeskKbaParser) {
     this.botId = botId;
     this.zendeskKbaParser = zendeskKbaParser ?? new ZendeskKbaParser();
-    this.prisma = new PrismaClient();
+    this.prisma = prisma;
   }
 
   async importAllKbas(): Promise<void> {

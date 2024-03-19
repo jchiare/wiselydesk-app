@@ -4,9 +4,7 @@ import SideNav from "@/components/web/side-nav";
 import { fetchServerSession } from "@/lib/shared/auth";
 import { PostHogPageView } from "@/src/app/(web)/bot/PostHogPageView";
 import { orgChooser } from "@/lib/shared/org-chooser";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 

@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
+import type { PrismaClient } from "@prisma/client";
 import { OpenAIEmbedder } from "@/lib/shared/services/openai/embeddings";
 import type { KnowledgeBaseArticle } from "@prisma/client";
 

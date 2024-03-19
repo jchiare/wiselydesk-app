@@ -1,6 +1,5 @@
 import { ZendeskClient, type TicketOptions } from "@/lib/chat/zendesk";
-import { PrismaClient } from "@prisma/client";
-
+import prisma from "@/lib/prisma";
 type Params = {
   params: { id: string; conversationId: string };
 };
@@ -29,9 +28,7 @@ export const POST = async (request: Request, { params }: Params) => {
     contactReason
   } = body as RequestBody;
 
-  const prismaClient = new PrismaClient();
-
-  const publicConversationId = await prismaClient.conversation
+  const publicConversationId = await prisma.conversation
     .findUnique({
       where: { id: Number(conversationId) }
     })
@@ -74,7 +71,7 @@ export const POST = async (request: Request, { params }: Params) => {
     );
 
     // would be better to put this in cache at some point
-    const conversation = await prismaClient.conversation.findFirst({
+    const conversation = await prisma.conversation.findFirst({
       where: {
         id: Number(conversationId)
       },
@@ -83,8 +80,8 @@ export const POST = async (request: Request, { params }: Params) => {
 
     const isConversationLivemode = !!conversation?.livemode;
 
-    await prismaClient.$transaction([
-      prismaClient.escalation.create({
+    await prisma.$transaction([
+      prisma.escalation.create({
         data: {
           bot_id: parseInt(id, 10),
           conversation_id: parseInt(conversationId, 10),
@@ -94,7 +91,7 @@ export const POST = async (request: Request, { params }: Params) => {
           livemode: isConversationLivemode
         }
       }),
-      prismaClient.conversation.update({
+      prisma.conversation.update({
         where: { id: Number(conversationId) },
         data: { zendesk_ticket_url: zendeskTicketUrl, escalated: true }
       })
