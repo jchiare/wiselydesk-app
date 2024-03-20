@@ -1,14 +1,9 @@
 "use client";
 import { formatDateTime } from "@/lib/shared/utils";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
-import type { Conversation } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import useRefreshPage from "@/lib/web/use-refresh-page";
 import type { ConversationDTO } from "@/src/app/api/bot/[id]/conversations/route";
-
-type Conversations = {
-  conversations: Conversation[];
-};
 
 function truncateSummary(summary: string | null, truncateLength = 115): string {
   if (!summary) return "";
@@ -17,7 +12,13 @@ function truncateSummary(summary: string | null, truncateLength = 115): string {
     : summary;
 }
 
-export default function ConversationTable({ data }: { data: ConversationDTO }) {
+export default function ConversationTable({
+  data,
+  filter
+}: {
+  data: ConversationDTO;
+  filter: string;
+}) {
   const router = useRouter();
   const { pathname } = useCustomQueryString();
 
@@ -65,7 +66,11 @@ export default function ConversationTable({ data }: { data: ConversationDTO }) {
         </dl>
       </td>
       <td className={`hidden px-3 py-4 text-sm text-gray-500 sm:table-cell `}>
-        {conversation.escalatedReason}
+        {filter === "escalated"
+          ? conversation.escalatedReason
+          : conversation.escalated
+          ? "Yes"
+          : ""}
       </td>
       <td className={`hidden px-3 py-4 text-sm text-gray-500 lg:table-cell `}>
         {conversation.rating === null

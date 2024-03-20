@@ -87,7 +87,7 @@ export default async function ConversationsPage({
           <th
             scope="col"
             className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
-            Escalated Reason
+            {filter === "escalated" ? "Escalated Reason" : "Escalated"}
           </th>
           <th
             scope="col"
@@ -102,7 +102,7 @@ export default async function ConversationsPage({
         </tr>
       </thead>
       <tbody className="divide-y divide-gray-200 bg-gray-100">
-        <ConversationsTable data={data} />
+        <ConversationsTable data={data} filter={filter} />
       </tbody>
     </table>
   );
