@@ -39,7 +39,7 @@ export default function Chat({
 }: ChatProps): JSX.Element {
   const {
     locale = "en",
-    create_support_ticket: createSupportTicket = false,
+    create_support_ticket: createSupportTicket = true,
     client_api_key: clientApiKey,
     model = "gpt-4",
     inline_sources: inlineSources = false,

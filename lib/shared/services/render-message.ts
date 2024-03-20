@@ -4,7 +4,7 @@ export function removeSupportButton(text: string): [string, boolean] {
   const supportTicketRegex = /<button\s+create.*>(.*?)(<\/button\s+create>|$)/g;
   let foundSupportTicketRegex = false;
 
-  text = text.replace(supportTicketRegex, (match) => {
+  text = text.replace(supportTicketRegex, match => {
     foundSupportTicketRegex = true;
     return "";
   });
@@ -13,7 +13,7 @@ export function removeSupportButton(text: string): [string, boolean] {
 }
 
 // Changes [url title](url) to a proper A html element
-function formatMarkdownLinks(text: string): string {
+export function formatMarkdownLinks(text: string): string {
   const markdownLinksRegex = /\[([^\]]+)\]\(([^)]+)\)/g; // Expect markdown links to be in the form [text](url)
 
   // Format links
@@ -30,10 +30,11 @@ function formatMarkdownLinks(text: string): string {
 }
 
 export default function renderMessage(text: string | null) {
+  console.log("text ... ", text);
   if (!text) return text;
-  text = text.replaceAll("<NEWLINE>", "<br>");
   [text] = removeSupportButton(text);
   text = formatMarkdownLinks(text);
+  console.log("text: ", text);
 
   return text;
 }
