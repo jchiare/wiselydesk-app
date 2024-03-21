@@ -26,6 +26,20 @@ export function formatMarkdownLinks(text: string): string {
     return `<a style="text-decoration:underline;" rel="noopener noreferrer" target="_blank" href="${p2}">${p1}</a>`;
   });
 
+  const partialMarkdownLinksRegex = /\[(\w+)\](?!(\(([^)]+)\)))/g;
+  const [urlTitleArr] = [...text.matchAll(partialMarkdownLinksRegex)];
+
+  const urlTitle = urlTitleArr?.[0]?.[1];
+  const matchSection = urlTitleArr?.[0]?.[0];
+
+  if (urlTitle) {
+    const insertLink = `<sup><a rel="noopener noreferrer" target="_blank" style="text-decoration:none;""> ${urlTitle}</a></sup>`;
+    text = text.replaceAll(matchSection, insertLink);
+    if (urlTitleArr.index) {
+      text = text.slice(0, urlTitleArr.index + insertLink.length);
+    }
+  }
+
   return text;
 }
 

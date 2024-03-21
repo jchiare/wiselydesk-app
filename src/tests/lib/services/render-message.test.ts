@@ -32,4 +32,11 @@ describe("formatMarkdownLinks", () => {
       'Refer to <sup><a rel="noopener noreferrer" target="_blank" style="text-decoration:none;" href="http://example.com/source1"> 1</a></sup>.';
     expect(formatMarkdownLinks(input)).toEqual(expectedOutput);
   });
+
+  it("half is hidden", () => {
+    const input = "Refer to [1](http://example.com/source1.";
+    const expectedOutput =
+      'Refer to <sup><a rel="noopener noreferrer" target="_blank" style="text-decoration:none;""> 1</a></sup>';
+    expect(formatMarkdownLinks(input)).toEqual(expectedOutput);
+  });
 });
