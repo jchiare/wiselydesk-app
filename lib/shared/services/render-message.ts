@@ -31,7 +31,7 @@ export function formatMarkdownLinks(text: string): string {
   text = text.replace(partialMarkdownLinksRegex, (_, p1) => {
     // Assuming partial links should also differentiate between numeric and text links
     if (["1", "2", "3", "4"].includes(p1)) {
-      return `<sup><a rel="noopener noreferrer" target="_blank" style="text-decoration:none;">${p1}</a></sup>`;
+      return `<sup><a rel="noopener noreferrer" target="_blank" style="text-decoration:none;"> ${p1}</a></sup>`;
     }
     return `<a style="text-decoration:underline;" rel="noopener noreferrer" target="_blank">${p1}</a>`;
   });

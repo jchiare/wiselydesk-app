@@ -36,14 +36,14 @@ describe("formatMarkdownLinks", () => {
   it("half is hidden", () => {
     const input = "Refer to [1](http://example.com/source1.";
     const expectedOutput =
-      'Refer to <sup><a rel="noopener noreferrer" target="_blank" style="text-decoration:none;""> 1</a></sup>';
+      'Refer to <sup><a rel="noopener noreferrer" target="_blank" style="text-decoration:none;"> 1</a></sup>';
     expect(formatMarkdownLinks(input)).toEqual(expectedOutput);
   });
 
   it("half is hidden for non source link", () => {
     const input = "Refer to [test link](http://example.com/source1.";
     const expectedOutput =
-      'Refer to <sup><a rel="noopener noreferrer" target="_blank" style="text-decoration:none;""> 1</a></sup>';
+      'Refer to <a style="text-decoration:underline;" rel="noopener noreferrer" target="_blank">test link</a>';
     expect(formatMarkdownLinks(input)).toEqual(expectedOutput);
   });
 });
