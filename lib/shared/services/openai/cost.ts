@@ -19,7 +19,6 @@ export function inputCost(
   }
 
   const cost = (numTokens / 1000) * costPerToken;
-  console.log(`input ${input} cost ${cost}`);
   return parseFloat(cost.toFixed(4));
 }
 
@@ -42,6 +41,5 @@ export function outputCost(
   }
 
   const cost = (numTokens / 1000) * costPerToken;
-  console.log(`output ${output} cost ${cost}`);
   return parseFloat(cost.toFixed(4));
 }
