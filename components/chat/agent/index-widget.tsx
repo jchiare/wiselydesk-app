@@ -4,7 +4,7 @@ import AgentMessage from "@/components/chat/agent/message";
 import Sources from "@/components/chat/agent/sources-widget";
 import SupportTicketModal from "@/components/chat/support-ticket-modal";
 import AiWarning from "@/components/chat/ai-warning-widget";
-import Feedback from "@/components/chat/agent/feedback";
+import Feedback from "@/components/chat/agent/feedback-widget";
 import { removeSupportButton } from "@/lib/shared/services/render-message";
 import type { Bot } from "@prisma/client";
 

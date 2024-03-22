@@ -3,7 +3,6 @@ import { NextResponse, NextRequest } from "next/server";
 
 export const POST = async (request: NextRequest) => {
   const body = await request.json();
-  console.log("body: ", body);
 
   const { clientApiKey } = body;
 
