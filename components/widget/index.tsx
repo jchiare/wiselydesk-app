@@ -24,18 +24,11 @@ export function Widget({
   const [widgetOpen, setWidgetOpen] = useState(false);
   const [bot, setBot] = useState<Bot | null>(null);
 
-  function openWidget() {
-    console.log("hello");
-    setWidgetOpen(!widgetOpen);
-  }
-
   useEffect(() => {
-    console.log("heyyyaa");
     getBot(clientApiKey).then(bot => {
       setBot(bot);
       console.log("bot: ", bot);
     });
-    console.log(bot);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -56,7 +49,7 @@ export function Widget({
       <div className="fixed bottom-3 right-3 z-50 h-14 w-14 origin-center select-none transition-transform duration-200 ease-in">
         <div className="absolute left-0 top-0 h-14 w-14 cursor-pointer overflow-hidden rounded-full antialiased">
           <button
-            onClick={openWidget}
+            onClick={() => setWidgetOpen(!widgetOpen)}
             aria-label="Open support widget"
             className="h-full w-full">
             <div className="absolute bottom-0 top-0 flex w-full select-none items-center justify-center opacity-100">

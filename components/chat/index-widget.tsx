@@ -15,7 +15,6 @@ import { useEffect, useRef } from "react";
 import * as Sentry from "@sentry/nextjs";
 
 export type SearchParams = {
-  german_source?: string;
   create_support_ticket?: boolean;
   client_api_key: string;
   model?: string;
