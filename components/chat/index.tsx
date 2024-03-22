@@ -29,11 +29,13 @@ type ChatProps = {
   searchParams: SearchParams;
   account: string;
   bot: Bot;
+  isWidget?: boolean;
 };
 
 export default function Chat({
   chatTheme,
   searchParams,
+  isWidget,
   account,
   bot
 }: ChatProps): JSX.Element {
