@@ -12,7 +12,7 @@ export default function AiWarning({ locale, account }: AiWarningProps) {
 
   if (!account) return null;
   return (
-    <>
+    <div className="flex flex-row items-center gap-2">
       <svg
         width="16"
         height="15"
@@ -46,6 +46,6 @@ export default function AiWarning({ locale, account }: AiWarningProps) {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }

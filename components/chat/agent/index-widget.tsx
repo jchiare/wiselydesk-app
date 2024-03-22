@@ -1,7 +1,7 @@
 import { type ChatThemeSettings } from "@/lib/chat/chat-theme";
 import AgentIcon from "@/components/chat/agent/icon";
 import AgentMessage from "@/components/chat/agent/message";
-import Sources from "@/components/chat/agent/sources";
+import Sources from "@/components/chat/agent/sources-widget";
 import SupportTicketModal from "@/components/chat/support-ticket-modal";
 import AiWarning from "@/components/chat/ai-warning-widget";
 import Feedback from "@/components/chat/agent/feedback";
@@ -52,10 +52,10 @@ export default function AgentDiv({
         " " +
         chatTheme.assistantMessageSetting.text
       }`}>
-      <div className="m-auto mx-4 flex gap-4 p-2 sm:pt-4 md:max-w-2xl md:gap-6 md:pt-4 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
+      <div className="flex gap-4 px-5 py-4">
         <AgentIcon chatTheme={chatTheme} />
 
-        <div className="relative flex w-full flex-col gap-1 sm:w-[calc(100%-50px)] md:gap-3 lg:w-[calc(100%-115px)]">
+        <div className="relative flex flex-col gap-1 md:gap-3 ">
           <div className="flex flex-grow flex-col gap-3">
             <div className="flex min-h-[20px] flex-col items-start gap-4 whitespace-pre-wrap ">
               <div className="prose prose-invert w-full break-words ">
@@ -84,15 +84,9 @@ export default function AgentDiv({
               </div>
             </div>
           </div>
-          {/* <Feedback
-            isLastMessage={isLastMessage}
-            chatTheme={chatTheme}
-            messageId={latestMessageId}
-          /> */}
-
-          {account && <hr />}
-          <div className="flex px-2 py-0.5">
-            <div className="flex w-full flex-row items-center justify-items-end gap-2">
+          <div className="w-[calc(100%-50px)]">
+            {account && <hr className="py-1" />}
+            <div className="flex items-center justify-between px-2 py-0.5">
               {/* @ts-expect-error done with ts for the day */}
               <AiWarning account={account} locale={locale} />
               <Feedback
