@@ -18,7 +18,7 @@ export default function AgentMessage({
     <p
       className={`${
         chatTheme.assistantMessageSetting.text
-      } text-[90%] sm:text-[100%] ${
+      } text-[90%] lg:text-[100%] ${
         !aiResponseDone &&
         isLastMessage &&
         `!last:after:mt-1 last:after:animate-assistant-message  last:after:bg-white last:after:text-white last:after:content-['▋']`
