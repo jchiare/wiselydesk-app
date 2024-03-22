@@ -89,11 +89,13 @@ export default function AgentDiv({
             <div className="flex items-center justify-between px-2 py-0.5">
               {/* @ts-expect-error done with ts for the day */}
               <AiWarning account={account} locale={locale} />
-              <Feedback
-                isLastMessage={isLastMessage}
-                chatTheme={chatTheme}
-                messageId={latestMessageId}
-              />
+              {aiResponseDone && (
+                <Feedback
+                  isLastMessage={isLastMessage}
+                  chatTheme={chatTheme}
+                  messageId={latestMessageId}
+                />
+              )}
             </div>
           </div>
         </div>

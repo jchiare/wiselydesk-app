@@ -123,7 +123,7 @@ export default function Chat({
           locale={locale}
           account={account}
         />
-        {/* <Input
+        <Input
           chatTheme={chatTheme}
           account={account}
           // @ts-expect-error done with ts for the day
@@ -132,7 +132,7 @@ export default function Chat({
           setInput={setInput}
           input={input}
           aiResponseDone={aiResponseDone}
-        /> */}
+        />
       </div>
     </main>
   );
