@@ -11,7 +11,7 @@ import { useScrollToBottom } from "@/lib/chat/hooks/use-scroll-to-bottom";
 import Input from "@/components/chat/user/input-widget";
 import CancelResponse from "@/components/chat/cancel-response";
 import type { Bot } from "@prisma/client";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import * as Sentry from "@sentry/nextjs";
 
 export type SearchParams = {
@@ -78,8 +78,16 @@ export default function Chat({
     sources
   });
 
+  const divRef = useRef<HTMLDivElement>(null);
+
+  let isOverflowing = false;
+  if (divRef.current) {
+    isOverflowing = divRef.current.scrollHeight > divRef.current.clientHeight;
+  }
+
   return (
     <div
+      ref={divRef}
       className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll text-[90%] antialiased md:h-[calc(100vh-100px)] ${combineClassNames(
         chatTheme.baseSettings
       )} flex-shrink-0 font-medium`}>
@@ -111,12 +119,13 @@ export default function Chat({
             conversationId={conversationId}
             createSupportTicket={createSupportTicket}
             bot={bot}
+            isOverflowing={isOverflowing}
           />
         );
       })}
 
       <div
-        className={`static bottom-0 left-0 mt-10 flex w-full justify-center ${chatTheme.assistantMessageSetting.bgColour}`}>
+        className={`absolute bottom-0 left-0 mt-10 flex w-full justify-center ${chatTheme.assistantMessageSetting.bgColour}`}>
         <CancelResponse
           aiResponseDone={aiResponseDone}
           setAiResponseDone={setAiResponseDone}
