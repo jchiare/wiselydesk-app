@@ -16,9 +16,7 @@ export default function AgentMessage({
 }: AgentMessageProps): JSX.Element {
   return (
     <p
-      className={`${
-        chatTheme.assistantMessageSetting.text
-      } text-[90%] sm:text-[100%] ${
+      className={`${chatTheme.assistantMessageSetting.text} text-[90%] ${
         !aiResponseDone &&
         isLastMessage &&
         `!last:after:mt-1 last:after:animate-assistant-message  last:after:bg-white last:after:text-white last:after:content-['▋']`

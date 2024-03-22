@@ -4,11 +4,11 @@ import {
   type ChatThemeSettings
 } from "@/lib/chat/chat-theme";
 import { welcomeReply } from "@/lib/shared/services/welcome-reply";
-import Agent from "@/components/chat/agent";
-import User from "@/components/chat/user";
+import Agent from "@/components/chat/agent/index-widget";
+import User from "@/components/chat/user/index-widget";
 import { useChatSubmit } from "@/lib/chat/hooks/use-chat-submit";
 import { useScrollToBottom } from "@/lib/chat/hooks/use-scroll-to-bottom";
-import Input from "@/components/chat/user/input";
+import Input from "@/components/chat/user/input-widget";
 import CancelResponse from "@/components/chat/cancel-response";
 import type { Bot } from "@prisma/client";
 import { useEffect } from "react";
@@ -80,7 +80,7 @@ export default function Chat({
 
   return (
     <main
-      className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll antialiased md:h-[calc(100vh-100px)] ${combineClassNames(
+      className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll text-[90%] antialiased md:h-[calc(100vh-100px)] ${combineClassNames(
         chatTheme.baseSettings
       )} flex-shrink-0 font-medium`}>
       <Agent

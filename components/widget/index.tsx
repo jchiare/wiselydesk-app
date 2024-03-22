@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import Chat, { type SearchParams } from "@/components/chat";
+import Chat, { type SearchParams } from "@/components/chat/index-widget";
 import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
 import type { Bot } from "@prisma/client";
 import getChatTheme from "@/lib/chat/chat-theme";
@@ -50,7 +50,6 @@ export function Widget({
             searchParams={searchParams}
             account={"amboss"}
             bot={bot}
-            isWidget={true}
           />
         </div>
       )}
