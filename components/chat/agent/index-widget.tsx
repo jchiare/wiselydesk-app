@@ -51,11 +51,11 @@ export default function AgentDiv({
         chatTheme.assistantMessageSetting.bgColour +
         " " +
         chatTheme.assistantMessageSetting.text
-      }`}>
-      <div className="flex gap-4 px-5 py-4">
+      } ${isLastMessage ? "pb-10" : ""}`}>
+      <div className="flex gap-4 px-5 pb-2 pt-4">
         <AgentIcon chatTheme={chatTheme} />
 
-        <div className="relative flex flex-col gap-1 md:gap-3 ">
+        <div className="relative flex flex-col gap-3 ">
           <div className="flex flex-grow flex-col gap-3">
             <div className="flex min-h-[20px] flex-col items-start gap-4 whitespace-pre-wrap ">
               <div className="prose prose-invert w-full break-words ">
@@ -85,7 +85,7 @@ export default function AgentDiv({
             </div>
           </div>
           <div className="w-[calc(100%-50px)]">
-            {account && <hr className="py-1" />}
+            {aiResponseDone && <hr className="py-1" />}
             <div className="flex items-center justify-between px-2 py-0.5">
               {/* @ts-expect-error done with ts for the day */}
               <AiWarning account={account} locale={locale} />

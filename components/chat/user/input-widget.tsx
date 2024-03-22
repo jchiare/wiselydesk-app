@@ -56,8 +56,7 @@ export default function Input({
 
   return (
     <label htmlFor="userQuestion">
-      <div
-        className={`absolute bottom-0 left-0 flex w-full justify-center bg-transparent `}>
+      <div className={`absolute bottom-0 left-0 flex w-full justify-center`}>
         <form
           className="stretch mx-1 mb-4 flex w-[90%] flex-row gap-3 lg:mx-auto lg:max-w-3xl lg:pt-6"
           onSubmit={e => handleSubmit(e)}

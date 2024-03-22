@@ -79,7 +79,7 @@ export default function Chat({
   });
 
   return (
-    <main
+    <div
       className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll text-[90%] antialiased md:h-[calc(100vh-100px)] ${combineClassNames(
         chatTheme.baseSettings
       )} flex-shrink-0 font-medium`}>
@@ -114,8 +114,9 @@ export default function Chat({
           />
         );
       })}
-      <div ref={messagesEndRef} />
-      <div className="absolute bottom-0 left-0 flex w-full justify-center">
+
+      <div
+        className={`static bottom-0 left-0 mt-10 flex w-full justify-center ${chatTheme.assistantMessageSetting.bgColour}`}>
         <CancelResponse
           aiResponseDone={aiResponseDone}
           setAiResponseDone={setAiResponseDone}
@@ -134,6 +135,7 @@ export default function Chat({
           aiResponseDone={aiResponseDone}
         />
       </div>
-    </main>
+      <div ref={messagesEndRef} />
+    </div>
   );
 }
