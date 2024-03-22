@@ -52,7 +52,7 @@ export default function AgentDiv({
         " " +
         chatTheme.assistantMessageSetting.text
       }`}>
-      <div className="m-auto mx-4 flex gap-4 p-2 sm:p-4 md:max-w-2xl md:gap-6 md:py-6 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
+      <div className="m-auto mx-4 flex gap-4 p-2 sm:pt-4 md:max-w-2xl md:gap-6 md:pt-4 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
         <AgentIcon chatTheme={chatTheme} />
 
         <div className="relative flex w-full flex-col gap-1 sm:w-[calc(100%-50px)] md:gap-3 lg:w-[calc(100%-115px)]">
@@ -84,15 +84,24 @@ export default function AgentDiv({
               </div>
             </div>
           </div>
-          <Feedback
+          {/* <Feedback
             isLastMessage={isLastMessage}
             chatTheme={chatTheme}
             messageId={latestMessageId}
-          />
-          {
-            // @ts-expect-error done with ts for the day
-            <AiWarning account={account} locale={locale} />
-          }
+          /> */}
+
+          {account && <hr />}
+          <div className="flex px-2 py-0.5">
+            <div className="flex w-full flex-row items-center justify-items-end gap-2">
+              {/* @ts-expect-error done with ts for the day */}
+              <AiWarning account={account} locale={locale} />
+              <Feedback
+                isLastMessage={isLastMessage}
+                chatTheme={chatTheme}
+                messageId={latestMessageId}
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
