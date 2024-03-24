@@ -9,6 +9,7 @@ export function PostHogPageView({ orgId }: { orgId: number }): null {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const posthog = usePostHog();
+  console.log(`orgId is ${orgId}`);
   // Track pageviews
   useEffect(() => {
     if (orgId === 2) return; // dont track wiselydesk employees
