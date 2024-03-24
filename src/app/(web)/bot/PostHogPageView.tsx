@@ -12,13 +12,12 @@ export function PostHogPageView({ orgId }: { orgId: number }): null {
   console.log(`orgId is ${orgId} with type ${typeof orgId}`);
   // Track pageviews
   useEffect(() => {
-    if (orgId === 2) return; // dont track wiselydesk employees
-    // @ts-expect-error
-    if ((pathname && posthog && orgId !== 2) || parseInt(orgId) !== 2) {
+    if (pathname && posthog) {
       let url = window.origin + pathname;
       if (searchParams.toString()) {
         url = url + `?${searchParams.toString()}`;
       }
+      posthog.identify("", { orgId });
       posthog.capture("$pageview", {
         $current_url: url
       });
