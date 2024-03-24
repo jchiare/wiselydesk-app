@@ -5,12 +5,13 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { usePostHog } from "posthog-js/react";
 
-export function PostHogPageView(): null {
+export function PostHogPageView({ orgId }: { orgId: number }): null {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const posthog = usePostHog();
   // Track pageviews
   useEffect(() => {
+    if (orgId === 2) return; // dont track wiselydesk employees
     if (pathname && posthog) {
       let url = window.origin + pathname;
       if (searchParams.toString()) {
@@ -20,7 +21,7 @@ export function PostHogPageView(): null {
         $current_url: url
       });
     }
-  }, [pathname, searchParams, posthog]);
+  }, [pathname, searchParams, posthog, orgId]);
 
   return null;
 }

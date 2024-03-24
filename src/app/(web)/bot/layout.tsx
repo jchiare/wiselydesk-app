@@ -38,7 +38,7 @@ export default async function WebLayout({
   return (
     <SessionProvider session={session}>
       <PHProvider>
-        <PostHogPageView />
+        <PostHogPageView orgId={orgId} />
         <div className="m-0 flex h-screen w-full bg-gray-100 p-0">
           <SideNav session={session} bots={bots} />
           <main className=" w-[calc(100%_-_18rem)] flex-grow overflow-y-scroll">
