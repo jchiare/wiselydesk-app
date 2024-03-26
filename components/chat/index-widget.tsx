@@ -16,7 +16,6 @@ import * as Sentry from "@sentry/nextjs";
 
 export type SearchParams = {
   create_support_ticket?: boolean;
-  client_api_key: string;
   model?: string;
   locale: string;
   inline_sources?: boolean;
@@ -28,18 +27,19 @@ type ChatProps = {
   searchParams: SearchParams;
   account: string;
   bot: Bot;
+  clientApiKey: string;
 };
 
 export default function Chat({
   chatTheme,
   searchParams,
   account,
-  bot
+  bot,
+  clientApiKey
 }: ChatProps): JSX.Element {
   const {
     locale = "en",
     create_support_ticket: createSupportTicket = true,
-    client_api_key: clientApiKey,
     model = "gpt-4",
     inline_sources: inlineSources = false,
     testSupportModal = false

@@ -14,6 +14,13 @@ async function getBot(clientApiKey: string) {
   return bot.bot as Bot;
 }
 
+type SearchParamsWidget = {
+  clientApiKey: string;
+  locale: string;
+  inline_sources?: boolean;
+  testSupportModal?: boolean;
+};
+
 export function Widget({
   clientApiKey,
   searchParams
@@ -27,7 +34,6 @@ export function Widget({
   useEffect(() => {
     getBot(clientApiKey).then(bot => {
       setBot(bot);
-      console.log("bot: ", bot);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -40,6 +46,7 @@ export function Widget({
         <div className="transform-origin[bottom_right] pointer-events-auto fixed bottom-20 right-5 z-[2147483000] h-[min(704px,calc(100%-104px))] max-h-[704px] min-h-[80px] w-[600px] overflow-hidden rounded-lg opacity-100 shadow-lg transition-all duration-200 ease-in-out">
           <Chat
             chatTheme={chatTheme}
+            clientApiKey={clientApiKey}
             searchParams={searchParams}
             account={"amboss"}
             bot={bot}
