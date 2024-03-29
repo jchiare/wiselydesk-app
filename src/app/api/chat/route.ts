@@ -200,11 +200,24 @@ async function* makeIterator(
     messageId
   );
 
-  await conversationService.updateMessage(aiResponseMessage.id, {
+  const aiMessage = {
     text: fullResponse,
     finished: true,
     sources: formattedSources.length === 0 ? null : formattedSources.join(", "),
     apiResponseCost: inputAiCost + outputCost(fullResponse, model)
+  };
+
+  await conversationService.updateMessage(aiResponseMessage.id, aiMessage);
+
+  await prisma.aiInput.create({
+    data: {
+      botId: aiResponseMessage.bot_id,
+      conversationId: conversationId,
+      messageId: aiResponseMessage.id,
+      log: JSON.stringify({
+        aiMessage
+      })
+    }
   });
 
   yield encoder.encode(finalSSEResponse);
