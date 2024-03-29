@@ -5,8 +5,6 @@ export function inputCost(
   formattedMessage: OpenAiMessage[],
   model: TiktokenModel | string
 ): number {
-  formattedMessage = trimMessageUnder5KTokens(formattedMessage);
-
   const numTokens = JSON.stringify(formattedMessage).length / 4; // not accurate but better than nothing
   let costPerToken: number;
 
