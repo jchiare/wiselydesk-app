@@ -43,7 +43,9 @@ describe("inputCost", () => {
   it("large system messages throw error", () => {
     const model = "gpt-4";
     // Expect the function to throw due to message size
-    expect(() => inputCost(MOCK_SYSTEM_MESSAGE_OVER_5K, model)).toThrow();
+    expect(() =>
+      trimMessageUnder5KTokens(MOCK_SYSTEM_MESSAGE_OVER_5K)
+    ).toThrow();
   });
 
   it("calculates cost with message adjustment for large message arrays", () => {
