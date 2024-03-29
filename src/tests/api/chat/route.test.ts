@@ -17,7 +17,7 @@ const MOCK_SYSTEM_MESSAGE_OVER_5K: OpenAiMessage[] = [
   { content: "Second message", role: "user" }
 ];
 
-const aBigString = "This is a big string".repeat(105);
+const aBigString = "This is a big string".repeat(430);
 
 // Example messages array that would exceed the 5K token limit if not modified
 const MOCK_MESSAGES_OVER_5K: OpenAiMessage[] = [
