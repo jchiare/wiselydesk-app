@@ -6,13 +6,18 @@ import {
 } from "@/lib/chat/conversation/parse-payload";
 import { ConversationService } from "@/lib/chat/conversation";
 import prisma from "@/lib/prisma";
-import { type Message } from "@prisma/client";
 import { KbaSearch } from "@/lib/shared/services/openai/rag";
 import { getSystemMessagePrompt } from "@/lib/chat/prompts/system-prompts";
-
-import type { Stream } from "openai/streaming";
 import { buildSources } from "@/lib/chat/sources";
-import { inputCost, outputCost } from "@/lib/shared/services/openai/cost";
+import {
+  inputCost,
+  outputCost,
+  trimMessageUnder5KTokens
+} from "@/lib/shared/services/openai/cost";
+
+import type { Message } from "@prisma/client";
+import type { Stream } from "openai/streaming";
+import type { OpenAiMessage } from "@/lib/chat/openai-chat-message";
 
 const openai = new OpenAI();
 const encoder = new TextEncoder();
@@ -86,19 +91,20 @@ export async function POST(req: Request) {
     );
 
   const systemMessage = getSystemMessagePrompt(botId, content);
-  const formattedSystemMessage: OpenAI.ChatCompletionMessageParam = {
+  const formattedSystemMessage: OpenAiMessage = {
     role: "system",
     content: systemMessage
   };
-  const formattedMessages = [formattedSystemMessage, ...updatedMessages];
+  let formattedMessages = [formattedSystemMessage, ...updatedMessages];
+  formattedMessages = trimMessageUnder5KTokens(formattedMessages);
+
+  const inputAiCost = inputCost(formattedMessages, model);
 
   const response = await openai.chat.completions.create({
     model,
     messages: formattedMessages,
     stream: true
   });
-
-  const inputAiCost = inputCost(JSON.stringify(formattedMessages), model);
 
   // save AI response before finishing to display in web app if
   // user quits mid-conversation

@@ -1,6 +1,6 @@
 import ChatMessage from "@/lib/chat/chat-message";
 
-type Role = "user" | "assistant";
+type Role = "user" | "assistant" | "system";
 
 export type OpenAiMessage = {
   role: Role;
