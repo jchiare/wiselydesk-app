@@ -1,4 +1,4 @@
-type Ticket = {
+export type BaseTicket = {
   url: string;
   id: number;
   external_id: null | string;
@@ -6,18 +6,19 @@ type Ticket = {
     channel: string;
     source: any;
   };
-  created_at: string;
-  updated_at: string;
+  created_at: Date;
+  updated_at: Date;
+  generated_timestamp?: number;
   type: null | string;
-  subject: string;
-  raw_subject: string;
+  subject: string | null;
+  raw_subject: string | null;
   description: string;
   priority: null | string;
   status: string;
   recipient: null | string;
   requester_id: number;
   submitter_id: number;
-  assignee_id: number;
+  assignee_id: number | null;
   organization_id: null | number;
   group_id: number;
   collaborator_ids: number[];
@@ -40,6 +41,7 @@ type Ticket = {
   allow_channelback: boolean;
   allow_attachments: boolean;
   from_messaging_channel: boolean;
+  result_type?: string;
 };
 
 type Audit = {
@@ -59,6 +61,6 @@ type Audit = {
 };
 
 export type ZendeskTicket = {
-  ticket: Ticket;
+  ticket: BaseTicket;
   audit: Audit;
 };
