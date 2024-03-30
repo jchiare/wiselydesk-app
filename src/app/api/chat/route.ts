@@ -124,7 +124,8 @@ export async function POST(req: Request) {
     aiResponseMessage,
     model,
     inputAiCost,
-    formattedMessages
+    formattedMessages,
+    startTime
   );
   const stream = iteratorToStream(iterator);
 
@@ -166,7 +167,8 @@ async function* makeIterator(
   aiResponseMessage: Message,
   model: string,
   inputAiCost: number,
-  formattedMessages: OpenAiMessage[]
+  formattedMessages: OpenAiMessage[],
+  startTime: number
 ): AsyncGenerator<Uint8Array, void, undefined> {
   let fullResponse = "";
   let modelVersion: string | undefined = undefined;
@@ -224,7 +226,8 @@ async function* makeIterator(
       log: {
         aiMessage,
         modelVersion,
-        formattedMessages
+        formattedMessages,
+        responseTime: `${((Date.now() - startTime) / 1000).toFixed(2)}s`
       }
     }
   });
