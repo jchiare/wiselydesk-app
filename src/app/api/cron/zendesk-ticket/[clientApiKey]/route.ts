@@ -27,10 +27,10 @@ export async function GET(request: NextRequest) {
     return new Response("Missing zk", { status: 400 });
   }
 
-  // Fetch tickets created in the last 1.25 hours
   const zendeskSearch = new SearchZendeskTickets(
     bot.zendesk_subdomain,
-    bot.zendesk_api_key
+    bot.zendesk_api_key,
+    bot.id.toString()
   );
 
   const tickets = await zendeskSearch.fetchRecentlyCreatedTickets();
@@ -41,7 +41,6 @@ export async function GET(request: NextRequest) {
   const ticketIdsAboutFreeAccess = await filterFreeAmbossTickets(
     tickets.results
   );
-
   if (ticketIdsAboutFreeAccess.length === 0) {
     return new Response("No tickets about that category", { status: 200 });
   }

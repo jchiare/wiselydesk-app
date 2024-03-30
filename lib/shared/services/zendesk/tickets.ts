@@ -3,14 +3,27 @@ import type { ZendeskSearchAPIResponse } from "@/types/zendesk-search";
 export class SearchZendeskTickets {
   private zendeskSubdomain: string;
   private zendeskApiKey: string;
+  private botId: string;
 
-  constructor(zendeskSubdomain: string, zendeskApiKey: string) {
+  constructor(zendeskSubdomain: string, zendeskApiKey: string, botId: string) {
     this.zendeskSubdomain = zendeskSubdomain;
     this.zendeskApiKey = zendeskApiKey;
+    this.botId = botId;
+  }
+
+  private getUsername(): string {
+    if (this.botId === "1") {
+      return "jay.gch93+daspu@gmail.com/token";
+    }
+    return process.env.NODE_ENV === "development"
+      ? "jay.gch93+daspu@gmail.com/token"
+      : "jay@wiselydesk.com/token";
   }
 
   private getAuthHeader(): string {
-    return `Basic ${btoa(`${this.zendeskApiKey}/token`)}`;
+    const username = this.getUsername();
+    const base64Credentials = btoa(`${username}:${this.zendeskApiKey}`);
+    return `Basic ${base64Credentials}`;
   }
 
   public async fetchRecentlyCreatedTickets(): Promise<ZendeskSearchAPIResponse> {
@@ -49,7 +62,7 @@ export class SearchZendeskTickets {
       const ticketUpdatePayload = {
         tickets: chunk.map(id => ({
           id,
-          tags: ["wiselydesk"]
+          tags: ["wiselydesk_free_access_requests_v1"]
         }))
       };
 
