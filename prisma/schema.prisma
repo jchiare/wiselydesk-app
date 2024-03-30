@@ -198,7 +198,7 @@ model AiInput {
   createdAt      DateTime  @default(now()) @db.DateTime(0)
   updatedAt      DateTime? @db.DateTime(0)
 
-  @@index([botId], name: "idx_conversation_log_bot_id")
-  @@index([conversationId], name: "idx_conversation_log_conversation_id")
+  @@index([botId], name: "idx_ai_input_bot_id")
+  @@index([conversationId], name: "idx_ai_input_conversation_id")
   @@map("ai_input")
 }
