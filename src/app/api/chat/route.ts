@@ -221,11 +221,11 @@ async function* makeIterator(
       botId: aiResponseMessage.bot_id,
       conversationId: conversationId,
       messageId: aiResponseMessage.id,
-      log: JSON.stringify({
+      log: {
         aiMessage,
         modelVersion,
-        formattedMessages: JSON.stringify(formattedMessages)
-      })
+        formattedMessages
+      }
     }
   });
 
