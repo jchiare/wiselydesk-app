@@ -188,3 +188,17 @@ model Escalation {
   @@index([conversation_id], map: "idx_conversation_id")
   @@map("escalation")
 }
+
+model AiInput {
+  id             Int       @id @default(autoincrement())
+  botId          Int
+  conversationId Int
+  messageId      Int
+  log            Json
+  createdAt      DateTime  @default(now()) @db.DateTime(0)
+  updatedAt      DateTime? @db.DateTime(0)
+
+  @@index([botId], name: "idx_ai_input_bot_id")
+  @@index([conversationId], name: "idx_ai_input_conversation_id")
+  @@map("ai_input")
+}
