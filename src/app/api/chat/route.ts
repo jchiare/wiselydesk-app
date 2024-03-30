@@ -123,7 +123,8 @@ export async function POST(req: Request) {
     conversationService,
     aiResponseMessage,
     model,
-    inputAiCost
+    inputAiCost,
+    formattedMessages
   );
   const stream = iteratorToStream(iterator);
 
@@ -164,9 +165,11 @@ async function* makeIterator(
   conversationService: ConversationService,
   aiResponseMessage: Message,
   model: string,
-  inputAiCost: number
+  inputAiCost: number,
+  formattedMessages: OpenAiMessage[]
 ): AsyncGenerator<Uint8Array, void, undefined> {
   let fullResponse = "";
+  let modelVersion: string | undefined = undefined;
 
   // @ts-expect-error - TS doesn't know about the toReadableStream method well
   for await (const chunk of response.toReadableStream()) {
@@ -175,11 +178,15 @@ async function* makeIterator(
       const jsonChunk = JSON.parse(
         textChunk
       ) as OpenAI.Chat.Completions.ChatCompletionChunk;
-
       const skipChunk = shouldSkipChunk(jsonChunk);
       if (!skipChunk) {
         const text = parseSSEMessageChunk(jsonChunk);
         fullResponse += jsonChunk.choices[0]?.delta?.content || "";
+
+        if (!modelVersion) {
+          modelVersion = jsonChunk.model;
+        }
+
         yield encoder.encode(text);
       }
     } catch (error) {
@@ -215,7 +222,9 @@ async function* makeIterator(
       conversationId: conversationId,
       messageId: aiResponseMessage.id,
       log: JSON.stringify({
-        aiMessage
+        aiMessage,
+        modelVersion,
+        formattedMessages: JSON.stringify(formattedMessages)
       })
     }
   });
