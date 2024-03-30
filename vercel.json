@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/zendesk-ticket/qGmNXgVcRRwVpL6i2bIDDYvPc8lJcSvndKE7DUZzq5M",
+      "schedule": "0 * * * *"
+    }
+  ]
+}
