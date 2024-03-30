@@ -7,7 +7,9 @@ export async function filterFreeAmbossTickets(
 ): Promise<number[]> {
   let ticketIds: number[] = [];
   for (const ticket of tickets) {
-    const isFreeInDescription = ticket.description.includes("free");
+    const isFreeInDescription = ticket.description
+      .toLowerCase()
+      .includes("free");
     if (isFreeInDescription) {
       const message = await anthropic.messages.create({
         max_tokens: 100,
