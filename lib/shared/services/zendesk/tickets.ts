@@ -40,7 +40,6 @@ export class SearchZendeskTickets {
     const encodedQuery = encodeURIComponent(query);
     const url = `${zendeskApiUrl}?query=${encodedQuery}`;
 
-    console.log("url: ", url);
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -49,13 +48,9 @@ export class SearchZendeskTickets {
       }
     })
       .then(response => response.json())
-      .catch(error => console.error("Failed to search tickets:", error));
-
-    console.log("resy: ", response);
-
-    // if (!response.ok) {
-    //   throw new Error(`Error searching Zendesk: ${response.statusText}`);
-    // }
+      .catch(error => {
+        throw new Error("Failed to search tickets:", error);
+      });
 
     return response as Promise<ZendeskSearchAPIResponse>;
   }
@@ -86,10 +81,7 @@ export class SearchZendeskTickets {
         }
       )
         .then(response => response.json())
-        .then(data => {
-          console.log("Update job status:", data);
-          jobStatuses.push(data.url);
-        })
+        .then(data => jobStatuses.push(data.job_status.url))
         .catch(error => console.error("Failed to update tickets:", error));
     }
 
@@ -100,8 +92,10 @@ export class SearchZendeskTickets {
     for (const jobUrl of jobUrls) {
       let jobCompleted = false;
       while (!jobCompleted) {
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for 2 seconds
+
+        console.log("Polling job status on url: ", jobUrl);
         await fetch(jobUrl, {
-          method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: this.getAuthHeader()
@@ -109,24 +103,19 @@ export class SearchZendeskTickets {
         })
           .then(response => response.json())
           .then(data => {
-            if (data.status === "failed") {
+            if (data.job_status.status === "failed") {
               throw new Error(`Job failed with message: ${data.message}`);
-            } else if (data.status === "completed") {
-              console.log(`Job completed with message: ${data.message}`);
+            } else if (data.job_status.status === "completed") {
               jobCompleted = true;
             }
             // If the job is still "queued" or "working", do nothing and let the loop continue.
           })
           .catch(error => {
-            console.error("Failed to get job status:", error);
-            throw error;
+            throw new Error(
+              `Failed to get job status on url ${jobUrl} with error: `,
+              error
+            );
           });
-
-        if (!jobCompleted) {
-          // Wait a bit before polling again to avoid hitting the API too hard.
-          // Adjust the timeout as needed based on how frequently you want to poll.
-          await new Promise(resolve => setTimeout(resolve, 50000)); // Wait for 5 seconds
-        }
       }
     }
   }
