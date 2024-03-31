@@ -57,7 +57,10 @@ export class SearchZendeskTickets {
     return (await response.json()) as Promise<ZendeskSearchAPIResponse>;
   }
 
-  public async updateTicketsWithTags(ticketIds: number[]): Promise<void> {
+  public async batchUpdateTicketsWithTags(
+    ticketIds: number[]
+  ): Promise<string[]> {
+    let jobStatuses: string[] = [];
     const chunkSize = 100; // Zendesk allows updating up to 100 tickets at a time
     for (let i = 0; i < ticketIds.length; i += chunkSize) {
       const chunk = ticketIds.slice(i, i + chunkSize);
@@ -80,8 +83,48 @@ export class SearchZendeskTickets {
         }
       )
         .then(response => response.json())
-        .then(data => console.log("Update job status:", data))
+        .then(data => {
+          console.log("Update job status:", data);
+          jobStatuses.push(data.url);
+        })
         .catch(error => console.error("Failed to update tickets:", error));
+    }
+
+    return jobStatuses;
+  }
+
+  public async ensureJobsComplete(jobUrls: string[]): Promise<void> {
+    for (const jobUrl of jobUrls) {
+      let jobCompleted = false;
+      while (!jobCompleted) {
+        await fetch(jobUrl, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: this.getAuthHeader()
+          }
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.status === "failed") {
+              throw new Error(`Job failed with message: ${data.message}`);
+            } else if (data.status === "completed") {
+              console.log(`Job completed with message: ${data.message}`);
+              jobCompleted = true;
+            }
+            // If the job is still "queued" or "working", do nothing and let the loop continue.
+          })
+          .catch(error => {
+            console.error("Failed to get job status:", error);
+            throw error;
+          });
+
+        if (!jobCompleted) {
+          // Wait a bit before polling again to avoid hitting the API too hard.
+          // Adjust the timeout as needed based on how frequently you want to poll.
+          await new Promise(resolve => setTimeout(resolve, 50000)); // Wait for 5 seconds
+        }
+      }
     }
   }
 }

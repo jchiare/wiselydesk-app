@@ -48,7 +48,10 @@ export async function GET(request: NextRequest) {
     return new Response("No tickets about that category", { status: 200 });
   }
 
-  await zendeskSearch.updateTicketsWithTags(ticketIdsAboutFreeAccess);
+  const jobStatusUrls = await zendeskSearch.batchUpdateTicketsWithTags(
+    ticketIdsAboutFreeAccess
+  );
+  await zendeskSearch.ensureJobsComplete(jobStatusUrls);
 
   return Response.json({ success: true });
 }
