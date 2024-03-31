@@ -49,6 +49,8 @@ export async function GET(request: NextRequest) {
     return new Response("No tickets", { status: 200 });
   }
 
+  console.log("tickets ..: ", tickets);
+
   console.log("Tickets: ", tickets.results.length);
 
   const ticketIdsAboutFreeAccess = await filterFreeAmbossTickets(
