@@ -46,6 +46,7 @@ export async function GET(request: NextRequest) {
     parseFloat(hours)
   );
   if (ticketSearchResults.count === 0) {
+    console.log("No Tickets found");
     return Response.json({ result: "No Tickets found" }, { status: 200 });
   }
 
