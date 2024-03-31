@@ -6,13 +6,14 @@ import type { NextRequest } from "next/server";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
-  console.log("got request: ", request);
+  console.log("got request ", request.nextUrl);
   const authHeader = request.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return new Response("Unauthorized", {
       status: 401
     });
   }
+  console.log("after auth");
 
   const clientApiKey = request.nextUrl.pathname.split("/")[4];
   const hours = request.nextUrl.pathname.split("/")[5];
@@ -22,6 +23,7 @@ export async function GET(request: NextRequest) {
     where: { client_api_key: clientApiKey }
   });
   if (!bot) return new Response("Missing", { status: 404 });
+  console.log("bot: ", bot);
 
   if (!bot.zendesk_subdomain) {
     return new Response("Missing sub", { status: 400 });
@@ -31,11 +33,14 @@ export async function GET(request: NextRequest) {
     return new Response("Missing zk", { status: 400 });
   }
 
+  console.log("before search");
   const zendeskSearch = new SearchZendeskTickets(
     bot.zendesk_subdomain,
     bot.zendesk_api_key,
     bot.id.toString()
   );
+
+  console.log("after search");
 
   const tickets = await zendeskSearch.fetchRecentlyCreatedTickets(
     parseFloat(hours)
