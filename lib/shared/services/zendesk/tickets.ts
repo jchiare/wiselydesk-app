@@ -33,7 +33,7 @@ export class SearchZendeskTickets {
     const timeAgo = new Date(
       new Date().getTime() - hours * 60 * 1000
     ).toISOString();
-    const query = `type:ticket created>${timeAgo} NOT tags:${this.freeAccessTag}`;
+    const query = `type:ticket created>${timeAgo} -tags:${this.freeAccessTag}`;
     return this.search(query);
   }
 
