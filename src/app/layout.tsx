@@ -1,6 +1,5 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: "WiselyDesk App",
@@ -22,9 +21,7 @@ export default function RootLayout({
           sizes="<generated>"
         />
       </head>
-
       <body className="h-full w-full">{children}</body>
-      <Analytics />
     </html>
   );
 }
