@@ -4,6 +4,7 @@ export class SearchZendeskTickets {
   private zendeskSubdomain: string;
   private zendeskApiKey: string;
   private botId: string;
+  private freeAccessTag = "wiselydesk_free_access_requests_v1";
 
   constructor(zendeskSubdomain: string, zendeskApiKey: string, botId: string) {
     this.zendeskSubdomain = zendeskSubdomain;
@@ -26,12 +27,13 @@ export class SearchZendeskTickets {
     return `Basic ${base64Credentials}`;
   }
 
-  public async fetchRecentlyCreatedTickets(): Promise<ZendeskSearchAPIResponse> {
-    // Construct the query to fetch tickets created in the last 1.25 hours
+  public async fetchRecentlyCreatedTickets(
+    hours: number
+  ): Promise<ZendeskSearchAPIResponse> {
     const timeAgo = new Date(
-      new Date().getTime() - 75 * 60 * 1000
+      new Date().getTime() - hours * 60 * 1000
     ).toISOString();
-    const query = `type:ticket created>${timeAgo}`;
+    const query = `type:ticket created>${timeAgo} NOT tags:${this.freeAccessTag}`;
     return this.search(query);
   }
 
@@ -62,7 +64,7 @@ export class SearchZendeskTickets {
       const ticketUpdatePayload = {
         tickets: chunk.map(id => ({
           id,
-          tags: ["wiselydesk_free_access_requests_v1"]
+          tags: [this.freeAccessTag]
         }))
       };
 

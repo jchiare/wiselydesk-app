@@ -12,7 +12,8 @@ export async function GET(request: NextRequest) {
   }
 
   const clientApiKey = request.nextUrl.pathname.split("/")[4];
-  if (!clientApiKey) return new Response("Missing", { status: 400 });
+  const hours = request.nextUrl.pathname.split("/")[5];
+  if (!clientApiKey || !hours) return new Response("Missing", { status: 400 });
 
   const bot = await prisma.bot.findFirst({
     where: { client_api_key: clientApiKey }
@@ -33,7 +34,9 @@ export async function GET(request: NextRequest) {
     bot.id.toString()
   );
 
-  const tickets = await zendeskSearch.fetchRecentlyCreatedTickets();
+  const tickets = await zendeskSearch.fetchRecentlyCreatedTickets(
+    parseFloat(hours)
+  );
   if (tickets.count === 0) {
     return new Response("No tickets", { status: 200 });
   }
