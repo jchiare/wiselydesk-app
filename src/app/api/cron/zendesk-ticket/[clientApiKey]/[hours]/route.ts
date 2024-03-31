@@ -59,5 +59,5 @@ export async function GET(request: NextRequest) {
   );
   await zendeskSearch.ensureJobsComplete(jobStatusUrls);
 
-  return Response.json({ success: true });
+  return Response.json({ success: true, jobStatusUrls });
 }
