@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
   console.log("after search");
 
   const ticketSearchResults = await zendeskSearch.fetchRecentlyCreatedTickets(
-    parseFloat(hours)
+    parseInt(hours, 10)
   );
   if (ticketSearchResults.count === 0) {
     console.log("No Tickets found");

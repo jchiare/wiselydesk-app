@@ -30,9 +30,7 @@ export class SearchZendeskTickets {
   public async fetchRecentlyCreatedTickets(
     hours: number
   ): Promise<ZendeskSearchAPIResponse> {
-    const timeAgo = new Date(
-      new Date().getTime() - hours * 60 * 1000
-    ).toISOString();
+    const timeAgo = `${hours}hour`;
     const query = `type:ticket created>${timeAgo} -tags:${this.freeAccessTag}`;
     return this.search(query);
   }
