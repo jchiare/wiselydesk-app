@@ -49,15 +49,17 @@ export class SearchZendeskTickets {
         Authorization: this.getAuthHeader(),
         "Content-Type": "application/json"
       }
-    });
+    })
+      .then(response => response.json())
+      .catch(error => console.error("Failed to search tickets:", error));
 
-    console.log(response.json());
+    console.log("resy: ", response);
 
-    if (!response.ok) {
-      throw new Error(`Error searching Zendesk: ${response.statusText}`);
-    }
+    // if (!response.ok) {
+    //   throw new Error(`Error searching Zendesk: ${response.statusText}`);
+    // }
 
-    return (await response.json()) as Promise<ZendeskSearchAPIResponse>;
+    return response as Promise<ZendeskSearchAPIResponse>;
   }
 
   public async batchUpdateTicketsWithTags(
