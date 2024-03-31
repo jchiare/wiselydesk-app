@@ -41,6 +41,8 @@ export async function GET(request: NextRequest) {
     return new Response("No tickets", { status: 200 });
   }
 
+  console.log("Tickets: ", tickets.results.length);
+
   const ticketIdsAboutFreeAccess = await filterFreeAmbossTickets(
     tickets.results
   );
@@ -48,6 +50,7 @@ export async function GET(request: NextRequest) {
     return new Response("No tickets about that category", { status: 200 });
   }
 
+  console.log("Tickets about free access: ", ticketIdsAboutFreeAccess.length);
   const jobStatusUrls = await zendeskSearch.batchUpdateTicketsWithTags(
     ticketIdsAboutFreeAccess
   );
