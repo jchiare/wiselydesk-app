@@ -42,19 +42,19 @@ export async function GET(request: NextRequest) {
 
   console.log("after search");
 
-  const tickets = await zendeskSearch.fetchRecentlyCreatedTickets(
+  const ticketSearchResults = await zendeskSearch.fetchRecentlyCreatedTickets(
     parseFloat(hours)
   );
-  if (tickets.count === 0) {
-    return new Response("No tickets", { status: 200 });
+  if (ticketSearchResults.count === 0) {
+    return Response.json({ result: "No Tickets found" }, { status: 200 });
   }
 
-  console.log("tickets ..: ", tickets);
+  console.log("tickets ..: ", ticketSearchResults);
 
-  console.log("Tickets: ", tickets.results.length);
+  console.log("Tickets: ", ticketSearchResults.results.length);
 
   const ticketIdsAboutFreeAccess = await filterFreeAmbossTickets(
-    tickets.results
+    ticketSearchResults.results
   );
   if (ticketIdsAboutFreeAccess.length === 0) {
     return new Response("No tickets about that category", { status: 200 });
