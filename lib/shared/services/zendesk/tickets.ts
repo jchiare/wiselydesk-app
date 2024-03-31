@@ -42,6 +42,7 @@ export class SearchZendeskTickets {
     const encodedQuery = encodeURIComponent(query);
     const url = `${zendeskApiUrl}?query=${encodedQuery}`;
 
+    console.log("url: ", url);
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -49,6 +50,8 @@ export class SearchZendeskTickets {
         "Content-Type": "application/json"
       }
     });
+
+    console.log(response.json());
 
     if (!response.ok) {
       throw new Error(`Error searching Zendesk: ${response.statusText}`);
