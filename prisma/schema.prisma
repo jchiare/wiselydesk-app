@@ -202,3 +202,16 @@ model AiInput {
   @@index([conversationId], name: "idx_ai_input_conversation_id")
   @@map("ai_input")
 }
+
+model Activity {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  orgId     Int
+  action    String
+  details   Json?
+  createdAt DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @updatedAt @db.DateTime(0)
+
+  @@index([orgId], name: "idx_activity_org_id")
+  @@map("activity")
+}
