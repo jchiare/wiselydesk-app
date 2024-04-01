@@ -4,6 +4,7 @@ import Chat, { type SearchParams } from "@/components/chat/index-widget";
 import { identifyVisitor } from "@/lib/visitor/identify";
 import type { Bot } from "@prisma/client";
 import type { ChatThemeSettings } from "@/lib/chat/chat-theme";
+import prisma from "@/lib/prisma";
 
 export function Widget({
   clientApiKey,
@@ -17,6 +18,26 @@ export function Widget({
   chatTheme: ChatThemeSettings;
 }): JSX.Element {
   const [widgetOpen, setWidgetOpen] = useState(false);
+  const [lastConversationId, setLastConversationId] = useState<
+    string | undefined
+  >(undefined);
+
+  async function handleWidgetClick() {
+    // identify user on widget transition to open
+    if (!widgetOpen) {
+      const sessionId = await identifyVisitor(bot.id);
+
+      const lastConvoId = await prisma.conversation.findFirst({
+        where: { widgetSessionId: sessionId },
+        orderBy: { created_at: "desc" },
+        select: { id: true }
+      });
+      if (lastConvoId) {
+        setLastConversationId(lastConvoId.id.toString());
+      }
+    }
+    setWidgetOpen(!widgetOpen);
+  }
 
   return (
     <div>
@@ -28,16 +49,14 @@ export function Widget({
             searchParams={searchParams}
             account={"amboss"}
             bot={bot}
+            lastConversationId={lastConversationId}
           />
         </div>
       )}
       <div className="fixed bottom-3 right-3 z-50 h-14 w-14 origin-center select-none transition-transform duration-200 ease-in">
         <div className="absolute left-0 top-0 h-14 w-14 cursor-pointer overflow-hidden rounded-full antialiased">
           <button
-            onClick={() => {
-              setWidgetOpen(!widgetOpen);
-              identifyVisitor();
-            }}
+            onClick={handleWidgetClick}
             aria-label="Open support widget"
             className="h-full w-full">
             <div className="absolute bottom-0 top-0 flex w-full select-none items-center justify-center opacity-100">

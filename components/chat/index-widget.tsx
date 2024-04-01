@@ -28,14 +28,19 @@ type ChatProps = {
   account: string;
   bot: Bot;
   clientApiKey: string;
+  lastConversationId: string | undefined;
 };
+
+// TODO - api request to get messages from conversation id,
+// and prepend it to the messsages array
 
 export default function Chat({
   chatTheme,
   searchParams,
   account,
   bot,
-  clientApiKey
+  clientApiKey,
+  lastConversationId
 }: ChatProps): JSX.Element {
   const {
     locale = "en",
@@ -61,7 +66,8 @@ export default function Chat({
     createSupportTicket,
     model,
     account,
-    inlineSources
+    inlineSources,
+    lastConversationId
   });
 
   useEffect(() => {
