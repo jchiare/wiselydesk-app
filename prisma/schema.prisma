@@ -215,3 +215,15 @@ model Activity {
   @@index([orgId], name: "idx_activity_org_id")
   @@map("activity")
 }
+
+model WidgetSession {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  botId     Int
+  isActive  Boolean  @default(true)
+  startedAt DateTime @default(now())
+  details   Json?
+
+  @@index([botId], name: "idx_widget_session_bot_id")
+  @@map("widget_session")
+}
