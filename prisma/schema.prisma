@@ -75,7 +75,7 @@ model KnowledgeBaseArticle {
 
 model Message {
   id                Int       @id @default(autoincrement())
-  text              String?   @db.VarChar(4096)
+  text              String    @db.VarChar(4096)
   index             Int
   conversation_id   Int
   from_user_id      Int

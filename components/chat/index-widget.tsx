@@ -102,7 +102,7 @@ export default function Chat({
 
   return (
     <>
-      <div
+      {/* <div
         ref={divRef}
         className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll text-[90%] antialiased md:h-[calc(100vh-100px)] ${combineClassNames(
           chatTheme.baseSettings
@@ -161,7 +161,7 @@ export default function Chat({
           />
         </div>
         {/* <div ref={messagesEndRef} /> */}
-      </div>
+      {/* </div> */} */}
       <div
         ref={divRef}
         className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll text-[90%] antialiased md:h-[calc(100vh-100px)] ${combineClassNames(
