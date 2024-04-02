@@ -24,17 +24,21 @@ export function Widget({
 
   async function handleWidgetClick() {
     // identify user on widget transition to open
-    console.log("here???");
     if (!widgetOpen) {
       const sessionId = await identifyVisitor(bot.id);
       const lastConversation = await getLastConversation(sessionId);
       if (lastConversation) {
         setLastConversation(lastConversation);
-        console.log("set");
+      }
+    } else {
+      // set the conversation as ended ..
+      if (lastConversation) {
+        fetch(`/api/conversation/${lastConversation.id}/end`, {
+          method: "POST"
+        }).catch(err => console.error(err));
       }
     }
     setWidgetOpen(!widgetOpen);
-    console.log("done");
   }
 
   return (

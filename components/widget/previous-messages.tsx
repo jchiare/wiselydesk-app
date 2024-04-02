@@ -31,7 +31,6 @@ export function PreviousMessages({
   lastConversationMessages,
   lastConversation
 }: Props) {
-  console.log("lastConversation: ", lastConversation);
   return (
     <>
       {lastConversationMessages.map((message, index) => {

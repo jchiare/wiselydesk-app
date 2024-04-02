@@ -48,13 +48,11 @@ export default function Chat({
 
   useEffect(() => {
     if (lastConversation) {
-      console.log("getting messages");
       getMessagesFromConversationId(lastConversation.id).then(messages => {
-        console.log("messages: ", messages);
         setLastConversationMessages(messages);
       });
     }
-  }, []);
+  }, [lastConversation]);
 
   const {
     locale = "en",
@@ -94,7 +92,8 @@ export default function Chat({
 
   const messagesEndRef = useScrollToBottom({
     messages,
-    sources
+    sources,
+    lastConversationMessages
   });
 
   const divRef = useRef<HTMLDivElement>(null);
@@ -104,15 +103,16 @@ export default function Chat({
     isOverflowing = divRef.current.scrollHeight > divRef.current.clientHeight;
   }
 
-  console.log(lastConversationMessages);
-
+  const hasLastConversationMessages =
+    lastConversationMessages && lastConversationMessages.length > 0;
+  console.log("is overflowing: ", isOverflowing);
   return (
     <div
       ref={divRef}
       className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll text-[90%] antialiased md:h-[calc(100vh-100px)] ${combineClassNames(
         chatTheme.baseSettings
       )} flex-shrink-0 font-medium`}>
-      {lastConversationMessages && lastConversationMessages.length > 0 && (
+      {hasLastConversationMessages && (
         <PreviousMessages
           bot={bot}
           chatTheme={chatTheme}
@@ -133,9 +133,11 @@ export default function Chat({
         locale={locale}
         key={0}
         aiResponseDone={false}
+        hasLastConversationMessages={hasLastConversationMessages}
         isLastMessage={false}
         bot={bot}
         testSupportModal={testSupportModal}
+        isOverflowing={isOverflowing}
       />
       {messages.map((message, index) => {
         const isLastMessage = messages.length === index + 1;

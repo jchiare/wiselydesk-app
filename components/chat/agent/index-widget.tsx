@@ -22,6 +22,7 @@ type AgentMessageProps = {
   bot: Bot;
   testSupportModal?: boolean;
   isOverflowing?: boolean;
+  hasLastConversationMessages?: boolean;
 };
 
 export default function AgentDiv({
@@ -37,7 +38,8 @@ export default function AgentDiv({
   createSupportTicket,
   bot,
   testSupportModal,
-  isOverflowing
+  isOverflowing,
+  hasLastConversationMessages
 }: AgentMessageProps): JSX.Element {
   const [_, buttonCreateHtml] = removeSupportButton(text);
 
@@ -53,7 +55,11 @@ export default function AgentDiv({
         chatTheme.assistantMessageSetting.bgColour +
         " " +
         chatTheme.assistantMessageSetting.text
-      } ${isLastMessage && isOverflowing ? "pb-[5.5rem]" : "pb-2"}`}>
+      } ${
+        (isLastMessage || hasLastConversationMessages) && isOverflowing
+          ? "pb-[5.5rem]"
+          : "pb-2"
+      }`}>
       <div className="flex gap-4 px-5 pb-2 pt-4">
         <AgentIcon chatTheme={chatTheme} />
 
