@@ -11,6 +11,7 @@ type UseChatSubmitParams = {
   model: string | undefined;
   createSupportTicket: boolean;
   inlineSources: boolean;
+  lastConversationId?: number;
 };
 
 export const useChatSubmit = ({
@@ -19,7 +20,8 @@ export const useChatSubmit = ({
   account,
   model,
   createSupportTicket,
-  inlineSources
+  inlineSources,
+  lastConversationId
 }: UseChatSubmitParams) => {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [input, setInput] = useState<string>("");
@@ -28,7 +30,7 @@ export const useChatSubmit = ({
     useState<string>("");
   const [sources, setSources] = useState<string[]>([]);
   const [latestMessageId, setLatestMessageId] = useState<number | null>();
-  const [conversationId, setConversationId] = useState<string | undefined>();
+  const [conversationId, setConversationId] = useState<number | undefined>();
 
   async function onSubmit() {
     const updatedMessages = [
@@ -38,6 +40,7 @@ export const useChatSubmit = ({
         text: input
       })
     ] as ChatMessage[];
+    console.log("updatedMessages: ", updatedMessages);
     // send empty response to indicate to user that a reply is coming
     setMessages([
       ...updatedMessages,

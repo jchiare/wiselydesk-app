@@ -37,7 +37,8 @@ export class ConversationService {
 
   async getOrCreateConversation(
     userInput: string,
-    conversationId: number | undefined
+    conversationId: number | undefined,
+    sessionId: string | undefined
   ): Promise<void> {
     if (this.isProductionTesting) {
       this.conversationId = 1;
@@ -50,14 +51,19 @@ export class ConversationService {
       return;
     }
 
-    const newConversationId = (await this.createConversation(userInput)).id;
+    const newConversationId = (
+      await this.createConversation(userInput, sessionId)
+    ).id;
     this.conversationId = newConversationId;
 
     // create welcome message since it's a new conversation
     await this.createWelcomeMessage();
   }
 
-  private async createConversation(userInput: string): Promise<Conversation> {
+  private async createConversation(
+    userInput: string,
+    sessionId: string | undefined
+  ): Promise<Conversation> {
     const startTime = Date.now();
 
     const publicID = await this.getNewPublicIdByBotId(this.botId);
@@ -73,7 +79,8 @@ export class ConversationService {
         public_id: publicID,
         user_id: 3,
         livemode: isConversationLivemode(userInput, this.botId),
-        summary: userInput.slice(0, 255)
+        summary: userInput.slice(0, 255),
+        widgetSessionId: sessionId
       }
     });
 

@@ -10,9 +10,12 @@ import { useChatSubmit } from "@/lib/chat/hooks/use-chat-submit";
 import { useScrollToBottom } from "@/lib/chat/hooks/use-scroll-to-bottom";
 import Input from "@/components/chat/user/input-widget";
 import CancelResponse from "@/components/chat/cancel-response";
-import type { Bot } from "@prisma/client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Sentry from "@sentry/nextjs";
+import { getMessagesFromConversationId } from "@/lib/visitor/identify";
+import { PreviousMessages } from "@/components/widget/previous-messages";
+
+import type { Bot, Conversation, Message } from "@prisma/client";
 
 export type SearchParams = {
   create_support_ticket?: boolean;
@@ -28,6 +31,7 @@ type ChatProps = {
   account: string;
   bot: Bot;
   clientApiKey: string;
+  lastConversation: Conversation | undefined;
 };
 
 export default function Chat({
@@ -35,8 +39,21 @@ export default function Chat({
   searchParams,
   account,
   bot,
-  clientApiKey
+  clientApiKey,
+  lastConversation
 }: ChatProps): JSX.Element {
+  const [lastConversationMessages, setLastConversationMessages] = useState<
+    Message[]
+  >([]);
+
+  useEffect(() => {
+    if (lastConversation) {
+      getMessagesFromConversationId(lastConversation.id).then(messages => {
+        setLastConversationMessages(messages);
+      });
+    }
+  }, [lastConversation]);
+
   const {
     locale = "en",
     create_support_ticket: createSupportTicket = true,
@@ -61,7 +78,8 @@ export default function Chat({
     createSupportTicket,
     model,
     account,
-    inlineSources
+    inlineSources,
+    lastConversationId: lastConversation?.id
   });
 
   useEffect(() => {
@@ -74,7 +92,8 @@ export default function Chat({
 
   const messagesEndRef = useScrollToBottom({
     messages,
-    sources
+    sources,
+    lastConversationMessages
   });
 
   const divRef = useRef<HTMLDivElement>(null);
@@ -84,21 +103,43 @@ export default function Chat({
     isOverflowing = divRef.current.scrollHeight > divRef.current.clientHeight;
   }
 
+  const hasLastConversationMessages =
+    lastConversationMessages && lastConversationMessages.length > 0;
+
+  console.log("lastConversationMessages: ", lastConversationMessages);
   return (
     <div
       ref={divRef}
       className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll text-[90%] antialiased md:h-[calc(100vh-100px)] ${combineClassNames(
         chatTheme.baseSettings
       )} flex-shrink-0 font-medium`}>
+      {hasLastConversationMessages && (
+        <PreviousMessages
+          bot={bot}
+          chatTheme={chatTheme}
+          account={account}
+          createSupportTicket={createSupportTicket}
+          aiResponseDone={aiResponseDone}
+          locale={locale}
+          sources={sources}
+          latestMessageId={latestMessageId}
+          lastConversation={lastConversation}
+          conversationId={conversationId!}
+          lastConversationMessages={lastConversationMessages}
+        />
+      )}
       <Agent
         chatTheme={chatTheme}
         text={welcomeReply(account, locale)}
         locale={locale}
         key={0}
-        aiResponseDone={false}
-        isLastMessage={false}
+        aiResponseDone={true}
+        isWelcomeMessage={true}
+        hasLastConversationMessages={hasLastConversationMessages}
+        isLastMessage={messages.length === 0}
         bot={bot}
         testSupportModal={testSupportModal}
+        isOverflowing={isOverflowing}
       />
       {messages.map((message, index) => {
         const isLastMessage = messages.length === index + 1;
@@ -115,7 +156,7 @@ export default function Chat({
             aiResponseDone={aiResponseDone}
             isLastMessage={isLastMessage}
             latestMessageId={latestMessageId}
-            conversationId={conversationId}
+            conversationId={conversationId?.toString()}
             createSupportTicket={createSupportTicket}
             bot={bot}
             isOverflowing={isOverflowing}

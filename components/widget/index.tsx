@@ -1,44 +1,64 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Chat, { type SearchParams } from "@/components/chat/index-widget";
-import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
-import type { Bot } from "@prisma/client";
-import getChatTheme from "@/lib/chat/chat-theme";
+import { identifyVisitor, getLastConversation } from "@/lib/visitor/identify";
 
-async function getBot(clientApiKey: string) {
-  const response = await fetch(`${NEXTJS_BACKEND_URL}/api/bot/find`, {
-    method: "POST",
-    body: JSON.stringify({ clientApiKey })
-  });
-  const bot = await response.json();
-  return bot.bot as Bot;
-}
-
-type SearchParamsWidget = {
-  clientApiKey: string;
-  locale: string;
-  inline_sources?: boolean;
-  testSupportModal?: boolean;
-};
+import type { Bot, Conversation } from "@prisma/client";
+import type { ChatThemeSettings } from "@/lib/chat/chat-theme";
 
 export function Widget({
   clientApiKey,
-  searchParams
+  searchParams,
+  bot,
+  chatTheme
 }: {
   clientApiKey: string;
   searchParams: SearchParams;
+  bot: Bot;
+  chatTheme: ChatThemeSettings;
 }): JSX.Element {
   const [widgetOpen, setWidgetOpen] = useState(false);
-  const [bot, setBot] = useState<Bot | null>(null);
+  const [lastConversation, setLastConversation] = useState<
+    Conversation | undefined
+  >(undefined);
 
-  useEffect(() => {
-    getBot(clientApiKey).then(bot => {
-      setBot(bot);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  async function handleWidgetClick() {
+    try {
+      setWidgetOpen(currentState => !currentState);
 
-  const chatTheme = getChatTheme("amboss");
+      const sessionId = await identifyVisitor(bot.id);
+      // If widget is transitioning to open and there's no last conversation cached
+      if (!widgetOpen && !lastConversation) {
+        const fetchedLastConversation = await getLastConversation(sessionId);
+        if (fetchedLastConversation) {
+          setLastConversation(fetchedLastConversation);
+          return;
+        }
+      }
+
+      if (widgetOpen && lastConversation) {
+        await endConversation(lastConversation.id);
+      } else if (!widgetOpen) {
+        // If widget is opening and no conversation was found initially
+        const fetchedLastConversation = await getLastConversation(sessionId);
+        if (fetchedLastConversation) {
+          await endConversation(fetchedLastConversation.id);
+        }
+      }
+    } catch (err) {
+      console.error("Error handling widget click:", err);
+    }
+  }
+
+  async function endConversation(conversationId: number) {
+    try {
+      await fetch(`/api/conversation/${conversationId}/end`, {
+        method: "POST"
+      });
+    } catch (err) {
+      console.error("Error ending conversation:", err);
+    }
+  }
 
   return (
     <div>
@@ -50,13 +70,14 @@ export function Widget({
             searchParams={searchParams}
             account={"amboss"}
             bot={bot}
+            lastConversation={lastConversation}
           />
         </div>
       )}
       <div className="fixed bottom-3 right-3 z-50 h-14 w-14 origin-center select-none transition-transform duration-200 ease-in">
         <div className="absolute left-0 top-0 h-14 w-14 cursor-pointer overflow-hidden rounded-full antialiased">
           <button
-            onClick={() => setWidgetOpen(!widgetOpen)}
+            onClick={() => handleWidgetClick()}
             aria-label="Open support widget"
             className="h-full w-full">
             <div className="absolute bottom-0 top-0 flex w-full select-none items-center justify-center opacity-100">

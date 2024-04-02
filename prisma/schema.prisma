@@ -28,24 +28,29 @@ model Bot {
 }
 
 model Conversation {
-  id                 Int       @id @default(autoincrement())
-  summary            String?   @db.VarChar(255)
+  id                 Int            @id @default(autoincrement())
+  summary            String?        @db.VarChar(255)
   public_id          Int
   bot_id             Int
   user_id            Int
-  created_at         DateTime  @default(now()) @db.DateTime(0)
-  updated_at         DateTime? @db.DateTime(0)
-  deleted_at         DateTime? @db.DateTime(0)
+  created_at         DateTime       @default(now()) @db.DateTime(0)
+  updated_at         DateTime?      @db.DateTime(0)
+  deleted_at         DateTime?      @db.DateTime(0)
   ticket_deflected   Boolean?
   to_review          Boolean?
-  zendesk_ticket_url String?   @db.VarChar(255)
-  livemode           Boolean   @default(false)
-  escalated          Boolean   @default(false)
+  zendesk_ticket_url String?        @db.VarChar(255)
+  livemode           Boolean        @default(false)
+  escalated          Boolean        @default(false)
   rating             Boolean?
+  ended              Boolean        @default(false)
+  ended_at           DateTime?      @db.DateTime(0)
+  widgetSessionId    String?
+  WidgetSession      WidgetSession? @relation(fields: [widgetSessionId], references: [sessionId])
 
   @@unique([public_id, bot_id])
   @@index([bot_id], map: "bot_id_index")
   @@index([bot_id, user_id], map: "bot_id_user_id_index")
+  @@index([widgetSessionId])
   @@map("conversation")
 }
 
@@ -70,7 +75,7 @@ model KnowledgeBaseArticle {
 
 model Message {
   id                Int       @id @default(autoincrement())
-  text              String?   @db.VarChar(4096)
+  text              String    @db.VarChar(4096)
   index             Int
   conversation_id   Int
   from_user_id      Int
@@ -214,4 +219,18 @@ model Activity {
 
   @@index([orgId], name: "idx_activity_org_id")
   @@map("activity")
+}
+
+model WidgetSession {
+  id           Int            @id @default(autoincrement())
+  sessionId    String         @unique
+  botId        Int
+  isActive     Boolean        @default(true)
+  startedAt    DateTime       @default(now()) @db.DateTime(0)
+  details      Json?
+  Conversation Conversation[]
+
+  @@index([sessionId], name: "idx_widget_session_session_id")
+  @@index([botId], name: "idx_widget_session_bot_id")
+  @@map("widget_session")
 }
