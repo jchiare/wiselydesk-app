@@ -26,6 +26,10 @@ export async function identifyVisitor(botId: number) {
   return visitorSessionId;
 }
 
+export async function getVisitorSessionId() {
+  return cookies().get(WISELYDESK_SESSION_ID)?.value;
+}
+
 export async function getLastConversationId(sessionId: string) {
   return await prisma.conversation.findFirst({
     where: { widgetSessionId: sessionId },

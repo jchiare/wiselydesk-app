@@ -14,6 +14,7 @@ import {
   outputCost,
   trimMessageUnder5KTokens
 } from "@/lib/shared/services/openai/cost";
+import { getVisitorSessionId } from "@/lib/visitor/identify";
 
 import type { Message } from "@prisma/client";
 import type { Stream } from "openai/streaming";
@@ -28,6 +29,8 @@ export const maxDuration = 75;
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
+  const sessionId = await getVisitorSessionId();
+
   const startTime = Date.now();
 
   const payload = await req.json();
@@ -52,7 +55,8 @@ export async function POST(req: Request) {
 
   await conversationService.getOrCreateConversation(
     userInput,
-    clientSentConversationId
+    clientSentConversationId,
+    sessionId
   );
 
   const conversationId = conversationService.getConversationId();

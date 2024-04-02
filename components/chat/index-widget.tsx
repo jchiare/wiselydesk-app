@@ -12,8 +12,10 @@ import Input from "@/components/chat/user/input-widget";
 import CancelResponse from "@/components/chat/cancel-response";
 import { useEffect, useRef, useState } from "react";
 import * as Sentry from "@sentry/nextjs";
-import type { Bot, Message } from "@prisma/client";
 import { getMessagesFromConversationId } from "@/lib/visitor/identify";
+import { PreviousMessages } from "@/components/widget/previous-messages";
+
+import type { Bot, Message } from "@prisma/client";
 
 export type SearchParams = {
   create_support_ticket?: boolean;
@@ -100,128 +102,83 @@ export default function Chat({
     isOverflowing = divRef.current.scrollHeight > divRef.current.clientHeight;
   }
 
+  console.log(lastConversationMessages);
+
   return (
-    <>
-      {/* <div
-        ref={divRef}
-        className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll text-[90%] antialiased md:h-[calc(100vh-100px)] ${combineClassNames(
-          chatTheme.baseSettings
-        )} flex-shrink-0 font-medium`}>
-        <Agent
-          chatTheme={chatTheme}
-          text={welcomeReply(account, locale)}
-          locale={locale}
-          key={0}
-          aiResponseDone={false}
-          isLastMessage={false}
+    <div
+      ref={divRef}
+      className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll text-[90%] antialiased md:h-[calc(100vh-100px)] ${combineClassNames(
+        chatTheme.baseSettings
+      )} flex-shrink-0 font-medium`}>
+      {lastConversationMessages && lastConversationMessages.length > 0 && (
+        <PreviousMessages
           bot={bot}
+          chatTheme={chatTheme}
+          account={account}
+          createSupportTicket={createSupportTicket}
           testSupportModal={testSupportModal}
+          aiResponseDone={aiResponseDone}
+          locale={locale}
+          sources={sources}
+          latestMessageId={latestMessageId}
+          conversationId={conversationId}
+          lastConversationMessages={lastConversationMessages}
         />
-        {messages.map((message, index) => {
-          const isLastMessage = messages.length === index + 1;
-          return message.sender === "user" ? (
-            <User chatTheme={chatTheme} text={message.text} key={index} />
-          ) : (
-            <Agent
-              chatTheme={chatTheme}
-              text={message.text}
-              locale={locale}
-              sources={isLastMessage ? sources : undefined} // only show sources on last message
-              key={index}
-              account={account}
-              aiResponseDone={aiResponseDone}
-              isLastMessage={isLastMessage}
-              latestMessageId={latestMessageId}
-              conversationId={conversationId?.toString()}
-              createSupportTicket={createSupportTicket}
-              bot={bot}
-              isOverflowing={isOverflowing}
-            />
-          );
-        })}
-
-        <div
-          className={`absolute bottom-0 left-0 mt-10 flex w-full justify-center ${chatTheme.assistantMessageSetting.bgColour}`}>
-          <CancelResponse
-            aiResponseDone={aiResponseDone}
-            setAiResponseDone={setAiResponseDone}
-            // @ts-expect-error done with ts for the day
-            locale={locale}
-            account={account}
-          />
-          <Input
+      )}
+      <Agent
+        chatTheme={chatTheme}
+        text={welcomeReply(account, locale)}
+        locale={locale}
+        key={0}
+        aiResponseDone={false}
+        isLastMessage={false}
+        bot={bot}
+        testSupportModal={testSupportModal}
+      />
+      {messages.map((message, index) => {
+        const isLastMessage = messages.length === index + 1;
+        return message.sender === "user" ? (
+          <User chatTheme={chatTheme} text={message.text} key={index} />
+        ) : (
+          <Agent
             chatTheme={chatTheme}
-            account={account}
-            // @ts-expect-error done with ts for the day
+            text={message.text}
             locale={locale}
-            onSubmit={onSubmit}
-            setInput={setInput}
-            input={input}
+            sources={isLastMessage ? sources : undefined} // only show sources on last message
+            key={index}
+            account={account}
             aiResponseDone={aiResponseDone}
+            isLastMessage={isLastMessage}
+            latestMessageId={latestMessageId}
+            conversationId={conversationId?.toString()}
+            createSupportTicket={createSupportTicket}
+            bot={bot}
+            isOverflowing={isOverflowing}
           />
-        </div>
-        {/* <div ref={messagesEndRef} /> */}
-      {/* </div> */} */}
+        );
+      })}
+
       <div
-        ref={divRef}
-        className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll text-[90%] antialiased md:h-[calc(100vh-100px)] ${combineClassNames(
-          chatTheme.baseSettings
-        )} flex-shrink-0 font-medium`}>
-        <Agent
-          chatTheme={chatTheme}
-          text={welcomeReply(account, locale)}
+        className={`absolute bottom-0 left-0 mt-10 flex w-full justify-center ${chatTheme.assistantMessageSetting.bgColour}`}>
+        <CancelResponse
+          aiResponseDone={aiResponseDone}
+          setAiResponseDone={setAiResponseDone}
+          // @ts-expect-error done with ts for the day
           locale={locale}
-          key={0}
-          aiResponseDone={false}
-          isLastMessage={false}
-          bot={bot}
-          testSupportModal={testSupportModal}
+          account={account}
         />
-        {messages.map((message, index) => {
-          const isLastMessage = messages.length === index + 1;
-          return message.sender === "user" ? (
-            <User chatTheme={chatTheme} text={message.text} key={index} />
-          ) : (
-            <Agent
-              chatTheme={chatTheme}
-              text={message.text}
-              locale={locale}
-              sources={isLastMessage ? sources : undefined} // only show sources on last message
-              key={index}
-              account={account}
-              aiResponseDone={aiResponseDone}
-              isLastMessage={isLastMessage}
-              latestMessageId={latestMessageId}
-              conversationId={conversationId?.toString()}
-              createSupportTicket={createSupportTicket}
-              bot={bot}
-              isOverflowing={isOverflowing}
-            />
-          );
-        })}
-
-        <div
-          className={`absolute bottom-0 left-0 mt-10 flex w-full justify-center ${chatTheme.assistantMessageSetting.bgColour}`}>
-          <CancelResponse
-            aiResponseDone={aiResponseDone}
-            setAiResponseDone={setAiResponseDone}
-            // @ts-expect-error done with ts for the day
-            locale={locale}
-            account={account}
-          />
-          <Input
-            chatTheme={chatTheme}
-            account={account}
-            // @ts-expect-error done with ts for the day
-            locale={locale}
-            onSubmit={onSubmit}
-            setInput={setInput}
-            input={input}
-            aiResponseDone={aiResponseDone}
-          />
-        </div>
-        <div ref={messagesEndRef} />
+        <Input
+          chatTheme={chatTheme}
+          account={account}
+          // @ts-expect-error done with ts for the day
+          locale={locale}
+          onSubmit={onSubmit}
+          setInput={setInput}
+          input={input}
+          aiResponseDone={aiResponseDone}
+        />
       </div>
-    </>
+      <div ref={messagesEndRef} />
+    </div>
   );
 }
