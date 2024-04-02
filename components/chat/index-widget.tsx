@@ -15,7 +15,7 @@ import * as Sentry from "@sentry/nextjs";
 import { getMessagesFromConversationId } from "@/lib/visitor/identify";
 import { PreviousMessages } from "@/components/widget/previous-messages";
 
-import type { Bot, Message } from "@prisma/client";
+import type { Bot, Conversation, Message } from "@prisma/client";
 
 export type SearchParams = {
   create_support_ticket?: boolean;
@@ -31,7 +31,7 @@ type ChatProps = {
   account: string;
   bot: Bot;
   clientApiKey: string;
-  lastConversationId: number | undefined;
+  lastConversation: Conversation | undefined;
 };
 
 export default function Chat({
@@ -40,19 +40,21 @@ export default function Chat({
   account,
   bot,
   clientApiKey,
-  lastConversationId
+  lastConversation
 }: ChatProps): JSX.Element {
   const [lastConversationMessages, setLastConversationMessages] = useState<
     Message[]
   >([]);
 
   useEffect(() => {
-    if (lastConversationId) {
-      getMessagesFromConversationId(lastConversationId).then(messages => {
+    if (lastConversation) {
+      console.log("getting messages");
+      getMessagesFromConversationId(lastConversation.id).then(messages => {
+        console.log("messages: ", messages);
         setLastConversationMessages(messages);
       });
     }
-  }, [lastConversationId]);
+  }, []);
 
   const {
     locale = "en",
@@ -79,7 +81,7 @@ export default function Chat({
     model,
     account,
     inlineSources,
-    lastConversationId
+    lastConversationId: lastConversation?.id
   });
 
   useEffect(() => {
@@ -116,12 +118,12 @@ export default function Chat({
           chatTheme={chatTheme}
           account={account}
           createSupportTicket={createSupportTicket}
-          testSupportModal={testSupportModal}
           aiResponseDone={aiResponseDone}
           locale={locale}
           sources={sources}
           latestMessageId={latestMessageId}
-          conversationId={conversationId}
+          lastConversation={lastConversation}
+          conversationId={conversationId!}
           lastConversationMessages={lastConversationMessages}
         />
       )}

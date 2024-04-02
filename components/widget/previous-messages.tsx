@@ -1,20 +1,21 @@
+"use client";
 import Agent from "@/components/chat/agent/index-widget";
 import User from "@/components/chat/user/index-widget";
 import type { ChatThemeSettings } from "@/lib/chat/chat-theme";
-import type { Bot, Message } from "@prisma/client";
+import type { Bot, Conversation, Message } from "@prisma/client";
 
 type Props = {
   chatTheme: ChatThemeSettings;
   account: string;
   bot: Bot;
   createSupportTicket: boolean;
-  testSupportModal: boolean;
   aiResponseDone: boolean;
   latestMessageId: number | null | undefined;
-  conversationId: number | null | undefined;
+  conversationId: number;
   locale: string;
   sources: string[];
   lastConversationMessages: Message[];
+  lastConversation: Conversation | undefined;
 };
 
 export function PreviousMessages({
@@ -24,12 +25,13 @@ export function PreviousMessages({
   createSupportTicket,
   aiResponseDone,
   locale,
-  testSupportModal,
   sources,
   latestMessageId,
   conversationId,
-  lastConversationMessages
+  lastConversationMessages,
+  lastConversation
 }: Props) {
+  console.log("lastConversation: ", lastConversation);
   return (
     <>
       {lastConversationMessages.map((message, index) => {
@@ -54,6 +56,9 @@ export function PreviousMessages({
           />
         );
       })}
+      {lastConversation?.ended_at && (
+        <div>Conversation ended: {lastConversation.ended_at.toISOString()}</div>
+      )}
     </>
   );
 }
