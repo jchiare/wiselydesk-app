@@ -23,6 +23,8 @@ type AgentMessageProps = {
   testSupportModal?: boolean;
   isOverflowing?: boolean;
   hasLastConversationMessages?: boolean;
+  isPreviousMessages?: boolean;
+  isWelcomeMessage?: boolean;
 };
 
 export default function AgentDiv({
@@ -39,7 +41,8 @@ export default function AgentDiv({
   bot,
   testSupportModal,
   isOverflowing,
-  hasLastConversationMessages
+  isPreviousMessages,
+  isWelcomeMessage
 }: AgentMessageProps): JSX.Element {
   const [_, buttonCreateHtml] = removeSupportButton(text);
 
@@ -49,17 +52,15 @@ export default function AgentDiv({
       aiResponseDone &&
       isLastMessage &&
       createSupportTicket);
+
+  console.log(isLastMessage, isOverflowing, text);
   return (
     <div
       className={`w-full border-b ${
         chatTheme.assistantMessageSetting.bgColour +
         " " +
         chatTheme.assistantMessageSetting.text
-      } ${
-        (isLastMessage || hasLastConversationMessages) && isOverflowing
-          ? "pb-[5.5rem]"
-          : "pb-2"
-      }`}>
+      } ${isLastMessage && isOverflowing ? "pb-[5.5rem]" : "pb-2"}`}>
       <div className="flex gap-4 px-5 pb-2 pt-4">
         <AgentIcon chatTheme={chatTheme} />
 
@@ -68,6 +69,7 @@ export default function AgentDiv({
             <div className="flex min-h-[20px] flex-col items-start gap-4 whitespace-pre-wrap ">
               <div className="prose prose-invert w-full break-words ">
                 <AgentMessage
+                  isPreviousMessages={isPreviousMessages}
                   chatTheme={chatTheme}
                   aiResponseDone={aiResponseDone}
                   text={text}
@@ -92,20 +94,22 @@ export default function AgentDiv({
               </div>
             </div>
           </div>
-          <div className="w-[calc(100%-50px)]">
-            {aiResponseDone && <hr className="py-1" />}
-            <div className="flex items-center justify-between px-2 py-0.5">
-              {/* @ts-expect-error done with ts for the day */}
-              <AiWarning account={account} locale={locale} />
-              {aiResponseDone && (
-                <Feedback
-                  isLastMessage={isLastMessage}
-                  chatTheme={chatTheme}
-                  messageId={latestMessageId}
-                />
-              )}
+          {!isWelcomeMessage && (
+            <div className="w-[calc(100%-50px)]">
+              {aiResponseDone && <hr className="py-1" />}
+              <div className="flex items-center justify-between px-2 py-0.5">
+                {/* @ts-expect-error done with ts for the day */}
+                <AiWarning account={account} locale={locale} />
+                {aiResponseDone && (
+                  <Feedback
+                    isLastMessage={isLastMessage}
+                    chatTheme={chatTheme}
+                    messageId={latestMessageId}
+                  />
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

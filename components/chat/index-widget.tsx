@@ -105,7 +105,8 @@ export default function Chat({
 
   const hasLastConversationMessages =
     lastConversationMessages && lastConversationMessages.length > 0;
-  console.log("is overflowing: ", isOverflowing);
+
+  console.log("lastConversationMessages: ", lastConversationMessages);
   return (
     <div
       ref={divRef}
@@ -132,9 +133,10 @@ export default function Chat({
         text={welcomeReply(account, locale)}
         locale={locale}
         key={0}
-        aiResponseDone={false}
+        aiResponseDone={true}
+        isWelcomeMessage={true}
         hasLastConversationMessages={hasLastConversationMessages}
-        isLastMessage={false}
+        isLastMessage={messages.length === 0}
         bot={bot}
         testSupportModal={testSupportModal}
         isOverflowing={isOverflowing}

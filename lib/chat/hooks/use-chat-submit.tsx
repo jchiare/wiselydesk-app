@@ -30,9 +30,7 @@ export const useChatSubmit = ({
     useState<string>("");
   const [sources, setSources] = useState<string[]>([]);
   const [latestMessageId, setLatestMessageId] = useState<number | null>();
-  const [conversationId, setConversationId] = useState<number | undefined>(
-    lastConversationId
-  );
+  const [conversationId, setConversationId] = useState<number | undefined>();
 
   async function onSubmit() {
     const updatedMessages = [
@@ -42,6 +40,7 @@ export const useChatSubmit = ({
         text: input
       })
     ] as ChatMessage[];
+    console.log("updatedMessages: ", updatedMessages);
     // send empty response to indicate to user that a reply is coming
     setMessages([
       ...updatedMessages,

@@ -23,22 +23,41 @@ export function Widget({
   >(undefined);
 
   async function handleWidgetClick() {
-    // identify user on widget transition to open
-    if (!widgetOpen) {
+    try {
+      setWidgetOpen(currentState => !currentState);
+
       const sessionId = await identifyVisitor(bot.id);
-      const lastConversation = await getLastConversation(sessionId);
-      if (lastConversation) {
-        setLastConversation(lastConversation);
+      // If widget is transitioning to open and there's no last conversation cached
+      if (!widgetOpen && !lastConversation) {
+        const fetchedLastConversation = await getLastConversation(sessionId);
+        if (fetchedLastConversation) {
+          setLastConversation(fetchedLastConversation);
+          return;
+        }
       }
-    } else {
-      // set the conversation as ended ..
-      if (lastConversation) {
-        fetch(`/api/conversation/${lastConversation.id}/end`, {
-          method: "POST"
-        }).catch(err => console.error(err));
+
+      if (widgetOpen && lastConversation) {
+        await endConversation(lastConversation.id);
+      } else if (!widgetOpen) {
+        // If widget is opening and no conversation was found initially
+        const fetchedLastConversation = await getLastConversation(sessionId);
+        if (fetchedLastConversation) {
+          await endConversation(fetchedLastConversation.id);
+        }
       }
+    } catch (err) {
+      console.error("Error handling widget click:", err);
     }
-    setWidgetOpen(!widgetOpen);
+  }
+
+  async function endConversation(conversationId: number) {
+    try {
+      await fetch(`/api/conversation/${conversationId}/end`, {
+        method: "POST"
+      });
+    } catch (err) {
+      console.error("Error ending conversation:", err);
+    }
   }
 
   return (

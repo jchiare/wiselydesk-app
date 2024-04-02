@@ -2,6 +2,7 @@
 import Agent from "@/components/chat/agent/index-widget";
 import User from "@/components/chat/user/index-widget";
 import type { ChatThemeSettings } from "@/lib/chat/chat-theme";
+import { formatDateTime } from "@/lib/shared/utils";
 import type { Bot, Conversation, Message } from "@prisma/client";
 
 type Props = {
@@ -52,11 +53,16 @@ export function PreviousMessages({
             createSupportTicket={createSupportTicket}
             bot={bot}
             isOverflowing={false}
+            isPreviousMessages={true}
           />
         );
       })}
       {lastConversation?.ended_at && (
-        <div>Conversation ended: {lastConversation.ended_at.toISOString()}</div>
+        <div className="w-full bg-gray-200 py-2 text-center">
+          <p className="text-sm italic text-gray-800">
+            Conversation ended: {formatDateTime(lastConversation.ended_at)}
+          </p>
+        </div>
       )}
     </>
   );

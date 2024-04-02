@@ -107,7 +107,7 @@ export default function Chat({
             aiResponseDone={aiResponseDone}
             isLastMessage={isLastMessage}
             latestMessageId={latestMessageId}
-            conversationId={conversationId}
+            conversationId={conversationId?.toString()}
             createSupportTicket={createSupportTicket}
             bot={bot}
           />

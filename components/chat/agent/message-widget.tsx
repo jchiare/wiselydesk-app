@@ -6,19 +6,22 @@ type AgentMessageProps = {
   aiResponseDone: boolean | undefined;
   text: string;
   isLastMessage: boolean;
+  isPreviousMessages?: boolean;
 };
 
 export default function AgentMessage({
   chatTheme,
   aiResponseDone,
   text,
-  isLastMessage
+  isLastMessage,
+  isPreviousMessages
 }: AgentMessageProps): JSX.Element {
   return (
     <p
       className={`${chatTheme.assistantMessageSetting.text} text-[90%]  ${
         !aiResponseDone &&
         isLastMessage &&
+        !isPreviousMessages &&
         `!last:after:mt-1 last:after:animate-assistant-message  last:after:bg-white last:after:text-white last:after:content-['▋']`
       }`}
       // @ts-expect-error some htmlthing
