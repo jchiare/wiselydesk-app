@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
 import Chat, { type SearchParams } from "@/components/chat/index-widget";
-import { identifyVisitor } from "@/lib/visitor/identify";
+import { identifyVisitor, getLastConversationId } from "@/lib/visitor/identify";
+
 import type { Bot } from "@prisma/client";
 import type { ChatThemeSettings } from "@/lib/chat/chat-theme";
-import prisma from "@/lib/prisma";
 
 export function Widget({
   clientApiKey,
@@ -19,21 +19,16 @@ export function Widget({
 }): JSX.Element {
   const [widgetOpen, setWidgetOpen] = useState(false);
   const [lastConversationId, setLastConversationId] = useState<
-    string | undefined
+    number | undefined
   >(undefined);
 
   async function handleWidgetClick() {
     // identify user on widget transition to open
     if (!widgetOpen) {
       const sessionId = await identifyVisitor(bot.id);
-
-      const lastConvoId = await prisma.conversation.findFirst({
-        where: { widgetSessionId: sessionId },
-        orderBy: { created_at: "desc" },
-        select: { id: true }
-      });
-      if (lastConvoId) {
-        setLastConversationId(lastConvoId.id.toString());
+      const lastConversationId = await getLastConversationId(sessionId);
+      if (lastConversationId) {
+        setLastConversationId(lastConversationId.id);
       }
     }
     setWidgetOpen(!widgetOpen);

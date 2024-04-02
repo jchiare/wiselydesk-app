@@ -11,7 +11,7 @@ type UseChatSubmitParams = {
   model: string | undefined;
   createSupportTicket: boolean;
   inlineSources: boolean;
-  lastConversationId?: string;
+  lastConversationId?: number;
 };
 
 export const useChatSubmit = ({
@@ -30,7 +30,7 @@ export const useChatSubmit = ({
     useState<string>("");
   const [sources, setSources] = useState<string[]>([]);
   const [latestMessageId, setLatestMessageId] = useState<number | null>();
-  const [conversationId, setConversationId] = useState<string | undefined>(
+  const [conversationId, setConversationId] = useState<number | undefined>(
     lastConversationId
   );
 

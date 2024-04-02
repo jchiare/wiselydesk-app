@@ -25,3 +25,17 @@ export async function identifyVisitor(botId: number) {
   }
   return visitorSessionId;
 }
+
+export async function getLastConversationId(sessionId: string) {
+  return await prisma.conversation.findFirst({
+    where: { widgetSessionId: sessionId },
+    orderBy: { created_at: "desc" },
+    select: { id: true }
+  });
+}
+
+export async function getMessagesFromConversationId(conversationId: number) {
+  return await prisma.message.findMany({
+    where: { conversation_id: conversationId }
+  });
+}
