@@ -2,7 +2,8 @@
 import { useState } from "react";
 import Chat, { type SearchParams } from "@/components/widget/chat";
 import { identifyVisitor, getLastConversation } from "@/lib/visitor/identify";
-
+import { useAtom } from "jotai";
+import { conversationIdAtom } from "@/lib/state/atoms";
 import type { Bot, Conversation } from "@prisma/client";
 import type { ChatThemeSettings } from "@/lib/chat/chat-theme";
 
@@ -21,12 +22,14 @@ export function Widget({
   const [lastConversation, setLastConversation] = useState<
     Conversation | undefined
   >(undefined);
+  const [conversationId, _] = useAtom(conversationIdAtom);
 
   async function handleWidgetClick() {
     try {
       setWidgetOpen(currentState => !currentState);
 
       const sessionId = await identifyVisitor(bot.id);
+
       // If widget is transitioning to open and there's no last conversation cached
       if (!widgetOpen && !lastConversation) {
         const fetchedLastConversation = await getLastConversation(sessionId);
@@ -36,14 +39,9 @@ export function Widget({
         }
       }
 
-      if (widgetOpen && lastConversation) {
-        await endConversation(lastConversation.id);
-      } else if (!widgetOpen) {
-        // If widget is opening and no conversation was found initially
-        const fetchedLastConversation = await getLastConversation(sessionId);
-        if (fetchedLastConversation) {
-          await endConversation(fetchedLastConversation.id);
-        }
+      if (widgetOpen && conversationId) {
+        await endConversation(conversationId);
+        setLastConversation(undefined);
       }
     } catch (err) {
       console.error("Error handling widget click:", err);

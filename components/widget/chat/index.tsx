@@ -6,7 +6,7 @@ import {
 import { welcomeReply } from "@/lib/shared/services/welcome-reply";
 import Agent from "@/components/chat/agent/index-widget";
 import User from "@/components/chat/user/index-widget";
-import { useChatSubmit } from "@/lib/chat/hooks/use-chat-submit";
+import { useChatSubmit } from "@/lib/chat/hooks/use-widget-chat-submit";
 import { useScrollToBottom } from "@/lib/chat/hooks/use-scroll-to-bottom";
 import Input from "@/components/chat/user/input-widget";
 import CancelResponse from "@/components/chat/cancel-response";
