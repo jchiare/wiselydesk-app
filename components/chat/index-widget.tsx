@@ -106,7 +106,6 @@ export default function Chat({
   const hasLastConversationMessages =
     lastConversationMessages && lastConversationMessages.length > 0;
 
-  console.log("lastConversationMessages: ", lastConversationMessages);
   return (
     <div
       ref={divRef}

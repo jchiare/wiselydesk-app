@@ -60,8 +60,10 @@ export function PreviousMessages({
       {lastConversation?.ended_at && (
         <div className="w-full bg-gray-200 py-2 text-center">
           <p className="text-sm italic text-gray-800">
-            Conversation ended: {formatDateTime(lastConversation.ended_at)}
+            Conversation automatically ended{" "}
+            {formatDateTime(lastConversation.ended_at)}
           </p>
+          <button>Click to continue conversation.</button>
         </div>
       )}
     </>
