@@ -10,10 +10,10 @@ import { useChatSubmit } from "@/lib/chat/hooks/use-chat-submit";
 import { useScrollToBottom } from "@/lib/chat/hooks/use-scroll-to-bottom";
 import Input from "@/components/chat/user/input-widget";
 import CancelResponse from "@/components/chat/cancel-response";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as Sentry from "@sentry/nextjs";
 import { getMessagesFromConversationId } from "@/lib/visitor/identify";
-import { PreviousMessages } from "@/components/widget/previous-messages";
+import { PreviousMessages } from "@/components/widget/chat/previous-messages";
 
 import type { Bot, Conversation, Message } from "@prisma/client";
 
@@ -45,6 +45,7 @@ export default function Chat({
   const [lastConversationMessages, setLastConversationMessages] = useState<
     Message[]
   >([]);
+  const [isOverflowing, setIsOverflowing] = useState(false);
 
   useEffect(() => {
     if (lastConversation) {
@@ -98,10 +99,22 @@ export default function Chat({
 
   const divRef = useRef<HTMLDivElement>(null);
 
-  let isOverflowing = false;
-  if (divRef.current) {
-    isOverflowing = divRef.current.scrollHeight > divRef.current.clientHeight;
+  function checkOverflow() {
+    if (divRef.current) {
+      const newOverflowing =
+        divRef.current.scrollHeight > divRef.current.clientHeight;
+      console.log("newOverflowing", newOverflowing, isOverflowing);
+      if (newOverflowing !== isOverflowing) {
+        setIsOverflowing(newOverflowing);
+      }
+    }
   }
+  useLayoutEffect(() => {
+    window.addEventListener("resize", checkOverflow);
+    checkOverflow(); // Initial check on mount
+
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, []); // Removed isOverflowing from dependencies to prevent re-running on state updates
 
   const hasLastConversationMessages =
     lastConversationMessages && lastConversationMessages.length > 0;

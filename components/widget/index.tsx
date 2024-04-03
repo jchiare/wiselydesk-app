@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import Chat, { type SearchParams } from "@/components/chat/index-widget";
+import Chat, { type SearchParams } from "@/components/widget/chat";
 import { identifyVisitor, getLastConversation } from "@/lib/visitor/identify";
 
 import type { Bot, Conversation } from "@prisma/client";
