@@ -59,11 +59,9 @@ export function PreviousMessages({
       })}
       {lastConversation?.ended_at && (
         <div className="w-full bg-gray-200 py-2 text-center">
-          <button className="text-sm italic text-gray-800">
+          <p className="text-sm italic text-gray-800">
             {`Chat ended ${formatDateTime(lastConversation.ended_at)}`}
-            <br />
-            Click here to resume or begin a new chat below
-          </button>
+          </p>
         </div>
       )}
     </>
