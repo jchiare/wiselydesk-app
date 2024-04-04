@@ -6,14 +6,14 @@ import {
 import { welcomeReply } from "@/lib/shared/services/welcome-reply";
 import Agent from "@/components/chat/agent/index-widget";
 import User from "@/components/chat/user/index-widget";
-import { useChatSubmit } from "@/lib/chat/hooks/use-chat-submit";
+import { useChatSubmit } from "@/lib/chat/hooks/use-widget-chat-submit";
 import { useScrollToBottom } from "@/lib/chat/hooks/use-scroll-to-bottom";
 import Input from "@/components/chat/user/input-widget";
 import CancelResponse from "@/components/chat/cancel-response";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import * as Sentry from "@sentry/nextjs";
 import { getMessagesFromConversationId } from "@/lib/visitor/identify";
-import { PreviousMessages } from "@/components/widget/previous-messages";
+import { PreviousMessages } from "@/components/widget/chat/previous-messages";
 
 import type { Bot, Conversation, Message } from "@prisma/client";
 
@@ -45,6 +45,7 @@ export default function Chat({
   const [lastConversationMessages, setLastConversationMessages] = useState<
     Message[]
   >([]);
+  const [isOverflowing, setIsOverflowing] = useState(false);
 
   useEffect(() => {
     if (lastConversation) {
@@ -53,6 +54,10 @@ export default function Chat({
       });
     }
   }, [lastConversation]);
+
+  useEffect(() => {
+    checkOverflow();
+  }, [lastConversationMessages]);
 
   const {
     locale = "en",
@@ -98,10 +103,21 @@ export default function Chat({
 
   const divRef = useRef<HTMLDivElement>(null);
 
-  let isOverflowing = false;
-  if (divRef.current) {
-    isOverflowing = divRef.current.scrollHeight > divRef.current.clientHeight;
+  function checkOverflow() {
+    if (divRef.current) {
+      const currentOverflowing =
+        divRef.current.scrollHeight > divRef.current.clientHeight;
+      if (currentOverflowing !== isOverflowing) {
+        setIsOverflowing(currentOverflowing);
+      }
+    }
   }
+  useLayoutEffect(() => {
+    window.addEventListener("resize", checkOverflow);
+    checkOverflow(); // Check overflow on mount and when window resizes.
+
+    return () => window.removeEventListener("resize", checkOverflow);
+  }, []); // Dependencies are not needed if they're not used in checkOverflow.
 
   const hasLastConversationMessages =
     lastConversationMessages && lastConversationMessages.length > 0;

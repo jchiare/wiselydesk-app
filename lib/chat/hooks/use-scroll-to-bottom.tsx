@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 type UseScrollToBottomProps = {
   messages: any[]; // Replace with your actual message type
@@ -20,8 +20,8 @@ export const useScrollToBottom = ({
     });
   }
 
-  useEffect(() => {
-    scrollToBottom(messagesEndRef);
+  useLayoutEffect(() => {
+    setTimeout(() => scrollToBottom(messagesEndRef), 100);
   }, [messages, sources, lastConversationMessages]);
 
   return messagesEndRef;
