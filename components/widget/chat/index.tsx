@@ -55,10 +55,14 @@ export default function Chat({
     }
   }, [lastConversation]);
 
+  useEffect(() => {
+    checkOverflow();
+  }, [lastConversationMessages]);
+
   const {
     locale = "en",
     create_support_ticket: createSupportTicket = true,
-    model = "gpt-4",
+    model = "gpt-3.5-turbo",
     inline_sources: inlineSources = false,
     testSupportModal = false
   } = searchParams;
@@ -101,20 +105,19 @@ export default function Chat({
 
   function checkOverflow() {
     if (divRef.current) {
-      const newOverflowing =
+      const currentOverflowing =
         divRef.current.scrollHeight > divRef.current.clientHeight;
-      console.log("newOverflowing", newOverflowing, isOverflowing);
-      if (newOverflowing !== isOverflowing) {
-        setIsOverflowing(newOverflowing);
+      if (currentOverflowing !== isOverflowing) {
+        setIsOverflowing(currentOverflowing);
       }
     }
   }
   useLayoutEffect(() => {
     window.addEventListener("resize", checkOverflow);
-    checkOverflow(); // Initial check on mount
+    checkOverflow(); // Check overflow on mount and when window resizes.
 
     return () => window.removeEventListener("resize", checkOverflow);
-  }, []); // Removed isOverflowing from dependencies to prevent re-running on state updates
+  }, []); // Dependencies are not needed if they're not used in checkOverflow.
 
   const hasLastConversationMessages =
     lastConversationMessages && lastConversationMessages.length > 0;
