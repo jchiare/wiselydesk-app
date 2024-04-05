@@ -45,12 +45,25 @@ export async function GET(request: NextRequest) {
     return Response.json({ result: "No Tickets found" }, { status: 200 });
   }
 
-  console.log(ticketSearchResults);
   const taggedTickets = await tagTickets(ticketSearchResults.results);
   if (taggedTickets.length === 0) {
     console.log("No tagged tickets");
     return new Response("No tagged tickets found", { status: 200 });
   }
+
+  await prisma.ticketTagging.createMany({
+    data: taggedTickets.map(ticket => ({
+      ticket_id: ticket.id,
+      tags: ticket.tags.join(", "),
+      ai_generated_tags: ticket.ai_generated_tags.join(", "),
+      zendesk_tags: ticket.zendesk_tags.join(", "),
+      ticket_description: ticket.ticket_description,
+      input_tokens: ticket.tokens.input_tokens,
+      output_tokens: ticket.tokens.output_tokens,
+      bot_id: bot.id,
+      zendesk_url: `https://${bot.zendesk_subdomain}.zendesk.com/agent/tickets/${ticket.id}`
+    }))
+  });
 
   return Response.json({ success: true });
 }

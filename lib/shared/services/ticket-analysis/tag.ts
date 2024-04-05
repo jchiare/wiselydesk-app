@@ -6,6 +6,8 @@ type TagTicketResponse = {
   id: number;
   tags: string[];
   ai_generated_tags: string[];
+  zendesk_tags: string[];
+  ticket_description: string;
   tokens: {
     input_tokens: number;
     output_tokens: number;
@@ -27,11 +29,14 @@ export async function tagTickets(
 
   for (const ticket of tickets) {
     const prefilled = '{"ai_generated_tags": [';
+    const ticketDescription = ticket.description
+      .replace(EMAIL_FORWARD_REGEX, "")
+      .replaceAll("\n", "");
     const content =
       "Here is the email subject: " +
       ticket.subject +
       "\nHere is the email body:\n" +
-      ticket.description.replace(EMAIL_FORWARD_REGEX, "");
+      ticketDescription;
     const message = await anthropic.messages.create({
       max_tokens: 100,
       system: TAG_AMBOSS_TICKETS,
@@ -57,12 +62,8 @@ export async function tagTickets(
       id: ticket.id,
       tags: responseText.tags,
       ai_generated_tags: responseText.ai_generated_tags,
-      tokens: { ...usage }
-    });
-    console.log({
-      id: ticket.id,
-      tags: responseText.tags,
-      ai_generated_tags: responseText.ai_generated_tags,
+      zendesk_tags: ticket.tags,
+      ticket_description: ticketDescription,
       tokens: { ...usage }
     });
     await new Promise(resolve => setTimeout(resolve, 500)); // rate limited by anthropic

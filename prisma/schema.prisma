@@ -235,29 +235,21 @@ model WidgetSession {
   @@map("widget_session")
 }
 
-model Tickets {
-  id          Int       @id @default(autoincrement())
-  bot_id      Int
-  ticket_id   String
-  zendesk_url String
-  created_at  DateTime  @default(now()) @db.DateTime(0)
-  updated_at  DateTime? @db.DateTime(0)
-
-  @@index([bot_id], name: "idx_widget_session_bot_id")
-  @@map("tickets")
-}
-
 model TicketTagging {
-  id                Int       @id @default(autoincrement())
-  ticket_id         Int
-  tag               String?
-  ai_generated_tags String?
-  zendesk_tags      String?
-  created_at        DateTime  @default(now()) @db.DateTime(0)
-  updated_at        DateTime? @db.DateTime(0)
-  input_tokens      Int
-  output_tokens     Int
-  other             Json?
+  id                 Int       @id @default(autoincrement())
+  ticket_id          Int
+  bot_id             Int
+  tags               String
+  zendesk_url        String
+  ticket_description String
+  ai_generated_tags  String?
+  zendesk_tags       String?
+  created_at         DateTime  @default(now()) @db.DateTime(0)
+  updated_at         DateTime? @db.DateTime(0)
+  input_tokens       Int
+  output_tokens      Int
+  other              Json?
 
+  @@unique([bot_id, ticket_id])
   @@map("ticket_tagging")
 }
