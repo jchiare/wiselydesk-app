@@ -1,5 +1,5 @@
 import { anthropic } from "@/lib/shared/services/anthropic";
-import { TAG_AMBOSS_TICKETS_SYSTEM_PROMPT } from "@/lib/chat/prompts/tag-category";
+import { TAG_AMBOSS_TICKETS_SYSTEM_PROMPT_FREE_ACCESS } from "@/lib/chat/prompts/tag-category";
 import type { BaseTicket } from "@/types/zendesk-ticket";
 
 export async function filterFreeAmbossTickets(
@@ -16,7 +16,7 @@ export async function filterFreeAmbossTickets(
       const content = ticket.subject + "\n\n" + ticket.description;
       const message = await anthropic.messages.create({
         max_tokens: 100,
-        system: TAG_AMBOSS_TICKETS_SYSTEM_PROMPT,
+        system: TAG_AMBOSS_TICKETS_SYSTEM_PROMPT_FREE_ACCESS,
         messages: [
           {
             role: "user",

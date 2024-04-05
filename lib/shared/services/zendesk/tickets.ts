@@ -4,7 +4,7 @@ export class SearchZendeskTickets {
   private zendeskSubdomain: string;
   private zendeskApiKey: string;
   private botId: string;
-  private freeAccessTag = "wiselydesk_free_access_requests_v1";
+  public freeAccessTag = "wiselydesk_free_access_requests_v1";
 
   constructor(zendeskSubdomain: string, zendeskApiKey: string, botId: string) {
     this.zendeskSubdomain = zendeskSubdomain;
@@ -16,6 +16,7 @@ export class SearchZendeskTickets {
     if (this.botId === "1") {
       return "jay.gch93+daspu@gmail.com/token";
     }
+    return "jay@wiselydesk.com/token";
     return process.env.NODE_ENV === "development"
       ? "jay.gch93+daspu@gmail.com/token"
       : "jay@wiselydesk.com/token";
@@ -28,10 +29,14 @@ export class SearchZendeskTickets {
   }
 
   public async fetchRecentlyCreatedTickets(
-    hours: number
+    hours: number,
+    queryEnding?: string
   ): Promise<ZendeskSearchAPIResponse> {
     const timeAgo = `${hours}hour`;
-    const query = `type:ticket created>${timeAgo} -tags:${this.freeAccessTag}`;
+    let query = `type:ticket created>${timeAgo}`;
+    if (queryEnding) {
+      query += ` ${queryEnding}`;
+    }
     return this.search(query);
   }
 

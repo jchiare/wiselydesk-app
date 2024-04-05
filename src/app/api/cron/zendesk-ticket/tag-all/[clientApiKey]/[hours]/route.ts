@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { filterFreeAmbossTickets } from "@/lib/shared/services/ticket-analysis";
+import { tagTickets } from "@/lib/shared/services/ticket-analysis/tag";
 import { SearchZendeskTickets } from "@/lib/shared/services/zendesk/tickets";
 import type { NextRequest } from "next/server";
 
@@ -13,8 +13,8 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const clientApiKey = request.nextUrl.pathname.split("/")[4];
-  const hours = request.nextUrl.pathname.split("/")[5];
+  const clientApiKey = request.nextUrl.pathname.split("/")[5];
+  const hours = request.nextUrl.pathname.split("/")[6];
   if (!clientApiKey || !hours) return new Response("Missing", { status: 400 });
 
   const bot = await prisma.bot.findFirst({
@@ -38,28 +38,32 @@ export async function GET(request: NextRequest) {
 
   const ticketSearchResults = await zendeskSearch.fetchRecentlyCreatedTickets(
     parseInt(hours, 10),
-    ` -tags:${zendeskSearch.freeAccessTag}`
+    "-tags:whats_app_en -description:Call from -tags:zopim_chat -ticket_form_id:360003125331 tags:amboss_en -subject:Call with"
   );
   if (ticketSearchResults.count === 0) {
     console.log("No Tickets found");
     return Response.json({ result: "No Tickets found" }, { status: 200 });
   }
 
-  const ticketIdsAboutFreeAccess = await filterFreeAmbossTickets(
-    ticketSearchResults.results
-  );
-  if (ticketIdsAboutFreeAccess.length === 0) {
-    console.log("No tickets about free access found");
-    return new Response("No tickets about that category", { status: 200 });
+  const taggedTickets = await tagTickets(ticketSearchResults.results);
+  if (taggedTickets.length === 0) {
+    console.log("No tagged tickets");
+    return new Response("No tagged tickets found", { status: 200 });
   }
 
-  const jobStatusUrls = await zendeskSearch.batchUpdateTicketsWithTags(
-    ticketIdsAboutFreeAccess
-  );
-  await zendeskSearch.ensureJobsComplete(jobStatusUrls);
+  await prisma.ticketTagging.createMany({
+    data: taggedTickets.map(ticket => ({
+      ticket_id: ticket.id,
+      tags: ticket.tags.join(", "),
+      ai_generated_tags: ticket.ai_generated_tags.join(", "),
+      zendesk_tags: ticket.zendesk_tags.join(", "),
+      ticket_description: ticket.ticket_description,
+      input_tokens: ticket.tokens.input_tokens,
+      output_tokens: ticket.tokens.output_tokens,
+      bot_id: bot.id,
+      zendesk_url: `https://${bot.zendesk_subdomain}.zendesk.com/agent/tickets/${ticket.id}`
+    }))
+  });
 
-  console.log(
-    `Successfully updated ${ticketIdsAboutFreeAccess.length} tickets with job status urls ${jobStatusUrls}`
-  );
-  return Response.json({ success: true, jobStatusUrls });
+  return Response.json({ success: true });
 }
