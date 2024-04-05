@@ -45,7 +45,6 @@ export class SearchZendeskTickets {
     const encodedQuery = encodeURIComponent(query);
     const url = `${zendeskApiUrl}?query=${encodedQuery}`;
 
-    console.log(url);
     const response = await fetch(url, {
       method: "GET",
       headers: {
