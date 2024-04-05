@@ -17,6 +17,9 @@ type AiResponse = {
   tags: string[];
 };
 
+const EMAIL_FORWARD_REGEX =
+  /On\s\w{1,3},\s\w{1,4}\s\d{1,2},\s20\d{2},\s\d{1,2}:\d{1,2}\s(AM|PM|am|pm)\sAMBOSS\s<.*>\swrote:.*/gs;
+
 export async function tagTickets(
   tickets: BaseTicket[]
 ): Promise<TagTicketResponse[]> {
@@ -28,7 +31,7 @@ export async function tagTickets(
       "Here is the email subject: " +
       ticket.subject +
       "\nHere is the email body:\n" +
-      ticket.description;
+      ticket.description.replace(EMAIL_FORWARD_REGEX, "");
     const message = await anthropic.messages.create({
       max_tokens: 100,
       system: TAG_AMBOSS_TICKETS,
