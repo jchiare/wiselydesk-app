@@ -37,7 +37,8 @@ export async function GET(request: NextRequest) {
   );
 
   const ticketSearchResults = await zendeskSearch.fetchRecentlyCreatedTickets(
-    parseInt(hours, 10)
+    parseInt(hours, 10),
+    ` -tags:${zendeskSearch.freeAccessTag}`
   );
   if (ticketSearchResults.count === 0) {
     console.log("No Tickets found");
