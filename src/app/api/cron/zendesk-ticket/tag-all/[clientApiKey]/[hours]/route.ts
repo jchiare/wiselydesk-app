@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
 
   const ticketSearchResults = await zendeskSearch.fetchRecentlyCreatedTickets(
     parseInt(hours, 10),
-    "-tags:whats_app_en -tags:zopim_chat -ticket_form_id:360003125331 tags:amboss_en -subject:Call with"
+    "-tags:whats_app_en -description:Call from -tags:zopim_chat -ticket_form_id:360003125331 tags:amboss_en -subject:Call with"
   );
   if (ticketSearchResults.count === 0) {
     console.log("No Tickets found");

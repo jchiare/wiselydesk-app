@@ -20,7 +20,9 @@ type AiResponse = {
 };
 
 const EMAIL_FORWARD_REGEX =
-  /On\s\w{1,3},\s\w{1,4}\s\d{1,2},\s20\d{2},\s\d{1,2}:\d{1,2}\s(AM|PM|am|pm)\sAMBOSS\s<.*>\swrote:.*/gs;
+  /(On.*<.*@.*amboss\.com>\s+wrote:|From:.*<.*@.*amboss\.com>\s+Sent:).*/gs;
+const UNSUBSCRIBE_REGEX = /unsubscribe\s+here.*/gis;
+const URL_REGEX = /\(http.*\)/g;
 
 export async function tagTickets(
   tickets: BaseTicket[]
@@ -30,7 +32,9 @@ export async function tagTickets(
   for (const ticket of tickets) {
     const prefilled = '{"ai_generated_tags": [';
     const ticketDescription = ticket.description
-      .replace(EMAIL_FORWARD_REGEX, "")
+      .replace(EMAIL_FORWARD_REGEX, " <forwarded_email_stripped>")
+      .replace(UNSUBSCRIBE_REGEX, "")
+      .replace(URL_REGEX, "")
       .replaceAll("\n", "");
     const content =
       "Here is the email subject: " +
