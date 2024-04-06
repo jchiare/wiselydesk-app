@@ -2,7 +2,8 @@
 import SideNavDisclosure from "@/components/web/side-nav-disclosure";
 import {
   ChatBubbleBottomCenterTextIcon,
-  ChartBarSquareIcon
+  ChartBarSquareIcon,
+  TagIcon
 } from "@heroicons/react/24/outline";
 import { concatClassNames } from "@/lib/shared/utils";
 import Link from "next/link";
@@ -20,6 +21,11 @@ const createNavigation = (botId: string) => [
     name: "Conversations",
     icon: ChatBubbleBottomCenterTextIcon,
     href: `/bot/${botId}/conversations/all`
+  },
+  {
+    name: "Ticket Tags",
+    icon: TagIcon,
+    href: `/bot/${botId}/tickets`
   },
   {
     name: "Analytics",
@@ -101,6 +107,8 @@ function findCurrentItem(
       if (matchingChild) {
         return matchingChild;
       }
+    } else if (thirdPathSegment === "tickets" && item.name === "Ticket Tags") {
+      return item;
     } else if (
       thirdPathSegment?.includes(item.name.toLowerCase().slice(0, -1))
     ) {
