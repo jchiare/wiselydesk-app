@@ -2,7 +2,6 @@ type UserSummary = {
   name: string;
   email: string;
   locale: string;
-  role: string;
   education: string;
   examCategory: string;
   examType: string;

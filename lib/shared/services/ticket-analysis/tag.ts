@@ -8,6 +8,7 @@ type TagTicketResponse = {
   ai_generated_tags: string[];
   zendesk_tags: string[];
   ticket_description: string;
+  user_tags: string[];
   tokens: {
     input_tokens: number;
     output_tokens: number;
@@ -17,6 +18,7 @@ type TagTicketResponse = {
 type AiResponse = {
   ai_generated_tags: string[];
   tags: string[];
+  user_tags: string[];
 };
 
 const EMAIL_FORWARD_REGEX =
@@ -43,6 +45,9 @@ export async function tagTickets(
       ticket.subject +
       "\nHere is the email body:\n" +
       ticketDescription;
+
+    console.log(JSON.stringify(ticket.userSummary));
+
     const message = await anthropic.messages.create({
       max_tokens: 100,
       system: TAG_AMBOSS_TICKETS,
@@ -68,7 +73,17 @@ export async function tagTickets(
       id: ticket.id,
       tags: responseText.tags,
       ai_generated_tags: responseText.ai_generated_tags,
+      user_tags: responseText.user_tags,
       zendesk_tags: ticket.tags,
+      ticket_description: ticketDescription,
+      tokens: { ...usage }
+    });
+    console.log({
+      id: ticket.id,
+      tags: responseText.tags,
+      ai_generated_tags: responseText.ai_generated_tags,
+      zendesk_tags: ticket.tags,
+      user_tags: responseText.user_tags,
       ticket_description: ticketDescription,
       tokens: { ...usage }
     });
