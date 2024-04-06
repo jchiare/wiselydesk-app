@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { filterFreeAmbossTickets } from "@/lib/shared/services/ticket-analysis";
-import { SearchZendeskTickets } from "@/lib/shared/services/zendesk/tickets";
+import { ZendeskApi } from "@/lib/shared/services/zendesk";
 import type { NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     return new Response("Missing zk", { status: 400 });
   }
 
-  const zendeskSearch = new SearchZendeskTickets(
+  const zendeskSearch = new ZendeskApi(
     bot.zendesk_subdomain,
     bot.zendesk_api_key,
     bot.id.toString()

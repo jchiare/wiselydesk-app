@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { tagTickets } from "@/lib/shared/services/ticket-analysis/tag";
-import { SearchZendeskTickets } from "@/lib/shared/services/zendesk/tickets";
+import { ZendeskApi } from "@/lib/shared/services/zendesk";
 import type { NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -30,19 +30,40 @@ export async function GET(request: NextRequest) {
     return new Response("Missing zk", { status: 400 });
   }
 
-  const zendeskSearch = new SearchZendeskTickets(
+  const zendeskApiClient = new ZendeskApi(
     bot.zendesk_subdomain,
     bot.zendesk_api_key,
     bot.id.toString()
   );
 
-  const ticketSearchResults = await zendeskSearch.fetchRecentlyCreatedTickets(
-    parseInt(hours, 10),
-    "-tags:whats_app_en -description:Call from -tags:zopim_chat -ticket_form_id:360003125331 tags:amboss_en -subject:Call with"
-  );
+  const ticketSearchResults =
+    await zendeskApiClient.fetchRecentlyCreatedTickets(
+      parseInt(hours, 10),
+      "-tags:whats_app_en -description:Call from -tags:zopim_chat -ticket_form_id:360003125331 tags:amboss_en -subject:Call with"
+    );
   if (ticketSearchResults.count === 0) {
     console.log("No Tickets found");
     return Response.json({ result: "No Tickets found" }, { status: 200 });
+  }
+
+  const tickets = ticketSearchResults.results;
+
+  const userIds = tickets.map(ticket => ticket.requester_id);
+  const { users } = await zendeskApiClient.fetchManyUserDetails(userIds);
+
+  for (const ticket of tickets) {
+    const user = users.find(user => user.id === ticket.requester_id);
+    if (!user) continue;
+    ticket.userSummary = {
+      name: user.name,
+      email: user.email,
+      locale: user.locale,
+      role: user.role,
+      education: user.user_fields.university_en_,
+      examCategory: user.user_fields.next_exam_category_en_,
+      examType: user.user_fields.next_exam_type_en_,
+      studyObjective: user.user_fields.study_objective_en_
+    };
   }
 
   const taggedTickets = await tagTickets(ticketSearchResults.results);

@@ -37,6 +37,8 @@ export async function tagTickets(
       .replace(URL_REGEX, "")
       .replaceAll("\n", "");
     const content =
+      "Here is the customers information: \n" +
+      JSON.stringify(ticket.userSummary) +
       "Here is the email subject: " +
       ticket.subject +
       "\nHere is the email body:\n" +

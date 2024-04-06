@@ -1,4 +1,16 @@
+type UserSummary = {
+  name: string;
+  email: string;
+  locale: string;
+  role: string;
+  education: string;
+  examCategory: string;
+  examType: string;
+  studyObjective: string;
+};
+
 export type BaseTicket = {
+  userSummary: UserSummary;
   url: string;
   id: number;
   external_id: null | string;
