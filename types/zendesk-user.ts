@@ -1,27 +1,27 @@
 export interface UserFields {
-  country_de_?: string | null;
-  country_en_: string;
-  current_access_class_de_?: string | null;
-  current_access_class_en_: string;
-  ig_followers?: number | null;
+  country_de_?: string;
+  country_en_?: string;
+  current_access_class_de_?: string;
+  current_access_class_en_?: string;
+  ig_followers?: number;
   ig_verified: boolean;
   last_active_platform: string;
-  lldata_tickler?: string | null;
-  next_exam_category_en_: string;
-  next_exam_type_en_: string;
-  occupation_de_?: string | null;
-  occupation_en_?: string | null;
-  profession_de_?: string | null;
-  profession_en_: string;
-  quickie_user_settings?: string | null;
-  speciality_de_?: string | null;
-  speciality_en_?: string | null;
-  study_objective_de_?: string | null;
+  lldata_tickler?: string;
+  next_exam_category_en_?: string;
+  next_exam_type_en_?: string;
+  occupation_de_?: string;
+  occupation_en_?: string;
+  profession_de_?: string;
+  profession_en_?: string;
+  quickie_user_settings?: string;
+  speciality_de_?: string;
+  speciality_en_?: string;
+  study_objective_de_?: string;
   study_objective_en_: string;
-  target_group_de_?: string | null;
-  target_group_en_: string;
-  university_de_?: string | null;
-  university_en_: string;
+  target_group_de_?: string;
+  target_group_en_?: string;
+  university_de_?: string;
+  university_en_?: string;
 }
 
 interface User {

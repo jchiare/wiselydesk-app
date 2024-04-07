@@ -1,11 +1,11 @@
 type UserSummary = {
-  name: string;
-  email: string;
-  locale: string;
-  education: string;
-  examCategory: string;
-  examType: string;
-  studyObjective: string;
+  locale?: string;
+  education?: string;
+  examCategory?: string;
+  examType?: string;
+  current_access?: string;
+  studyObjective?: string;
+  profession?: string;
 };
 
 export type BaseTicket = {

@@ -48,22 +48,28 @@ export async function GET(request: NextRequest) {
 
   const tickets = ticketSearchResults.results;
 
-  // const userIds = tickets.map(ticket => ticket.requester_id);
-  // const { users } = await zendeskApiClient.fetchManyUserDetails(userIds);
+  const userIds = tickets.map(ticket => ticket.requester_id);
+  const { users } = await zendeskApiClient.fetchManyUserDetails(userIds);
 
-  // for (const ticket of tickets) {
-  //   const user = users.find(user => user.id === ticket.requester_id);
-  //   if (!user) continue;
-  //   ticket.userSummary = {
-  //     name: user.name,
-  //     email: user.email,
-  //     locale: user.locale,
-  //     education: user.user_fields.university_en_,
-  //     examCategory: user.user_fields.next_exam_category_en_,
-  //     examType: user.user_fields.next_exam_type_en_,
-  //     studyObjective: user.user_fields.study_objective_en_
-  //   };
-  // }
+  for (const ticket of tickets) {
+    const user = users.find(user => user.id === ticket.requester_id);
+    if (!user) continue;
+    ticket.userSummary = {
+      locale: user.locale,
+      profession:
+        user.user_fields.profession_en_ || user.user_fields.profession_de_,
+      current_access:
+        user.user_fields.current_access_class_en_ ||
+        user.user_fields.current_access_class_de_,
+      education:
+        user.user_fields.university_en_ || user.user_fields.university_de_,
+      examCategory: user.user_fields.next_exam_category_en_,
+      examType: user.user_fields.next_exam_type_en_,
+      studyObjective:
+        user.user_fields.study_objective_en_ ||
+        user.user_fields.study_objective_de_
+    };
+  }
 
   const taggedTickets = await tagTickets(tickets);
   if (taggedTickets.length === 0) {
