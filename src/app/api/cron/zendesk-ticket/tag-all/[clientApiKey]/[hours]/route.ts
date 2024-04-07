@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
   const ticketSearchResults =
     await zendeskApiClient.fetchRecentlyCreatedTickets(
       parseInt(hours, 10),
-      "-tags:whats_app_en -description:Call from -tags:zopim_chat -ticket_form_id:360003125331 tags:amboss_en -subject:Call with"
+      "-tags:wiselydesk -tags:whats_app_en -description:Call from -tags:zopim_chat -ticket_form_id:360003125331 -subject:Call with"
     );
   if (ticketSearchResults.count === 0) {
     console.log("No Tickets found");
@@ -86,7 +86,7 @@ export async function GET(request: NextRequest) {
       ticket_description: ticket.ticket_description,
       input_tokens: ticket.tokens.input_tokens,
       output_tokens: ticket.tokens.output_tokens,
-      bot_id: bot.id,
+      bot_id: ticket.bot_id,
       zendesk_url: `https://${bot.zendesk_subdomain}.zendesk.com/agent/tickets/${ticket.id}`
     }))
   });

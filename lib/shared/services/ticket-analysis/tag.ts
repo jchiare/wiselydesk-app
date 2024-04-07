@@ -9,6 +9,7 @@ type TagTicketResponse = {
   zendesk_tags: string[];
   ticket_description: string;
   user_tags: string[];
+  bot_id: number;
   tokens: {
     input_tokens: number;
     output_tokens: number;
@@ -38,6 +39,7 @@ export async function tagTickets(
       .replace(UNSUBSCRIBE_REGEX, "")
       .replace(URL_REGEX, "")
       .replaceAll("\n", "");
+
     const content =
       "Here is the customers information: \n" +
       JSON.stringify(ticket.userSummary) +
@@ -45,8 +47,6 @@ export async function tagTickets(
       ticket.subject +
       "\nHere is the email body:\n" +
       ticketDescription;
-
-    console.log(JSON.stringify(ticket.userSummary));
 
     const message = await anthropic.messages.create({
       max_tokens: 100,
@@ -76,6 +76,7 @@ export async function tagTickets(
       user_tags: responseText.user_tags,
       zendesk_tags: ticket.tags,
       ticket_description: ticketDescription,
+      bot_id: ticket.tags.includes("amboss_en") ? 3 : 4,
       tokens: { ...usage }
     });
     console.log({
