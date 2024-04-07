@@ -41,7 +41,7 @@ export async function tagTickets(
       .replaceAll("\n", "");
 
     const content =
-      "Here is the customers information: \n" +
+      "Here is the customer's information: \n" +
       JSON.stringify(ticket.userSummary) +
       "Here is the email subject: " +
       ticket.subject +
