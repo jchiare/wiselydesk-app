@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { tagTickets } from "@/lib/shared/services/ticket-analysis/tag";
-import { SearchZendeskTickets } from "@/lib/shared/services/zendesk/tickets";
+import { ZendeskApi } from "@/lib/shared/services/zendesk";
 import type { NextRequest } from "next/server";
 
 export const dynamic = "force-dynamic";
@@ -30,22 +30,48 @@ export async function GET(request: NextRequest) {
     return new Response("Missing zk", { status: 400 });
   }
 
-  const zendeskSearch = new SearchZendeskTickets(
+  const zendeskApiClient = new ZendeskApi(
     bot.zendesk_subdomain,
     bot.zendesk_api_key,
     bot.id.toString()
   );
 
-  const ticketSearchResults = await zendeskSearch.fetchRecentlyCreatedTickets(
-    parseInt(hours, 10),
-    "-tags:whats_app_en -description:Call from -tags:zopim_chat -ticket_form_id:360003125331 tags:amboss_en -subject:Call with"
-  );
+  const ticketSearchResults =
+    await zendeskApiClient.fetchRecentlyCreatedTickets(
+      parseInt(hours, 10),
+      "-tags:wiselydesk -tags:whats_app_en -description:Call from -tags:zopim_chat -ticket_form_id:360003125331 -subject:Call with"
+    );
   if (ticketSearchResults.count === 0) {
     console.log("No Tickets found");
     return Response.json({ result: "No Tickets found" }, { status: 200 });
   }
 
-  const taggedTickets = await tagTickets(ticketSearchResults.results);
+  const tickets = ticketSearchResults.results;
+
+  const userIds = tickets.map(ticket => ticket.requester_id);
+  const { users } = await zendeskApiClient.fetchManyUserDetails(userIds);
+
+  for (const ticket of tickets) {
+    const user = users.find(user => user.id === ticket.requester_id);
+    if (!user) continue;
+    ticket.userSummary = {
+      locale: user.locale,
+      profession:
+        user.user_fields.profession_en_ || user.user_fields.profession_de_,
+      current_access:
+        user.user_fields.current_access_class_en_ ||
+        user.user_fields.current_access_class_de_,
+      education:
+        user.user_fields.university_en_ || user.user_fields.university_de_,
+      examCategory: user.user_fields.next_exam_category_en_,
+      examType: user.user_fields.next_exam_type_en_,
+      studyObjective:
+        user.user_fields.study_objective_en_ ||
+        user.user_fields.study_objective_de_
+    };
+  }
+
+  const taggedTickets = await tagTickets(tickets);
   if (taggedTickets.length === 0) {
     console.log("No tagged tickets");
     return new Response("No tagged tickets found", { status: 200 });
@@ -60,9 +86,10 @@ export async function GET(request: NextRequest) {
       ticket_description: ticket.ticket_description,
       input_tokens: ticket.tokens.input_tokens,
       output_tokens: ticket.tokens.output_tokens,
-      bot_id: bot.id,
+      bot_id: ticket.bot_id,
       zendesk_url: `https://${bot.zendesk_subdomain}.zendesk.com/agent/tickets/${ticket.id}`
-    }))
+    })),
+    skipDuplicates: true
   });
 
   return Response.json({ success: true });

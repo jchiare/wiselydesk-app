@@ -8,6 +8,8 @@ type TagTicketResponse = {
   ai_generated_tags: string[];
   zendesk_tags: string[];
   ticket_description: string;
+  user_tags: string[];
+  bot_id: number;
   tokens: {
     input_tokens: number;
     output_tokens: number;
@@ -17,6 +19,7 @@ type TagTicketResponse = {
 type AiResponse = {
   ai_generated_tags: string[];
   tags: string[];
+  user_tags: string[];
 };
 
 const EMAIL_FORWARD_REGEX =
@@ -36,11 +39,15 @@ export async function tagTickets(
       .replace(UNSUBSCRIBE_REGEX, "")
       .replace(URL_REGEX, "")
       .replaceAll("\n", "");
+
     const content =
+      "Here is the customer's information: \n" +
+      JSON.stringify(ticket.userSummary) +
       "Here is the email subject: " +
       ticket.subject +
       "\nHere is the email body:\n" +
       ticketDescription;
+
     const message = await anthropic.messages.create({
       max_tokens: 100,
       system: TAG_AMBOSS_TICKETS,
@@ -66,10 +73,13 @@ export async function tagTickets(
       id: ticket.id,
       tags: responseText.tags,
       ai_generated_tags: responseText.ai_generated_tags,
+      user_tags: responseText.user_tags,
       zendesk_tags: ticket.tags,
       ticket_description: ticketDescription,
+      bot_id: ticket.tags.includes("amboss_en") ? 3 : 4,
       tokens: { ...usage }
     });
+
     await new Promise(resolve => setTimeout(resolve, 500)); // rate limited by anthropic
   }
   return taggedTickets;

@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import useRefreshPage from "@/lib/web/use-refresh-page";
 import type { ConversationDTO } from "@/src/app/api/bot/[id]/conversations/route";
 
-function truncateSummary(summary: string | null, truncateLength = 115): string {
+export function truncateSummary(
+  summary: string | null,
+  truncateLength = 115
+): string {
   if (!summary) return "";
   return summary.length > truncateLength
     ? `${summary.slice(0, truncateLength)}...`

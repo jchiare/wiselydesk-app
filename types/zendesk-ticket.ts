@@ -1,4 +1,15 @@
+type UserSummary = {
+  locale?: string;
+  education?: string;
+  examCategory?: string;
+  examType?: string;
+  current_access?: string;
+  studyObjective?: string;
+  profession?: string;
+};
+
 export type BaseTicket = {
+  userSummary: UserSummary;
   url: string;
   id: number;
   external_id: null | string;

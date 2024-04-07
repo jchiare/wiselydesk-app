@@ -1,6 +1,7 @@
 import type { ZendeskSearchAPIResponse } from "@/types/zendesk-search";
+import type { ZendeskUserDetails } from "@/types/zendesk-user";
 
-export class SearchZendeskTickets {
+export class ZendeskApi {
   private zendeskSubdomain: string;
   private zendeskApiKey: string;
   private botId: string;
@@ -123,5 +124,27 @@ export class SearchZendeskTickets {
           });
       }
     }
+  }
+  public async fetchManyUserDetails(
+    userIds: number[]
+  ): Promise<ZendeskUserDetails> {
+    const url = `https://${
+      this.zendeskSubdomain
+    }.zendesk.com/api/v2/users/show_many.json?ids=${userIds.join(",")}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: this.getAuthHeader(),
+        "Content-Type": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch user details for user IDs: ${userIds}`);
+    }
+
+    const data = await response.json();
+    return data as ZendeskUserDetails;
   }
 }
