@@ -79,15 +79,7 @@ export async function tagTickets(
       bot_id: ticket.tags.includes("amboss_en") ? 3 : 4,
       tokens: { ...usage }
     });
-    console.log({
-      id: ticket.id,
-      tags: responseText.tags,
-      ai_generated_tags: responseText.ai_generated_tags,
-      zendesk_tags: ticket.tags,
-      user_tags: responseText.user_tags,
-      ticket_description: ticketDescription,
-      tokens: { ...usage }
-    });
+
     await new Promise(resolve => setTimeout(resolve, 500)); // rate limited by anthropic
   }
   return taggedTickets;

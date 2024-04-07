@@ -88,7 +88,8 @@ export async function GET(request: NextRequest) {
       output_tokens: ticket.tokens.output_tokens,
       bot_id: ticket.bot_id,
       zendesk_url: `https://${bot.zendesk_subdomain}.zendesk.com/agent/tickets/${ticket.id}`
-    }))
+    })),
+    skipDuplicates: true
   });
 
   return Response.json({ success: true });
