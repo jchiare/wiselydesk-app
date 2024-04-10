@@ -22,6 +22,7 @@
     "@prisma/client": "^5.11.0",
     "@radix-ui/react-select": "^2.0.0",
     "@sentry/nextjs": "^7.105.0",
+    "@tanstack/react-table": "^8.15.3",
     "@types/chart.js": "^2.9.41",
     "chart.js": "^4.4.1",
     "class-variance-authority": "^0.7.0",

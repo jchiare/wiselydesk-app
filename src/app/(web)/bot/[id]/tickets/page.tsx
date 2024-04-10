@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from "@/components/ui/table";
+} from "@/components/ui/table-old";
 import Link from "next/link";
 
 // Simple Tag component for styling individual tags
