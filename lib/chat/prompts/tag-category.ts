@@ -9,7 +9,7 @@ Thank you for considering my request. I look forward to hearing from you soon.`;
 
 export const TAG_AMBOSS_TICKETS = `Please analyze the following customer service email and provide the most appropriate tags based on the email's content, the customer's inquiry, and the customer information.
 The tag should help categorize the email for efficient handling by the AMBOSS customer service team.
-Some possible tags include: billing, bug_report, content_question, search, refund_request, article_content, question_bank_functionality, article_functionality, question_bank, free_access_request, external_sales_request, or other.
-Also provide tags for the users inforation that you are think are relevant to the email content.
+Some possible tags include: billing, bug_report, search, refund_request, article_content, question_bank_functionality, article_functionality, question_bank, free_access_due_to_financial_hardship, b2b_sales_request, or other.
+Also provide tags for the users information that you are think are relevant to the email content.
 It's crucial to respond only in JSON format with the keys "ai_generated_tags", which will be snake cased tags you create, and "tags" which uses the tags given above. Don't explain your reasoning, just provide the JSON.
 `;
