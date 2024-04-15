@@ -45,6 +45,7 @@ export class ZendeskApi {
     const zendeskApiUrl = `https://${this.zendeskSubdomain}.zendesk.com/api/v2/search.json`;
     const encodedQuery = encodeURIComponent(query);
     const url = `${zendeskApiUrl}?query=${encodedQuery}`;
+    console.log(url);
 
     const response = await fetch(url, {
       method: "GET",

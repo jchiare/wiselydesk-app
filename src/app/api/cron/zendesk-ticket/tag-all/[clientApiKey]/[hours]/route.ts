@@ -39,12 +39,14 @@ export async function GET(request: NextRequest) {
   const ticketSearchResults =
     await zendeskApiClient.fetchRecentlyCreatedTickets(
       parseInt(hours, 10),
-      "-tags:wiselydesk -tags:whats_app_en -description:Call from -tags:zopim_chat -ticket_form_id:360003125331 -subject:Call with"
+      `-tags:wiselydesk -tags:whats_app_en -tags:"delighted-promoter-score*" -description:"Call from" -tags:zopim_chat -ticket_form_id:360003125331 -subject:"Call with"`
     );
   if (ticketSearchResults.count === 0) {
     console.log("No Tickets found");
     return Response.json({ result: "No Tickets found" }, { status: 200 });
   }
+
+  console.log(`Will tag ${ticketSearchResults.count} tickets`);
 
   const tickets = ticketSearchResults.results;
 
@@ -77,7 +79,9 @@ export async function GET(request: NextRequest) {
     return new Response("No tagged tickets found", { status: 200 });
   }
 
-  await prisma.ticketTagging.createMany({
+  console.log(`Tagged ${taggedTickets.length} tickets`);
+
+  const res = await prisma.ticketTagging.createMany({
     data: taggedTickets.map(ticket => ({
       ticket_id: ticket.id,
       tags: ticket.tags.join(", "),
@@ -91,6 +95,8 @@ export async function GET(request: NextRequest) {
     })),
     skipDuplicates: true
   });
+
+  console.log(res);
 
   return Response.json({ success: true });
 }
