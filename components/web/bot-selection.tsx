@@ -5,12 +5,17 @@ import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 import { useRouter } from "next/navigation";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
 import type { Bot } from "@prisma/client";
+import { useLocalStorage } from "@/lib/chat/hooks/use-local-storage";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function BotSelection({ bots }: { bots: Bot[] }) {
+  const [botLocalStorage, setBotLocalStorage] = useLocalStorage<Bot | null>(
+    "lastChosenBot",
+    null
+  );
   const router = useRouter();
   const { changeBotById, getBotId } = useCustomQueryString();
 
@@ -24,20 +29,24 @@ export default function BotSelection({ bots }: { bots: Bot[] }) {
     (bot: Bot) => {
       const newPath = changeBotById(bot.id);
       router.push(newPath);
+      setBotLocalStorage(bot);
     },
-    [changeBotById, router]
+    [changeBotById, router, setBotLocalStorage]
   );
 
   useEffect(() => {
     const botId = getBotId();
     const bot = bots.find(bot => bot.id.toString() === botId);
     if (!bot) {
-      changeSelectedBot(bots[0]);
+      console.log("No bots? chosing first one");
+      changeSelectedBot(botLocalStorage || bots[0]);
     } else {
+      console.log("found bot", bot.name);
       changeSelectedBot(bot);
     }
   }, [bots, changeSelectedBot, getBotId]);
 
+  console.log("bot", botLocalStorage, bot);
   return (
     <Listbox value={bot} onChange={changeSelectedBot}>
       {({ open }) => (
