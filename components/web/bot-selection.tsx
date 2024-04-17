@@ -38,10 +38,8 @@ export default function BotSelection({ bots }: { bots: Bot[] }) {
     const botId = getBotId();
     const bot = bots.find(bot => bot.id.toString() === botId);
     if (!bot) {
-      console.log("No bots? chosing first one");
       changeSelectedBot(botLocalStorage || bots[0]);
     } else {
-      console.log("found bot", bot.name);
       changeSelectedBot(bot);
     }
   }, [bots, changeSelectedBot, getBotId]);
