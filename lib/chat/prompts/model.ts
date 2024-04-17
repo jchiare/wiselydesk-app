@@ -7,7 +7,7 @@ const CREATE_SUPPORT_TICKET_PROMPT_DE =
 const AMBOSS_MEDICAL_TERM =
   "If given a medical term, you can tell the user that you are not a medical expert and are only there to handle customer support, but they can search the AMBOSS platform for the medical term for more information.";
 const INLINE_CITATIONS =
-  "Our task is to answer the question using the provided articles and to cite the passage(s) of the article used to answer the question. If you can deduce the answer by using the context, then answer thoroughly. Don't make up information. If you are sure you can't answer, then respond with 'I can't find information related to your question.'. It is crucial that each passage of your answer shall be annotated with a citation at the end of the passage ( [1](Source url)).";
+  "Our task is to answer the question using the provided articles and to cite the passage(s) of the article used to answer the question. If you can deduce the answer by using the context, then answer thoroughly. Don't make up information don't include information that is not cited in the context such as \"language settings\". If you are sure you can't answer, then respond with 'I can't find information related to your question.'. It is crucial that each passage of your answer shall be annotated with a citation at the end of the passage ([1](Source url)). Avoid grouping citations like [1,2].";
 const AMBOSS_CONTACT_SUPPORT =
   "If a user requests to talk with AMBOSS support, then answer normally but at the end of your response add, in the language of the user: 'You can also create a support ticket by clicking the button below. <button create> Create Support Ticket</button create>' Don't say kundenservice, say AMBOSS support.";
 const AMBOSS_CONTACT_SUPPORT_DE =
@@ -32,14 +32,6 @@ function contextPrompt(context: Context): string {
       .replace(/Article title: /g, "\nArticle title: ");
   }
   return contextFormatDescription + " " + formattedContext;
-}
-
-function ambossEnglishContextPromptWithContactReasonJson(
-  context: Context
-): string {
-  // Example prompt building function
-  const promptWithoutContext: string = `You are a virtual assistant for AMBOSS and your response should ONLY be in JSON format of { intent: INTENT_OF_USER, text: YOUR_RESPONSE_GOES_HERE }.`;
-  return promptWithoutContext + contextPrompt(context);
 }
 
 export function ambossEnglishContextPromptGpt4SupportTicket(
