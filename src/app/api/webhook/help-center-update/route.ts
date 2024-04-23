@@ -72,7 +72,10 @@ export async function POST(req: Request) {
     );
   } catch (error) {
     console.error("Error processing webhook:", error);
-    return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    return Response.json(
+      { error: `Internal Server Error with error ${JSON.stringify(error)}` },
+      { status: 500 }
+    );
   }
 }
 
