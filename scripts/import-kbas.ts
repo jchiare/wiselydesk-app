@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { parseArgs } from "node:util";
 import { ZendeskKbaImporter } from "@/lib/shared/services/zendesk/kba-import";
 

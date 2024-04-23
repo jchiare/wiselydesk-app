@@ -128,7 +128,6 @@ export class ZendeskKbaImporter {
     });
 
     if (!existingArticle) {
-      console.log(`KBA ${kba.id} not found in DB`);
       return true;
     }
 
@@ -136,17 +135,6 @@ export class ZendeskKbaImporter {
     const lastUpdated = existingArticle.updated_at
       ? new Date(existingArticle.updated_at)
       : new Date(existingArticle.created_at);
-
-    console.log(
-      "KBA updated at: ",
-      kbaUpdatedAt,
-      " Last updated at: ",
-      lastUpdated,
-      " for KBA: ",
-      kba.id,
-      " true or false: ",
-      kbaUpdatedAt > lastUpdated
-    );
 
     return kbaUpdatedAt > lastUpdated;
   }
