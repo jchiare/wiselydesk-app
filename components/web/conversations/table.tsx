@@ -3,7 +3,7 @@ import { formatDateTime } from "@/lib/shared/utils";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
 import { useRouter } from "next/navigation";
 import useRefreshPage from "@/lib/web/use-refresh-page";
-import type { ConversationDTO } from "@/src/app/api/bot/[id]/conversations/route";
+import type { ConversationDTO } from "@/src/app/(non-widget)/api/bot/[id]/conversations/route";
 
 export function truncateSummary(
   summary: string | null,
