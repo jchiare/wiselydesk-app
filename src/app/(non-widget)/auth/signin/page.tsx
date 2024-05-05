@@ -1,4 +1,4 @@
-import SignInButton from "@/src/app/auth/signin/sign-in-button";
+import SignInButton from "@/src/app/(non-widget)/auth/signin/sign-in-button";
 import Image from "next/image";
 import signInBg from "@/public/signin-screen-bg.png";
 import type { Metadata } from "next/types";
