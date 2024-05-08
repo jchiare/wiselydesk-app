@@ -42,7 +42,6 @@ export const useChatSubmit = ({
         text: input
       })
     ] as ChatMessage[];
-    console.log("updatedMessages: ", updatedMessages);
     // send empty response to indicate to user that a reply is coming
     setMessages([
       ...updatedMessages,
