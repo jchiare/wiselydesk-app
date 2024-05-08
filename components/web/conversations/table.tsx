@@ -33,7 +33,7 @@ export default function ConversationTable({
     router.push(newPath.replace("conversations", "conversation"));
   }
 
-  useRefreshPage(10);
+  useRefreshPage(30);
 
   if (!data.conversations || data.conversations.length === 0) {
     return (
