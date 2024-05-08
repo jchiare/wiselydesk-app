@@ -1,6 +1,6 @@
 const AMBOSS_WELCOME_REPLY = {
-  en: "Hi there and welcome to AMBOSS! I'm a virtual assistant and happy to help you with your request.",
-  de: "Hallo und herzlich Willkommen bei AMBOSS! Ich bin ein virtueller Assistent und stehe dir bei Fragen gerne zur Verfügung!"
+  en: "Hi there and welcome to AMBOSS! \nI'm a virtual assistant and happy to help you with your request.",
+  de: "Hallo und herzlich Willkommen bei AMBOSS! \nIch bin ein virtueller Assistent und stehe dir bei Fragen gerne zur Verfügung!"
 };
 
 const DEFAULT_WELCOME_REPLY = {
