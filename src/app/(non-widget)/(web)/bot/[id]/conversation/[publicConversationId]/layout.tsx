@@ -1,5 +1,4 @@
 import type { Metadata } from "next/types";
-import BackButton from "@/components/web/back-button";
 
 export const metadata: Metadata = {
   title: "Single Conversation | WiselyDesk",
@@ -13,10 +12,7 @@ export default async function SingleConversationLayout({
 }) {
   return (
     <div className="h-screen overflow-y-scroll">
-      <div className="h-full">
-        <BackButton />
-        {children}
-      </div>
+      <div className="h-full">{children}</div>
     </div>
   );
 }
