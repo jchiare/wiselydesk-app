@@ -39,7 +39,7 @@ export default async function RightBar({
   return (
     <div className="flex h-full flex-col justify-between space-y-4">
       <NavigationButtons hasNextConversation={!!hasNextConversation} />
-      <div className="flex-grow space-y-4 px-4 py-6">
+      <div className="flex-grow space-y-4 px-4 pb-6">
         <div className="rounded-md border bg-gray-50 p-4">
           {zendeskTicketUrl ? (
             <>
