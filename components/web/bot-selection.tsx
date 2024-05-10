@@ -28,7 +28,7 @@ export default function BotSelection({ bots }: { bots: Bot[] }) {
 
   const handleBotChange = (newBot: Bot) => {
     // if bot is the same do nothing
-    if (newBot == bot) return;
+    if (!bot || newBot == bot) return;
     const newPath = changeBotById(newBot.id);
     setBotLocalStorage(newBot);
 
