@@ -10,7 +10,7 @@ type NotesProps = {
   conversationId: number;
   botId: string;
   userId: number;
-  publicConversationId: string;
+  publicConversationId: number;
 };
 
 export default function ConversationNote({
@@ -67,7 +67,7 @@ export default function ConversationNote({
       <div className="mt-4 flex flex-col items-center">
         <textarea
           value={newNote}
-          onChange={(e) => setNewNote(e.target.value)}
+          onChange={e => setNewNote(e.target.value)}
           className="mt-1 w-full flex-1 rounded border p-2"
           placeholder="New note"
           rows={3}

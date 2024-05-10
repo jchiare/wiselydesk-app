@@ -19,7 +19,7 @@ export default async function RightBar({
   conversationId: number;
   botId: string;
   userId: number;
-  publicConversationId: string;
+  publicConversationId: number;
   zendeskTicketUrl: string | null;
 }) {
   const notes = await prisma.note.findMany({
@@ -31,10 +31,16 @@ export default async function RightBar({
     select: { reason: true }
   });
 
+  console.log("publicConversationId: ", publicConversationId);
+
   const hasNextConversation = await prisma.conversation.findFirst({
-    where: { public_id: conversationId + 1, bot_id: parseInt(botId, 10) },
+    where: {
+      public_id: publicConversationId + 1,
+      bot_id: parseInt(botId, 10)
+    },
     select: { id: true }
   });
+  console.log("has next: ", hasNextConversation);
 
   return (
     <div className="flex h-full flex-col justify-between space-y-4">

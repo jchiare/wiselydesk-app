@@ -60,7 +60,7 @@ export default function SingleConversationLoading() {
           ticketDeflected={null}
           toReview={null}
           userId={123}
-          publicConversationId={"hello"}
+          publicConversationId={123}
           zendeskTicketUrl={null}
         />
       </div>

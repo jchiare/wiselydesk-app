@@ -1,8 +1,8 @@
 "use client";
-import { Fragment, useCallback, useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
 import type { Bot } from "@prisma/client";
 import { useLocalStorage } from "@/lib/chat/hooks/use-local-storage";
@@ -17,6 +17,7 @@ export default function BotSelection({ bots }: { bots: Bot[] }) {
     null
   );
   const router = useRouter();
+  const path = usePathname();
   const { changeBotById, getBotId } = useCustomQueryString();
 
   const botId = getBotId();
@@ -25,28 +26,33 @@ export default function BotSelection({ bots }: { bots: Bot[] }) {
     bot = bots[0];
   }
 
-  const changeSelectedBot = useCallback(
-    (bot: Bot) => {
-      const newPath = changeBotById(bot.id);
+  const handleBotChange = (newBot: Bot) => {
+    // if bot is the same do nothing
+    if (newBot == bot) return;
+    const newPath = changeBotById(newBot.id);
+    setBotLocalStorage(newBot);
+
+    // Special case when switching bots
+    // to avoid going to same public conversation id
+    if (path.includes(`bot/${bot.id}/conversation/`)) {
+      router.push(`/bot/${newBot.id}/conversations/all`);
+    } else {
       router.push(newPath);
-      setBotLocalStorage(bot);
-    },
-    [changeBotById, router, setBotLocalStorage]
-  );
+    }
+  };
 
   useEffect(() => {
     const botId = getBotId();
     const bot = bots.find(bot => bot.id.toString() === botId);
     if (!bot) {
-      changeSelectedBot(botLocalStorage || bots[0]);
+      handleBotChange(botLocalStorage || bots[0]);
     } else {
-      changeSelectedBot(bot);
+      handleBotChange(bot);
     }
-  }, [bots, changeSelectedBot, getBotId]);
+  }, [bots, handleBotChange, getBotId]);
 
-  console.log("bot", botLocalStorage, bot);
   return (
-    <Listbox value={bot} onChange={changeSelectedBot}>
+    <Listbox value={bot} onChange={handleBotChange}>
       {({ open }) => (
         <>
           <Listbox.Label className="block pt-6 text-center font-medium leading-6 text-white">

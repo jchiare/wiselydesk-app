@@ -72,7 +72,7 @@ export default async function SingleConversationPage({
           ticketDeflected={conversationObject.conversation.ticket_deflected}
           conversationId={conversationObject.conversation.id}
           zendeskTicketUrl={conversationObject.conversation.zendesk_ticket_url}
-          publicConversationId={params.publicConversationId}
+          publicConversationId={parseInt(params.publicConversationId, 10)}
           botId={params.id}
           userId={userId}
         />
