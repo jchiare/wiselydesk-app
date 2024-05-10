@@ -1,6 +1,7 @@
 import Note from "@/components/web/conversation/right-bar/notes";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
+import { NavigationButtons } from "@/components/web/conversation/right-bar/navigation";
 
 export default async function RightBar({
   isLoading,
@@ -30,19 +31,15 @@ export default async function RightBar({
     select: { reason: true }
   });
 
+  const hasNextConversation = await prisma.conversation.findFirst({
+    where: { id: conversationId + 1 },
+    select: { id: true }
+  });
+
   return (
     <div className="flex h-full flex-col justify-between space-y-4">
+      <NavigationButtons hasNextConversation={!!hasNextConversation} />
       <div className="flex-grow space-y-4 px-4 py-6">
-        {/* <TicketDeflected
-          ticketDeflected={ticketDeflected}
-          publicConversationId={publicConversationId}
-          botId={botId}
-        />
-        <ToReview
-          toReview={toReview}
-          publicConversationId={publicConversationId}
-          botId={botId}
-        /> */}
         <div className="rounded-md border bg-gray-50 p-4">
           {zendeskTicketUrl ? (
             <>
