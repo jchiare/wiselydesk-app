@@ -32,7 +32,7 @@ export default async function RightBar({
   });
 
   const hasNextConversation = await prisma.conversation.findFirst({
-    where: { id: conversationId + 1 },
+    where: { public_id: conversationId + 1, bot_id: parseInt(botId, 10) },
     select: { id: true }
   });
 
