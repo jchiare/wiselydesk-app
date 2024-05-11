@@ -10,7 +10,7 @@ import { useChatSubmit } from "@/lib/chat/hooks/use-widget-chat-submit";
 import { useScrollToBottom } from "@/lib/chat/hooks/use-scroll-to-bottom";
 import Input from "@/components/chat/user/input-widget";
 import CancelResponse from "@/components/chat/cancel-response";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Sentry from "@sentry/nextjs";
 import { getMessagesFromConversationId } from "@/lib/visitor/identify";
 import { PreviousMessages } from "@/components/widget/chat/previous-messages";
@@ -46,6 +46,8 @@ export default function Chat({
     Message[]
   >([]);
   const [isOverflowing, setIsOverflowing] = useState(false);
+  const scrollHeightRef = useRef<number>(0);
+  const divRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (lastConversation) {
@@ -101,23 +103,49 @@ export default function Chat({
     lastConversationMessages
   });
 
-  const divRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    checkOverflow();
+  }, []);
 
-  function checkOverflow() {
+  const checkOverflow = () => {
     if (divRef.current) {
-      const currentOverflowing =
-        divRef.current.scrollHeight > divRef.current.clientHeight;
-      if (currentOverflowing !== isOverflowing) {
-        setIsOverflowing(currentOverflowing);
+      const currentScrollHeight = divRef.current.scrollHeight;
+      const isCurrentlyOverflowing =
+        currentScrollHeight > divRef.current.clientHeight;
+
+      // Only update the overflow state if it has changed
+      if (
+        currentScrollHeight !== scrollHeightRef.current ||
+        isCurrentlyOverflowing !== isOverflowing
+      ) {
+        scrollHeightRef.current = currentScrollHeight;
+        setIsOverflowing(isCurrentlyOverflowing);
       }
     }
-  }
-  useLayoutEffect(() => {
-    window.addEventListener("resize", checkOverflow);
-    checkOverflow(); // Check overflow on mount and when window resizes.
+  };
 
-    return () => window.removeEventListener("resize", checkOverflow);
-  }, []); // Dependencies are not needed if they're not used in checkOverflow.
+  useEffect(() => {
+    // Set up MutationObserver to monitor DOM changes
+    const observer = new MutationObserver(checkOverflow);
+    if (divRef.current) {
+      observer.observe(divRef.current, {
+        childList: true,
+        subtree: true,
+        attributes: true
+      });
+    }
+
+    // Set up event listener for window resize
+    window.addEventListener("resize", checkOverflow);
+
+    // Initial check
+    checkOverflow();
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", checkOverflow);
+    };
+  }, []);
 
   const hasLastConversationMessages =
     lastConversationMessages && lastConversationMessages.length > 0;

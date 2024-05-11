@@ -118,13 +118,3 @@ export function Widget({
     </div>
   );
 }
-
-{
-  /* <iframe
-  src="https://apps.wiselydesk.com/chat/demo?client_api_key=hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE&model=gpt-3.5-turbo&create_support_ticket=true"
-  name="wiselydesk-launcher"
-  title="WiselyDesk Chat"
-  role="dialog"
-  className="h-16 w-16 rounded-full border shadow-lg" 
-/> */
-}
