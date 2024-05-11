@@ -10,7 +10,7 @@ import { useChatSubmit } from "@/lib/chat/hooks/use-widget-chat-submit";
 import { useScrollToBottom } from "@/lib/chat/hooks/use-scroll-to-bottom";
 import Input from "@/components/chat/user/input-widget";
 import CancelResponse from "@/components/chat/cancel-response";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Sentry from "@sentry/nextjs";
 import { getMessagesFromConversationId } from "@/lib/visitor/identify";
 import { PreviousMessages } from "@/components/widget/chat/previous-messages";

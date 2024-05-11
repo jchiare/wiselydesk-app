@@ -53,15 +53,6 @@ export default function AgentDiv({
       isLastMessage &&
       createSupportTicket);
 
-  console.log(
-    "isLastMessage: ",
-    isLastMessage,
-    " isOverflowing:  ",
-    isOverflowing,
-    " time: ",
-    Date.now()
-  );
-
   return (
     <div
       className={`w-full border-b ${
