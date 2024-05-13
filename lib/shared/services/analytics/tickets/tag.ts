@@ -28,7 +28,8 @@ const UNSUBSCRIBE_REGEX = /unsubscribe\s+here.*/gis;
 const URL_REGEX = /\(http.*\)/g;
 
 export async function tagTickets(
-  tickets: BaseTicket[]
+  tickets: BaseTicket[],
+  prompt = TAG_AMBOSS_TICKETS
 ): Promise<TagTicketResponse[]> {
   let taggedTickets: TagTicketResponse[] = [];
 
@@ -61,7 +62,7 @@ export async function tagTickets(
           content: prefilled
         }
       ],
-      model: "claude-3-sonnet-20240229",
+      model: "claude-3-haiku-20240307",
       temperature: 0
     });
 

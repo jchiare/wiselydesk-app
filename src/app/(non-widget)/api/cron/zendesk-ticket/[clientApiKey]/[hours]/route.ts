@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { filterFreeAmbossTickets } from "@/lib/shared/services/ticket-analysis";
+import { filterFreeAmbossTickets } from "@/lib/shared/services/analytics/tickets";
 import { ZendeskApi } from "@/lib/shared/services/zendesk";
 import type { NextRequest } from "next/server";
 

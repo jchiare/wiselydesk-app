@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { tagTickets } from "@/lib/shared/services/ticket-analysis/tag";
+import { tagTickets } from "@/lib/shared/services/analytics/tickets/tag";
 import { ZendeskApi } from "@/lib/shared/services/zendesk";
 import type { NextRequest } from "next/server";
 
