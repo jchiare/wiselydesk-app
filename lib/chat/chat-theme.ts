@@ -62,7 +62,7 @@ const AMBOSS_BOT_SETTINGS: ChatThemeSettings = {
     text: "text-black"
   },
   assistantMessageSetting: {
-    bgColour: "bg-[#a3d8e7ff]",
+    bgColour: "bg-[#eef2f5]",
     text: "text-black",
     feedbackColour: "text-black",
     icon: "/amboss.png"

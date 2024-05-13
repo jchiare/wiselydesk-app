@@ -25,6 +25,7 @@ type AgentMessageProps = {
   hasLastConversationMessages?: boolean;
   isPreviousMessages?: boolean;
   isWelcomeMessage?: boolean;
+  bgColorOverride?: string;
 };
 
 export default function AgentDiv({
@@ -42,7 +43,8 @@ export default function AgentDiv({
   testSupportModal,
   isOverflowing,
   isPreviousMessages,
-  isWelcomeMessage
+  isWelcomeMessage,
+  bgColorOverride
 }: AgentMessageProps): JSX.Element {
   const [_, buttonCreateHtml] = removeSupportButton(text);
 
@@ -56,7 +58,7 @@ export default function AgentDiv({
   return (
     <div
       className={`w-full border-b ${
-        chatTheme.assistantMessageSetting.bgColour +
+        (bgColorOverride ?? chatTheme.assistantMessageSetting.bgColour) +
         " " +
         chatTheme.assistantMessageSetting.text
       } ${isLastMessage && isOverflowing ? "pb-[5.5rem]" : "pb-2"}`}>

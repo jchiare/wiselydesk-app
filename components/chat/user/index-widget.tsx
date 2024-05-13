@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   combineClassNames,
   type ChatThemeSettings
@@ -19,20 +20,13 @@ export default function User({
         <div className="relative hidden w-[30px] flex-col items-end sm:flex">
           <span className="m-0 inline-block h-auto w-auto max-w-full overflow-hidden border-0 bg-none p-0 opacity-100">
             <span className="m-0 block h-auto w-auto max-w-full border-0 bg-none p-0 opacity-100">
-              <svg width="30" height="30" viewBox="0 0 30 30">
-                <rect
-                  rx="2"
-                  ry="2"
-                  x="0"
-                  y="0"
-                  width="30"
-                  height="30"
-                  fill="#5485d1"
-                />
-                <text fill="#ffffff" x="30%" y="70%">
-                  U
-                </text>
-              </svg>
+              <Image
+                width={25}
+                height={25}
+                alt="User Icon"
+                src={"/silhouette.png"}
+                priority={true}
+              />
             </span>
           </span>
         </div>

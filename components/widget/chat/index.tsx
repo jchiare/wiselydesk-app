@@ -183,6 +183,7 @@ export default function Chat({
         bot={bot}
         testSupportModal={testSupportModal}
         isOverflowing={isOverflowing}
+        bgColorOverride="bg-[#0AA6B8]"
       />
       {messages.map((message, index) => {
         const isLastMessage = messages.length === index + 1;
