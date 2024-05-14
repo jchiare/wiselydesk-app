@@ -97,7 +97,9 @@ export default function AgentDiv({
           </div>
           {!isWelcomeMessage && (
             <div className="w-[calc(100%-50px)]">
-              {aiResponseDone && <hr className="py-1" />}
+              {aiResponseDone && (
+                <hr className="my-2 rounded-sm border-0 bg-slate-300 pt-[1px]" />
+              )}
               <div className="flex items-center justify-between px-2 py-0.5">
                 {/* @ts-expect-error done with ts for the day */}
                 <AiWarning account={account} locale={locale} />
