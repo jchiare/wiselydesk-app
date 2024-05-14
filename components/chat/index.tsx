@@ -91,6 +91,7 @@ export default function Chat({
         isLastMessage={false}
         bot={bot}
         testSupportModal={testSupportModal}
+        bgColorOverride="bg-[#0AA6B8]"
       />
       {messages.map((message, index) => {
         const isLastMessage = messages.length === index + 1;
