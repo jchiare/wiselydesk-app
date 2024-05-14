@@ -23,7 +23,7 @@ export default function AgentMessage({
         !aiResponseDone &&
         isLastMessage &&
         !isPreviousMessages &&
-        `!last:after:mt-1 last:after:animate-assistant-message  last:after:bg-white last:after:text-black last:after:content-['▋']`
+        `!last:after:mt-1 last:after:animate-assistant-message  last:after:text-black last:after:content-['▋']`
       }`}
       // @ts-expect-error some htmlthing
       dangerouslySetInnerHTML={{ __html: htmlText }}></p>

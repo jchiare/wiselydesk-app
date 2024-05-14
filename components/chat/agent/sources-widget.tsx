@@ -58,14 +58,14 @@ export default function Sources({
   if (!sources || sources.length === 0 || !aiResponseDone) return;
   return (
     <div className="flex w-[90%] justify-end">
-      <div className="w-fit rounded-lg bg-slate-600 px-3 pb-3 pt-1 text-[0.8rem] leading-5">
-        <p style={{ marginTop: "0.25em", marginBottom: "0.25em" }}>
+      <div className="w-fit rounded-lg bg-slate-600 px-3 pb-3 pt-1 text-[0.8rem] leading-5 text-[#F8F8FF]">
+        <p className="mx-1 text-[#F8F8FF]">
           {getText(account)["sources"][locale]}
         </p>
         {sources.map((source, index) => {
           return (
             <React.Fragment key={index}>
-              <Link target="_blank" href={source}>
+              <Link target="_blank" className="hover:underline" href={source}>
                 {sourceText(source, index)}
               </Link>
               <br />
