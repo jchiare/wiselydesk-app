@@ -68,7 +68,7 @@ export default function AgentDiv({
         <div className="relative flex flex-col gap-3 ">
           <div className="flex flex-grow flex-col gap-3">
             <div className="flex min-h-[20px] flex-col items-start gap-4 whitespace-pre-wrap ">
-              <div className="prose prose-invert w-full break-words ">
+              <div className="w-full break-words ">
                 <AgentMessage
                   isPreviousMessages={isPreviousMessages}
                   chatTheme={chatTheme}

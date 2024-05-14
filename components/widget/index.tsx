@@ -28,21 +28,21 @@ export function Widget({
     try {
       setWidgetOpen(currentState => !currentState);
 
-      const sessionId = await identifyVisitor(bot.id);
+      // const sessionId = await identifyVisitor(bot.id);
 
-      // If widget is transitioning to open and there's no last conversation cached
-      if (!widgetOpen && !lastConversation) {
-        const fetchedLastConversation = await getLastConversation(sessionId);
-        if (fetchedLastConversation) {
-          setLastConversation(fetchedLastConversation);
-          return;
-        }
-      }
+      // // If widget is transitioning to open and there's no last conversation cached
+      // if (!widgetOpen && !lastConversation) {
+      //   const fetchedLastConversation = await getLastConversation(sessionId);
+      //   if (fetchedLastConversation) {
+      //     setLastConversation(fetchedLastConversation);
+      //     return;
+      //   }
+      // }
 
-      if (widgetOpen && conversationId) {
-        await endConversation(conversationId);
-        setLastConversation(undefined);
-      }
+      // if (widgetOpen && conversationId) {
+      //   await endConversation(conversationId);
+      //   setLastConversation(undefined);
+      // }
     } catch (err) {
       console.error("Error handling widget click:", err);
     }

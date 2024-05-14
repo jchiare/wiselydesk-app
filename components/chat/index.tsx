@@ -40,7 +40,7 @@ export default function Chat({
     locale = "en",
     create_support_ticket: createSupportTicket = true,
     client_api_key: clientApiKey,
-    model = "gpt-4",
+    model = "gpt-4o",
     inline_sources: inlineSources = false,
     testSupportModal = false
   } = searchParams;
