@@ -12,6 +12,9 @@ export function inputCost(
     case "gpt-4":
       costPerToken = 0.03;
       break;
+    case "gpt-4o":
+      costPerToken = 0.005;
+      break;
     case "gpt-3.5-turbo":
       costPerToken = 0.002;
       break;
@@ -58,6 +61,9 @@ export function outputCost(
   switch (model) {
     case "gpt-4":
       costPerToken = 0.06;
+      break;
+    case "gpt-4o":
+      costPerToken = 0.015;
       break;
     case "gpt-3.5-turbo":
       costPerToken = 0.002;

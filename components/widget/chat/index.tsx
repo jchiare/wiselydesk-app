@@ -64,7 +64,7 @@ export default function Chat({
   const {
     locale = "en",
     create_support_ticket: createSupportTicket = true,
-    model = "gpt-4",
+    model = "gpt-4o",
     inline_sources: inlineSources = false,
     testSupportModal = false
   } = searchParams;
