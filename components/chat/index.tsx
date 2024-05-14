@@ -111,6 +111,7 @@ export default function Chat({
             conversationId={conversationId?.toString()}
             createSupportTicket={createSupportTicket}
             bot={bot}
+            bgColourOverride="bg-[#0AA6B8]"
           />
         );
       })}
