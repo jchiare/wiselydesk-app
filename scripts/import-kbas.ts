@@ -1,3 +1,4 @@
+// export $(cat .env.local | xargs) && npx tsx scripts/import-kbas.ts -b 3
 import "dotenv/config";
 import { parseArgs } from "node:util";
 import { ZendeskKbaImporter } from "@/lib/shared/services/zendesk/kba-import";
