@@ -42,6 +42,7 @@ export async function POST(req: Request) {
   }
 
   const articleId = webhookPayload.detail.id;
+  const locale = webhookPayload.event.locale;
 
   try {
     const bots = await prisma.bot.findMany({
@@ -61,7 +62,8 @@ export async function POST(req: Request) {
     const webhookResult = await handleWebhookPayload(
       webhookPayload.type,
       articleId,
-      botIds
+      botIds,
+      locale
     );
 
     return Response.json(
@@ -73,7 +75,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("Error processing webhook:", error);
     return Response.json(
-      { error: `Internal Server Error with error ${JSON.stringify(error)}` },
+      { error: `Internal Server Error with error ${error}` },
       { status: 500 }
     );
   }
@@ -85,11 +87,12 @@ const UNPUBLISHED_EVENT_TYPE = "zen:event-type:article.unpublished";
 async function handleWebhookPayload(
   webhookType: string,
   articleId: string,
-  botIds: number[]
+  botIds: number[],
+  locale: string | undefined
 ) {
   let botId = botIds[0];
   if (botIds.length > 1) {
-    botId = await handleMultipleBots(articleId);
+    botId = await handleMultipleBots(articleId, locale);
   }
   const zendeskClient = new ZendeskKbaImporter(botId.toString());
   switch (webhookType) {
@@ -118,17 +121,32 @@ async function handleWebhookPayload(
   }
 }
 
-async function handleMultipleBots(kbaId: string): Promise<number> {
-  const botId = await prisma.knowledgeBaseArticle.findFirst({
+async function handleMultipleBots(
+  kbaId: string,
+  locale: string | undefined
+): Promise<number> {
+  // default to WiselyDesk
+
+  if (locale) {
+    if (locale === "en-us") {
+      return 3;
+    } else if (locale === "de") {
+      return 4;
+    }
+    throw new Error(`Unhandled locale: ${locale}`);
+  }
+
+  // handle if there is no locale in the webhook
+  const bot = await prisma.knowledgeBaseArticle.findFirst({
     where: { client_article_id: kbaId },
     select: {
       bot_id: true
     }
   });
-  if (!botId) {
+  if (!bot) {
     throw new Error(
       `Article with client_article_id ${kbaId} not found for any bot`
     );
   }
-  return botId.bot_id;
+  return bot.bot_id;
 }

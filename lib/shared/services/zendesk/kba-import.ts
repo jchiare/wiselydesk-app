@@ -146,7 +146,9 @@ export class ZendeskKbaImporter {
     const data = (await response.json()) as ExternalZendeskArticleResponse;
 
     if (!data.article) {
-      console.error(`Article ${kbaId} not found for bot ${this.botId}`);
+      console.error(
+        `Article ${kbaId} not found in Zednesk for bot ${this.botId}`
+      );
       return;
     }
 
