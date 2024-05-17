@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
   const escalatedChatsLastDay = await prisma.conversation.findMany({
     where: {
       bot_id: bot.id,
-      created_at: { gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000) },
+      created_at: { gte: new Date(new Date().getTime() - 60 * 60 * 60 * 1000) },
       escalated: true
     }
   });

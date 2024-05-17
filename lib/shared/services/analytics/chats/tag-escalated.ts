@@ -27,6 +27,7 @@ type AiResponse = {
   user_tags: string[];
 };
 
+const excludedConversations = ["4399", "4402"];
 export async function tagEscalatedChats(
   chats: MessagesGroupedByConversation,
   botId: number
@@ -34,6 +35,9 @@ export async function tagEscalatedChats(
   let taggedChats: Response[] = [];
 
   for (const conversationId of Object.keys(chats)) {
+    if (excludedConversations.includes(conversationId)) {
+      continue;
+    }
     const messages = chats[conversationId];
 
     const formattedMessages = messages
