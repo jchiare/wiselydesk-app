@@ -1,4 +1,3 @@
-// removes the HTML text <button create> </button create>
 // from the message
 export function removeSupportButton(text: string): [string, boolean] {
   const supportTicketRegex = /<button\s+create.*>(.*?)(<\/button\s+create>|$)/g;
@@ -39,10 +38,44 @@ export function formatMarkdownLinks(text: string): string {
   return text;
 }
 
+function markdownToHtml(markdown: string): string {
+  // Convert headings and apply TailwindCSS classes
+  const headingRegex = /^(#{1,6})\s+(.*)$/gm;
+  markdown = markdown.replace(headingRegex, (_, hashes, content) => {
+    const level = hashes.length;
+    let tailwindClass = "";
+    switch (level) {
+      case 1:
+        tailwindClass = "text-4xl font-bold text-gray-900";
+        break;
+      case 2:
+        tailwindClass = "text-3xl font-semibold text-gray-800";
+        break;
+      case 3:
+        tailwindClass = "text-2xl font-medium text-gray-700";
+        break;
+      default:
+        tailwindClass = "text-xl font-medium text-gray-600"; // Generic style for h4-h6
+    }
+    return `<h${level} class="${tailwindClass}">${content}</h${level}>`;
+  });
+
+  // Convert bold text
+  const boldRegex = /\*\*(.*?)\*\*/g;
+  markdown = markdown.replace(boldRegex, "<strong>$1</strong>");
+
+  // Convert italic text
+  const italicRegex = /\*(.*?)\*/g;
+  markdown = markdown.replace(italicRegex, "<em>$1</em>");
+
+  return markdown;
+}
 export default function renderMessage(text: string | null) {
   if (!text) return text;
   [text] = removeSupportButton(text);
   text = formatMarkdownLinks(text);
+
+  text = markdownToHtml(text);
 
   return text;
 }

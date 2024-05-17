@@ -135,12 +135,12 @@ export default function SupportTicketModal({
       </button>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-40 flex items-center justify-center">
           <div
             className="absolute inset-0 bg-black opacity-70"
             onClick={closeModal}></div>
 
-          <div className="relative z-10 flex h-fit max-w-[1/3] flex-col rounded bg-white p-7 text-gray-800 shadow-lg">
+          <div className="relative z-30 flex h-fit max-w-[1/3] flex-col rounded bg-white p-7 text-gray-800 shadow-lg">
             <label className="mb-2 block ">
               <span className="pl-1">
                 {texti18.supportTicketModal.name[adjustedLocale]}:
@@ -221,7 +221,6 @@ export default function SupportTicketModal({
                   </SelectContent>
                 </Select>
               </div>
-
               <button
                 onClick={submitButton}
                 disabled={isLoading || submitSuccess}

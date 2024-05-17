@@ -40,7 +40,7 @@ export default function Chat({
     locale = "en",
     create_support_ticket: createSupportTicket = true,
     client_api_key: clientApiKey,
-    model = "gpt-4",
+    model = "gpt-4o",
     inline_sources: inlineSources = false,
     testSupportModal = false
   } = searchParams;
@@ -91,6 +91,7 @@ export default function Chat({
         isLastMessage={false}
         bot={bot}
         testSupportModal={testSupportModal}
+        bgColourOverride="bg-[#0AA6B8]"
       />
       {messages.map((message, index) => {
         const isLastMessage = messages.length === index + 1;
@@ -110,6 +111,7 @@ export default function Chat({
             conversationId={conversationId?.toString()}
             createSupportTicket={createSupportTicket}
             bot={bot}
+            bgColourOverride="bg-[#0AA6B8]"
           />
         );
       })}

@@ -64,7 +64,7 @@ export default function Chat({
   const {
     locale = "en",
     create_support_ticket: createSupportTicket = true,
-    model = "gpt-4",
+    model = "gpt-4o",
     inline_sources: inlineSources = false,
     testSupportModal = false
   } = searchParams;
@@ -183,6 +183,7 @@ export default function Chat({
         bot={bot}
         testSupportModal={testSupportModal}
         isOverflowing={isOverflowing}
+        bgColorOverride="bg-[#0AA6B8]"
       />
       {messages.map((message, index) => {
         const isLastMessage = messages.length === index + 1;

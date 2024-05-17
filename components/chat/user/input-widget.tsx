@@ -63,7 +63,7 @@ export default function Input({
           onKeyDown={e => handleEnterBtn(e)}>
           <div className="relative flex h-full flex-1 md:flex-col">
             <div
-              className={`relative flex w-full flex-grow flex-col items-center rounded-md border border-gray-900/50 bg-gray-700 py-[10px] text-white shadow-[0_0_15px_rgba(0,0,0,0.10)] md:p-4 ${
+              className={`relative flex w-full flex-grow flex-col items-center justify-center rounded-md border border-slate-900/50 bg-slate-600 py-[10px] text-white shadow-[0_0_15px_rgba(0,0,0,0.10)] md:p-4 ${
                 !aiResponseDone && "cursor-not-allowed"
               }`}>
               <textarea
@@ -79,7 +79,7 @@ export default function Input({
                 className={`h-[24px] max-h-[200px] w-full resize-none border-0 bg-transparent p-0 pl-2 pr-7 ring-0 focus:outline-none focus:ring-0 focus-visible:ring-0 disabled:cursor-not-allowed md:pl-0`}></textarea>
               <button
                 aria-label="Input for Chat"
-                className={`absolute right-2 rounded-md p-1 text-gray-500 hover:bg-gray-900 hover:text-gray-400 disabled:cursor-not-allowed disabled:hover:bg-transparent`}
+                className={`absolute right-2 rounded-md p-1 text-slate-500 hover:bg-slate-900 hover:text-slate-400 disabled:cursor-not-allowed disabled:hover:bg-transparent`}
                 onClick={e => handleSubmit(e)}
                 disabled={!aiResponseDone}
                 type="submit">
@@ -90,9 +90,7 @@ export default function Input({
                   viewBox="0 0 24 24"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="mb-1 mr-1 h-4 w-4"
-                  height="1em"
-                  width="1em"
+                  className="m-1 h-4 w-4"
                   xmlns="http://www.w3.org/2000/svg">
                   <line x1="22" y1="2" x2="11" y2="13"></line>
                   <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
