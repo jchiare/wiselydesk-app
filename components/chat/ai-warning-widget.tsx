@@ -26,7 +26,7 @@ export default function AiWarning({ locale, account }: AiWarningProps) {
         <text
           x="50%"
           y="50%"
-          dominant-baseline="middle"
+          dominantBaseline="middle"
           textAnchor="middle"
           fill="white"
           fontSize="15"

@@ -61,7 +61,7 @@ export function Widget({
   return (
     <div>
       {bot && widgetOpen && (
-        <div className="transform-origin[bottom_right] pointer-events-auto fixed bottom-20 right-5 z-[2147483000] h-[min(704px,calc(100%-104px))] max-h-[704px] min-h-[80px] w-[600px] overflow-hidden rounded-lg opacity-100 shadow-lg transition-all duration-200 ease-in-out">
+        <div className="transform-origin[bottom_right] pointer-events-auto fixed bottom-20 right-5 z-10 h-[min(704px,calc(100%-104px))] max-h-[704px] min-h-[80px] w-[600px] overflow-hidden rounded-lg opacity-100 shadow-lg transition-all duration-200 ease-in-out">
           <Chat
             chatTheme={chatTheme}
             clientApiKey={clientApiKey}
@@ -72,7 +72,7 @@ export function Widget({
           />
         </div>
       )}
-      <div className="fixed bottom-3 right-3 z-50 h-14 w-14 origin-center select-none transition-transform duration-200 ease-in hover:scale-[1.08]">
+      <div className="fixed bottom-3 right-3 h-14 w-14 origin-center select-none transition-transform duration-200 ease-in hover:scale-[1.08]">
         <div className="absolute left-0 top-0 h-14 w-14 cursor-pointer overflow-hidden rounded-full antialiased">
           <button
             onClick={() => handleWidgetClick()}
