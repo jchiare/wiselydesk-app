@@ -1,4 +1,4 @@
-import { anthropic } from "@/lib/shared/services/anthropic";
+import openai from "@/lib/shared/services/openai";
 import { TAG_AMBOSS_ESCALATED_CHATS } from "@/lib/chat/prompts/tag-category";
 
 type GroupedConversation = {
@@ -16,8 +16,8 @@ type Response = {
   userTags: string[];
   botId: number;
   tokens: {
-    input_tokens: number;
-    output_tokens: number;
+    input_tokens: number | undefined;
+    output_tokens: number | undefined;
   };
 };
 
@@ -32,7 +32,6 @@ export async function tagEscalatedChats(
   botId: number
 ): Promise<Response[]> {
   let taggedChats: Response[] = [];
-  const prefilled = '{"ai_generated_tags": [';
 
   for (const conversationId of Object.keys(chats)) {
     const messages = chats[conversationId];
@@ -47,27 +46,25 @@ export async function tagEscalatedChats(
       })
       .join("\n");
 
-    const message = await anthropic.messages.create({
-      max_tokens: 100,
-      system: TAG_AMBOSS_ESCALATED_CHATS,
+    const message = await openai.chat.completions.create({
       messages: [
+        { role: "system", content: TAG_AMBOSS_ESCALATED_CHATS },
         {
           role: "user",
-          content: formattedMessages
-        },
-        {
-          role: "assistant",
-          content: prefilled
+          content: `Here are the messages from chat: ${formattedMessages}`
         }
       ],
-      model: "claude-3-sonnet-20240229",
-      temperature: 0
+      model: "gpt-4o",
+      response_format: { type: "json_object" }
     });
 
-    const usage = message.usage;
-    const responseText = JSON.parse(
-      prefilled + message.content[0].text
-    ) as AiResponse;
+    // const usage = message.usage;
+    const unparsedResponseText = message.choices[0].message.content;
+    if (!unparsedResponseText) {
+      throw new Error(`No response from openai tagEscalatedChats`);
+    }
+
+    const responseText = JSON.parse(unparsedResponseText) as AiResponse;
 
     taggedChats.push({
       conversationId,
@@ -76,8 +73,8 @@ export async function tagEscalatedChats(
       userTags: responseText.user_tags,
       botId,
       tokens: {
-        input_tokens: usage.input_tokens,
-        output_tokens: usage.output_tokens
+        input_tokens: message.usage?.prompt_tokens,
+        output_tokens: message.usage?.completion_tokens
       }
     });
   }
