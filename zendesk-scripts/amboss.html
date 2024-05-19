@@ -1,22 +1,23 @@
+<!-- https://github.com/amboss-mededu/zendesk-theme/blob/main/theme/templates/footer.hbs#L126 -->
 <script>
-  // Hide Zendesk Widget during business hours and show WiselyDesk Widget instead
-  document.addEventListener("DOMContentLoaded", function () {
-    const url = window.location.href;
-    const nycBusinessHours = {
-      start: 9,
-      end: 17,
-      timeZone: "America/New_York",
-      locale: "en"
-    };
-    const berlinBusinessHours = {
-      start: 9,
-      end: 17,
-      timeZone: "Europe/Berlin",
-      locale: "de"
-    };
+  const url = window.location.href;
 
-    // Determine the appropriate timezone based on URL
-    const { start, end, timeZone, locale } = url.includes("en-us")
+  const nycBusinessHours = {
+    start: 9,
+    end: 17,
+    timeZone: "America/New_York",
+    locale: "en"
+  };
+
+  const berlinBusinessHours = {
+    start: 9,
+    end: 17,
+    timeZone: "Europe/Berlin",
+    locale: "de"
+  };
+
+  function isOutsideBusinessHours() {
+    const { start, end, timeZone } = url.includes("en-us")
       ? nycBusinessHours
       : berlinBusinessHours;
 
@@ -26,17 +27,18 @@
     const localHours = localTime.getHours();
     const dayOfWeek = localTime.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
 
-    // Check if current time is outside business hours or on weekends
-    if (
+    return (
       localHours < start ||
       localHours >= end ||
       dayOfWeek === 0 ||
       dayOfWeek === 6
-    ) {
-      createWiselyDeskWidget(locale);
-      hideZendeskWidget("#zw-customLauncher"); // assume Zendesk widget div contains this id
-    }
-  });
+    );
+  }
+
+  if (isOutsideBusinessHours()) {
+    createWiselyDeskWidget(url.includes("en-us"));
+    hideZendeskWidget("#zw-customLauncher");
+  }
 
   function hideZendeskWidget(selector) {
     let attempts = 0;
@@ -55,12 +57,11 @@
     }, 200);
   }
 
-  function createWiselyDeskWidget(locale) {
+  function createWiselyDeskWidget(isEnglish) {
     // Determine the iframe URL based on the locale
-    const iframeUrl =
-      locale === "en"
-        ? "https://apps.wiselydesk.com/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY"
-        : "https://apps.wiselydesk.com/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE";
+    const iframeUrl = isEnglish
+      ? "https://apps.wiselydesk.com/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY"
+      : "https://apps.wiselydesk.com/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE";
     const iframe = document.createElement("iframe");
     iframe.src = iframeUrl;
     iframe.style =
