@@ -1,0 +1,45 @@
+<!-- https://github.com/amboss-mededu/zendesk-theme/blob/main/theme/templates/footer.hbs#L124 -->
+<script>
+  const url = window.location.href;
+  const nycBusinessHours = {
+    start: 9,
+    end: 17,
+    timeZone: "America/New_York",
+    locale: "en"
+  };
+  const berlinBusinessHours = {
+    start: 9,
+    end: 17,
+    timeZone: "Europe/Berlin",
+    locale: "de"
+  };
+
+  // Determine the appropriate timezone based on URL
+  const { start, end, timeZone, locale } = url.includes("en-us")
+    ? nycBusinessHours
+    : berlinBusinessHours;
+
+  const now = new Date();
+  const localTime = new Date(now.toLocaleString("en-US", { timeZone }));
+
+  const localHours = localTime.getHours();
+  const dayOfWeek = localTime.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+
+  // Check if current time is outside business hours or on weekends
+  if (
+    localHours < start ||
+    localHours >= end ||
+    dayOfWeek === 0 ||
+    dayOfWeek === 6
+  ) {
+    const zendeskScript = document.createElement("script");
+    zendeskScript.id = "ze-snippet";
+    zendeskScript.src =
+      "https://static.zdassets.com/ekr/snippet.js?key=fcf62d49-362c-4073-a3f6-80484a427852";
+    document.head.appendChild(zendeskScript);
+
+    const customScript = document.createElement("script");
+    customScript.src = "{{asset 'webwidg2.js'}}";
+    document.head.appendChild(customScript);
+  }
+</script>
