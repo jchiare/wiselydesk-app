@@ -59,6 +59,12 @@ function hideZendeskWidget(selector) {
 }
 
 function createWiselyDeskWidget(isEnglish, wiselyDeskWidgetOpen) {
+  // First, remove the existing iframe if it exists
+  const existingIframe = document.querySelector("iframe");
+  if (existingIframe) {
+    document.body.removeChild(existingIframe);
+  }
+
   // Determine the iframe URL based on the locale
   const iframeUrl = isEnglish
     ? `https://apps.wiselydesk.com/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}`
@@ -101,9 +107,9 @@ function createSupportWidget(wiselyDeskWidgetOpen) {
 }
 
 function handleWidgetClick() {
-  // Handle the widget click event
-  console.log("Widget clicked");
-  // Optionally, you can toggle the widgetOpen state and recreate the widget
-  wiselyDeskWidgetOpen = !wiselyDeskWidgetOpen; // Toggle the state
+  // Toggle the widget open state
+  wiselyDeskWidgetOpen = !wiselyDeskWidgetOpen;
+  // Update both widgets with the new state
+  createWiselyDeskWidget(url.includes("en-us"), wiselyDeskWidgetOpen);
   createSupportWidget(wiselyDeskWidgetOpen);
 }
