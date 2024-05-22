@@ -34,8 +34,6 @@ export function Widget({
     }
   }
 
-  console.log("widgetOpen: ", widgetOpen);
-
   return (
     <div>
       {bot && widgetOpen && widgetOpen === "true" && (
