@@ -7,7 +7,7 @@ export default function AgentIcon({
   chatTheme: ChatThemeSettings;
 }): JSX.Element {
   return (
-    <div className="relative hidden w-[30px] flex-col items-end sm:flex">
+    <div className="relative flex w-[30px] flex-col items-end">
       <div className="relative flex h-[30px] w-[30px] items-center justify-center rounded-sm bg-white p-1 text-white">
         {chatTheme.assistantMessageSetting.icon ? (
           <Image
