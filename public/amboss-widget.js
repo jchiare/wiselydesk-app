@@ -80,7 +80,7 @@ function createWiselyDeskWidget(isEnglish, wiselyDeskWidgetOpen) {
 function createSupportWidget(wiselyDeskWidgetOpen) {
   const widgetContainer = document.createElement("div");
   widgetContainer.innerHTML = `
-    <div style="position: fixed; bottom: 12px; right: 12x; height: 60px; width: 60px; transform-origin: center; user-select: none; transition: transform 0.1s ease-in; cursor: pointer;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    <div style="position: fixed; bottom: 12px; right: 12px; height: 60px; width: 60px; transform-origin: center; user-select: none; transition: transform 0.1s ease-in; cursor: pointer;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
       <div style="position: absolute; top: 0; left: 0; height: 58px; width: 58px; overflow: hidden; border-radius: 50%;">
         <button onclick="handleWidgetClick()" aria-label="Open support widget" style="height: 100%; width: 100%; background: none; border: none; padding: 0;">
           <div style="position: absolute; top: 0; bottom: 0; width: 100%; display: flex; align-items: center; justify-content: center; background-color: #0AA6B8;">
