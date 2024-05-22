@@ -76,7 +76,7 @@ function createWiselyDeskWidget(isEnglish, wiselyDeskWidgetOpen) {
     wiselyDeskWidgetOpen ? "620px" : "60px"
   }; height: ${
     wiselyDeskWidgetOpen ? "calc(100% - 85px)" : "60px"
-  }; position: fixed; bottom: -20px; overflow: visible; opacity: 1; border: 0px; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; right: 0px;`;
+  }; position: fixed; bottom: -70px; overflow: visible; opacity: 1; border: 0px; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; right: 0px;`;
   document.body.appendChild(iframe);
 }
 
