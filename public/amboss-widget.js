@@ -63,6 +63,6 @@ function createWiselyDeskWidget(isEnglish) {
   const iframe = document.createElement("iframe");
   iframe.src = iframeUrl;
   iframe.style =
-    "color-scheme: light; padding: 0px; width: 100%; height: 100%; position: fixed; bottom: 0px; overflow: visible; opacity: 1; border: 0px; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; right: 0px;";
+    "color-scheme: light; padding: 0px; width: 100%; height: 100%; z-index: -1; position: fixed; bottom: 0px; overflow: visible; opacity: 1; border: 0px; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; right: 0px;";
   document.body.appendChild(iframe);
 }
