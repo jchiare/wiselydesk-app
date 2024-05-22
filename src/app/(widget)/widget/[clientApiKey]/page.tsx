@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 
 type Params = {
   clientApiKey: string;
+  widgetOpen: string;
 };
 
 export default async function ChatbotWidget({

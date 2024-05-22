@@ -18,35 +18,11 @@ export function Widget({
   bot: Bot;
   chatTheme: ChatThemeSettings;
 }): JSX.Element {
-  const [widgetOpen, setWidgetOpen] = useState(false);
+  const { widgetOpen } = searchParams;
   const [lastConversation, setLastConversation] = useState<
     Conversation | undefined
   >(undefined);
   const [conversationId, _] = useAtom(conversationIdAtom);
-
-  async function handleWidgetClick() {
-    try {
-      setWidgetOpen(currentState => !currentState);
-
-      // const sessionId = await identifyVisitor(bot.id);
-
-      // // If widget is transitioning to open and there's no last conversation cached
-      // if (!widgetOpen && !lastConversation) {
-      //   const fetchedLastConversation = await getLastConversation(sessionId);
-      //   if (fetchedLastConversation) {
-      //     setLastConversation(fetchedLastConversation);
-      //     return;
-      //   }
-      // }
-
-      // if (widgetOpen && conversationId) {
-      //   await endConversation(conversationId);
-      //   setLastConversation(undefined);
-      // }
-    } catch (err) {
-      console.error("Error handling widget click:", err);
-    }
-  }
 
   async function endConversation(conversationId: number) {
     try {

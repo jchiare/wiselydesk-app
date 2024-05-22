@@ -23,6 +23,7 @@ export type SearchParams = {
   locale: string;
   inline_sources?: boolean;
   testSupportModal?: boolean;
+  widgetOpen?: boolean;
 };
 
 type ChatProps = {
