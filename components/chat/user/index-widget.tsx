@@ -17,7 +17,7 @@ export default function User({
         chatTheme.userMessageSetting
       )}`}>
       <div className="flex gap-4 px-5 py-4">
-        <div className="relative hidden w-[30px] flex-col items-end sm:flex">
+        <div className="relative flex w-[30px] flex-col items-end">
           <span className="m-0 inline-block h-auto w-auto max-w-full overflow-hidden border-0 bg-none p-0 opacity-100">
             <span className="m-0 block h-auto w-auto max-w-full border-0 bg-none p-0 opacity-100">
               <Image

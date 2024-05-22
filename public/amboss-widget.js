@@ -59,25 +59,36 @@ function hideZendeskWidget(selector) {
 }
 
 function createWiselyDeskWidget(isEnglish, wiselyDeskWidgetOpen) {
-  // First, remove the existing iframe if it exists
-  const existingIframe = document.getElementById("wiselyDeskIframe");
-  if (existingIframe) {
-    document.body.removeChild(existingIframe);
+  let container = document.getElementById("wiselyDeskContainer");
+  // Check if the container exists; if not, create it
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "wiselyDeskContainer";
+    container.style = `position: fixed; bottom: 0; right: 0; overflow: hidden; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);`;
+    document.body.appendChild(container);
   }
 
-  // Determine the iframe URL based on the locale
+  // Adjust container size based on the widget state
+  container.style.width = wiselyDeskWidgetOpen ? "620px" : "60px";
+  container.style.height = "calc(100% - 85px)";
+
+  // Always remove the existing iframe and create a new one
+  const existingIframe = document.getElementById("wiselyDeskIframe");
+  if (existingIframe) {
+    container.removeChild(existingIframe);
+  }
+
+  // Create a new iframe
   const iframeUrl = isEnglish
     ? `https://apps.wiselydesk.com/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}`
     : `https://apps.wiselydesk.com/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de`;
   const iframe = document.createElement("iframe");
-  iframe.src = iframeUrl;
   iframe.id = "wiselyDeskIframe";
-  iframe.style = `color-scheme: light; padding: 0px; width: ${
-    wiselyDeskWidgetOpen ? "620px" : "60px"
-  }; height: ${
-    wiselyDeskWidgetOpen ? "calc(100% - 85px)" : "60px"
-  }; position: fixed; bottom: 0; overflow: visible; opacity: 1; border: 0px; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; right: 0px;`;
-  document.body.appendChild(iframe);
+  iframe.src = iframeUrl;
+  iframe.style = `width: 100%; height: 100%; border: 0; opacity: 1; transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);`;
+
+  // Append the new iframe to the container
+  container.appendChild(iframe);
 }
 
 function createSupportWidget(wiselyDeskWidgetOpen) {
@@ -86,7 +97,7 @@ function createSupportWidget(wiselyDeskWidgetOpen) {
     <div style="position: fixed; bottom: 12px; right: 12px; height: 60px; width: 60px; transform-origin: center; user-select: none; transition: transform 0.1s ease-in; cursor: pointer;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
       <div style="position: absolute; top: 0; left: 0; height: 58px; width: 58px; overflow: hidden; border-radius: 50%;">
         <button onclick="handleWidgetClick()" aria-label="Open support widget" style="height: 100%; width: 100%; background: none; border: none; padding: 0;">
-          <div style="position: absolute; top: 0; bottom: 0; width: 100%; display: flex; align-items: center; justify-content: center; background-color: #0AA6B8;">
+          <div style="position: absolute; top: 0; bottom: 0; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; background-color: #0AA6B8;">
             ${
               wiselyDeskWidgetOpen
                 ? `
