@@ -68,7 +68,7 @@ function createWiselyDeskWidget(isEnglish, wiselyDeskWidgetOpen) {
   // Determine the iframe URL based on the locale
   const iframeUrl = isEnglish
     ? `https://apps.wiselydesk.com/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}`
-    : `https://apps.wiselydesk.com/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}`;
+    : `https://apps.wiselydesk.com/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de`;
   const iframe = document.createElement("iframe");
   iframe.src = iframeUrl;
   iframe.id = "wiselyDeskIframe";
@@ -76,7 +76,7 @@ function createWiselyDeskWidget(isEnglish, wiselyDeskWidgetOpen) {
     wiselyDeskWidgetOpen ? "620px" : "60px"
   }; height: ${
     wiselyDeskWidgetOpen ? "calc(100% - 85px)" : "60px"
-  }; position: fixed; bottom: -70px; overflow: visible; opacity: 1; border: 0px; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; right: 0px;`;
+  }; position: fixed; bottom: 0; overflow: visible; opacity: 1; border: 0px; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; right: 0px;`;
   document.body.appendChild(iframe);
 }
 
