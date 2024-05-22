@@ -60,7 +60,7 @@ function hideZendeskWidget(selector) {
 
 function createWiselyDeskWidget(isEnglish, wiselyDeskWidgetOpen) {
   // First, remove the existing iframe if it exists
-  const existingIframe = document.querySelector("iframe");
+  const existingIframe = document.getElementById("wiselyDeskIframe");
   if (existingIframe) {
     document.body.removeChild(existingIframe);
   }
@@ -71,6 +71,7 @@ function createWiselyDeskWidget(isEnglish, wiselyDeskWidgetOpen) {
     : `https://apps.wiselydesk.com/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}`;
   const iframe = document.createElement("iframe");
   iframe.src = iframeUrl;
+  iframe.id = "wiselyDeskIframe";
   iframe.style =
     "color-scheme: light; padding: 0px; width: 100%; height: 100%; position: fixed; bottom: 0px; overflow: visible; opacity: 1; border: 0px; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1); transition-property: opacity, top, bottom; right: 0px;";
   document.body.appendChild(iframe);
