@@ -114,6 +114,9 @@ export default function Chat({
       const isCurrentlyOverflowing =
         currentScrollHeight > divRef.current.clientHeight;
 
+      console.log("currentScrollHeight: ", currentScrollHeight);
+      console.log("isCurrentlyOverflowing: ", isCurrentlyOverflowing);
+      console.log("clientheight: ", divRef.current.clientHeight);
       // Only update the overflow state if it has changed
       if (
         currentScrollHeight !== scrollHeightRef.current ||
