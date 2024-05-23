@@ -66,7 +66,7 @@ export default function Chat({
     locale = "en",
     create_support_ticket: createSupportTicket = true,
     model = "gpt-4o",
-    inline_sources: inlineSources = false,
+    inline_sources: inlineSources = true,
     testSupportModal = false
   } = searchParams;
 
