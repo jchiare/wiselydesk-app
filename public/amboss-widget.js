@@ -34,7 +34,10 @@ function isOutsideBusinessHours() {
   );
 }
 
-if (window.location.href.includes("jaytesting")) {
+if (
+  window.location.href.includes("wiselydeskTesting") ||
+  isOutsideBusinessHours()
+) {
   const isEnglish = url.includes("en-us");
   createWiselyDeskWidget(isEnglish, wiselyDeskWidgetOpen);
   hideZendeskWidget("#zw-customLauncher");
