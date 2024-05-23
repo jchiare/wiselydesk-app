@@ -157,7 +157,7 @@ export default function Chat({
   return (
     <div
       ref={divRef}
-      className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll text-[90%] antialiased ${combineClassNames(
+      className={`flex h-full w-full flex-col items-center overflow-scroll text-[90%] antialiased ${combineClassNames(
         chatTheme.baseSettings
       )} flex-shrink-0 font-medium`}>
       {hasLastConversationMessages && (
