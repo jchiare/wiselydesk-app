@@ -12,7 +12,7 @@ import { buildSources } from "@/lib/chat/sources";
 import {
   inputCost,
   outputCost,
-  trimMessageUnder5KTokens
+  trimMessageUnder8KTokens
 } from "@/lib/shared/services/openai/cost";
 import { getVisitorSessionId } from "@/lib/visitor/identify";
 
@@ -100,7 +100,7 @@ export async function POST(req: Request) {
     content: systemMessage
   };
   let formattedMessages = [formattedSystemMessage, ...updatedMessages];
-  formattedMessages = trimMessageUnder5KTokens(formattedMessages);
+  formattedMessages = trimMessageUnder8KTokens(formattedMessages);
 
   const inputAiCost = inputCost(formattedMessages, model);
 

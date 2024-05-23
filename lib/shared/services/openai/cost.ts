@@ -25,17 +25,17 @@ export function inputCost(
   return (numTokens / 1000) * costPerToken;
 }
 
-export function trimMessageUnder5KTokens(
+export function trimMessageUnder8KTokens(
   formattedMessage: OpenAiMessage[]
 ): OpenAiMessage[] {
-  const over8KTokens = JSON.stringify(formattedMessage).length / 4 > 8000;
+  const over8KTokens = JSON.stringify(formattedMessage).length / 4 > 13000;
   if (over8KTokens) {
     // remove the earliest messages
     if (formattedMessage.length > 2) {
       const systemMessage = formattedMessage[0];
       const remainingMessagesExcludingFirst = formattedMessage.slice(2);
 
-      return trimMessageUnder5KTokens([
+      return trimMessageUnder8KTokens([
         systemMessage,
         ...remainingMessagesExcludingFirst
       ]);
