@@ -28,8 +28,8 @@ export function inputCost(
 export function trimMessageUnder5KTokens(
   formattedMessage: OpenAiMessage[]
 ): OpenAiMessage[] {
-  const over5KTokens = JSON.stringify(formattedMessage).length / 4 > 5000;
-  if (over5KTokens) {
+  const over8KTokens = JSON.stringify(formattedMessage).length / 4 > 8000;
+  if (over8KTokens) {
     // remove the earliest messages
     if (formattedMessage.length > 2) {
       const systemMessage = formattedMessage[0];
