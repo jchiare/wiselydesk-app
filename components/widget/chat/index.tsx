@@ -157,7 +157,7 @@ export default function Chat({
   return (
     <div
       ref={divRef}
-      className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll text-[90%] antialiased ${combineClassNames(
+      className={`flex h-fit w-full flex-col items-center overflow-scroll text-[90%] antialiased ${combineClassNames(
         chatTheme.baseSettings
       )} flex-shrink-0 font-medium`}>
       {hasLastConversationMessages && (
@@ -213,7 +213,7 @@ export default function Chat({
       })}
 
       <div
-        className={`absolute ${
+        className={`sticky ${
           isOverflowing ? "bottom-[-80px]" : "bottom-0"
         } left-0 mt-10 flex w-full justify-center ${
           chatTheme.assistantMessageSetting.bgColour
