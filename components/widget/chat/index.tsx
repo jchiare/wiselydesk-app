@@ -210,11 +210,7 @@ export default function Chat({
       })}
 
       <div
-        className={`absolute ${
-          isOverflowing ? "bottom-[-80px]" : "bottom-0"
-        } left-0 mt-10 flex w-full justify-center ${
-          chatTheme.assistantMessageSetting.bgColour
-        }`}>
+        className={`absolute bottom-[100px] left-0 mt-10 flex w-full justify-center ${chatTheme.assistantMessageSetting.bgColour}`}>
         <CancelResponse
           aiResponseDone={aiResponseDone}
           setAiResponseDone={setAiResponseDone}
