@@ -54,7 +54,7 @@ export const useChatSubmit = ({
 
     const controller = new AbortController();
 
-    fetchEventSource(`${NEXTJS_BACKEND_URL}/api/chat`, {
+    const x = fetchEventSource(`${NEXTJS_BACKEND_URL}/api/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -78,6 +78,7 @@ export const useChatSubmit = ({
       },
       openWhenHidden: true,
       onmessage(mes: any) {
+        console.log("Received message: ", mes);
         const event = mes.event as string | undefined;
 
         if (event === "closing_connection") {
@@ -93,6 +94,24 @@ export const useChatSubmit = ({
           return controller.abort();
         }
 
+        if (event === "patched_json_response") {
+          const data = JSON.parse(mes.data);
+          const message = data.text;
+          console.log("message: ", message);
+          const newStreamingResponse = assistantStreamingResponse + message;
+          setAssistantStreamingResponse(
+            response => response + newStreamingResponse
+          );
+          if (!conversationId) {
+            setConversationId(data.conversation_id);
+          }
+
+          setLatestMessageId(data.message_id);
+          controller.abort();
+          controller.signal.throwIfAborted();
+          throw new Error("not real", { cause: "patched_json_response" });
+        }
+
         const message = JSON.parse(mes.data).text;
         const newStreamingResponse = assistantStreamingResponse + message;
         setAssistantStreamingResponse(
@@ -106,6 +125,13 @@ export const useChatSubmit = ({
       },
       // To close the SSE connection client side, you need to throw an error
       onerror(e: any) {
+        if (e.cause === "patched_json_response") {
+          console.log("good?");
+          // setAiResponseDone(true);
+          controller.abort();
+          throw new Error();
+          return;
+        }
         console.error(e);
         setAssistantStreamingResponse(
           "We're sorry, there was an error with our server. Please refresh the page and try again, or contact support."
