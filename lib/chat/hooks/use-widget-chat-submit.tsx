@@ -152,12 +152,9 @@ export const useChatSubmit = ({
     setAiResponseDone(true);
   }
   return {
-    messages,
-    input,
-    setInput,
     aiResponseDone,
     onSubmit,
-    conversationId,
+
     setAiResponseDone
   };
 };
