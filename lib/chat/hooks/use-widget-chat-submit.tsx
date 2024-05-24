@@ -3,42 +3,41 @@ import ChatMessage from "@/lib/chat/chat-message";
 import { transformChatMessageToOpenAi } from "@/lib/chat/openai-chat-message";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
-import { useAtom } from "jotai";
-import { conversationIdAtom } from "@/lib/state/atoms";
 
 type UseChatSubmitParams = {
-  initialMessages: ChatMessage[];
   clientApiKey: string;
   account: string;
   model: string | undefined;
   createSupportTicket: boolean;
   inlineSources: boolean;
-  lastConversationId?: number;
   setInput: (input: string) => void;
   input: string;
   messages: ChatMessage[];
   setMessages: (messages: ChatMessage[]) => void;
+  setSources: (sources: string[]) => void;
+  setConversationId: any;
+  setLatestMessageId: (latestMessageId: number) => void;
+  conversationId: number | undefined;
 };
 
 export const useChatSubmit = ({
-  initialMessages,
   clientApiKey,
   account,
   model,
   createSupportTicket,
   inlineSources,
-  lastConversationId,
   setInput,
   messages,
   setMessages,
-  input
+  conversationId,
+  input,
+  setSources,
+  setConversationId,
+  setLatestMessageId
 }: UseChatSubmitParams) => {
   const [aiResponseDone, setAiResponseDone] = useState<boolean>(true);
   const [assistantStreamingResponse, setAssistantStreamingResponse] =
     useState<string>("");
-  const [sources, setSources] = useState<string[]>([]);
-  const [latestMessageId, setLatestMessageId] = useState<number | null>();
-  const [conversationId, setConversationId] = useAtom(conversationIdAtom);
 
   async function onSubmit() {
     const updatedMessages = [
@@ -158,8 +157,6 @@ export const useChatSubmit = ({
     setInput,
     aiResponseDone,
     onSubmit,
-    sources,
-    latestMessageId,
     conversationId,
     setAiResponseDone
   };

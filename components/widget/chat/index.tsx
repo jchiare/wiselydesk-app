@@ -18,6 +18,8 @@ import { PreviousMessages } from "@/components/widget/chat/previous-messages";
 import type { Bot, Conversation, Message } from "@prisma/client";
 import { AgentRequest } from "@/lib/shared/agent-request";
 import ChatMessage from "@/lib/chat/chat-message";
+import { useAtom } from "jotai/react";
+import { conversationIdAtom } from "@/lib/state/atoms";
 
 export type SearchParams = {
   create_support_ticket?: boolean;
@@ -48,6 +50,9 @@ export default function Chat({
   const [lastConversationMessages, setLastConversationMessages] = useState<
     Message[]
   >([]);
+  const [sources, setSources] = useState<string[]>([]);
+  const [latestMessageId, setLatestMessageId] = useState<number | null>();
+  const [conversationId, setConversationId] = useAtom(conversationIdAtom);
   const [input, setInput] = useState<string>("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -74,15 +79,7 @@ export default function Chat({
     testSupportModal = false
   } = searchParams;
 
-  const {
-    aiResponseDone,
-    onSubmit,
-    sources,
-    latestMessageId,
-    conversationId,
-    setAiResponseDone
-  } = useChatSubmit({
-    initialMessages: [],
+  const { aiResponseDone, onSubmit, setAiResponseDone } = useChatSubmit({
     clientApiKey,
     createSupportTicket,
     model,
@@ -92,7 +89,10 @@ export default function Chat({
     messages,
     setMessages,
     input,
-    lastConversationId: lastConversation?.id
+    setSources,
+    setLatestMessageId,
+    setConversationId,
+    conversationId
   });
 
   async function handleSubmit() {
@@ -126,11 +126,11 @@ export default function Chat({
             new ChatMessage({ text: res.data.text, sender: "assistant" })
           ]);
           setAiResponseDone(true);
+          setSources([]);
         })
         .catch(err => {
           throw new Error(err);
         });
-      console.log("res: ", res);
     } else {
       onSubmit();
     }
