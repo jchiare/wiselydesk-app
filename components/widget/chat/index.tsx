@@ -99,7 +99,6 @@ export default function Chat({
     const agentRequestClient = new AgentRequest({
       botId: bot.id
     });
-    console.log(agentRequestClient.requestingAgent(input));
     if (agentRequestClient.requestingAgent(input)) {
       // call non-streaming backend
       setMessages(prevMessages => [
@@ -117,16 +116,11 @@ export default function Chat({
           messagesLength: messages.length,
           userInput: savedInput,
           clientApiKey,
-          account,
-          model,
-          conversationId,
-          createSupportTicket,
-          inlineSources
+          conversationId
         })
       })
         .then(response => response.json())
         .then(res => {
-          console.log("res: ", res);
           setMessages(prevMessages => [
             ...prevMessages,
             new ChatMessage({ text: res.data.text, sender: "assistant" })
