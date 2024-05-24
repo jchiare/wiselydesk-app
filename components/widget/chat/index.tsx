@@ -16,6 +16,8 @@ import { getMessagesFromConversationId } from "@/lib/visitor/identify";
 import { PreviousMessages } from "@/components/widget/chat/previous-messages";
 
 import type { Bot, Conversation, Message } from "@prisma/client";
+import { AgentRequest } from "@/lib/shared/agent-request";
+import ChatMessage from "@/lib/chat/chat-message";
 
 export type SearchParams = {
   create_support_ticket?: boolean;
@@ -46,6 +48,8 @@ export default function Chat({
   const [lastConversationMessages, setLastConversationMessages] = useState<
     Message[]
   >([]);
+  const [input, setInput] = useState<string>("");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const scrollHeightRef = useRef<number>(0);
   const divRef = useRef<HTMLDivElement>(null);
@@ -71,9 +75,6 @@ export default function Chat({
   } = searchParams;
 
   const {
-    messages,
-    input,
-    setInput,
     aiResponseDone,
     onSubmit,
     sources,
@@ -87,8 +88,53 @@ export default function Chat({
     model,
     account,
     inlineSources,
+    setInput,
+    messages,
+    setMessages,
+    input,
     lastConversationId: lastConversation?.id
   });
+
+  async function handleSubmit() {
+    const agentRequestClient = new AgentRequest({
+      botId: bot.id
+    });
+    if (agentRequestClient.requestingAgent(input)) {
+      // call non-streaming backend
+      setMessages(prevMessages => [
+        ...prevMessages,
+        new ChatMessage({ text: input, sender: "user" })
+      ]);
+      let savedInput = input;
+      setInput("");
+      const res = await fetch("/api/non-streaming-chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messagesLength: messages.length,
+          userInput: savedInput,
+          clientApiKey,
+          conversationId
+        })
+      })
+        .then(response => response.json())
+        .then(res => {
+          setMessages(prevMessages => [
+            ...prevMessages,
+            new ChatMessage({ text: res.data.text, sender: "assistant" })
+          ]);
+          setAiResponseDone(true);
+        })
+        .catch(err => {
+          throw new Error(err);
+        });
+      console.log("res: ", res);
+    } else {
+      onSubmit();
+    }
+  }
 
   useEffect(() => {
     const scope = Sentry.getCurrentScope();
@@ -114,9 +160,6 @@ export default function Chat({
       const isCurrentlyOverflowing =
         currentScrollHeight > divRef.current.clientHeight;
 
-      console.log("currentScrollHeight: ", currentScrollHeight);
-      console.log("isCurrentlyOverflowing: ", isCurrentlyOverflowing);
-      console.log("clientheight: ", divRef.current.clientHeight);
       // Only update the overflow state if it has changed
       if (
         currentScrollHeight !== scrollHeightRef.current ||
@@ -226,7 +269,7 @@ export default function Chat({
           account={account}
           // @ts-expect-error done with ts for the day
           locale={locale}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
           setInput={setInput}
           input={input}
           aiResponseDone={aiResponseDone}

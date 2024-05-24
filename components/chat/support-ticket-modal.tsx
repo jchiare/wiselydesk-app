@@ -51,6 +51,9 @@ export default function SupportTicketModal({
           });
       }
     } else {
+      if (botId === 1) {
+        return;
+      }
       throw new Error("No Conversation ID ... cant get summarization");
     }
   }

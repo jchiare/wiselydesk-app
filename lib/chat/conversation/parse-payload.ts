@@ -8,7 +8,7 @@ type ParsedPayload = {
   clientSentConversationId: number | undefined;
 };
 export function parsePayload(payload: any): ParsedPayload {
-  const model = payload.model || "gpt-4";
+  const model = payload.model || "gpt-4o";
   const clientApiKey = payload.clientApiKey;
 
   if (

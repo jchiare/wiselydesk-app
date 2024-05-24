@@ -131,9 +131,9 @@ export async function POST(req: Request) {
     formattedMessages,
     startTime
   );
-  const stream = iteratorToStream(iterator);
+  const responseStream = iteratorToStream(iterator);
 
-  return new Response(stream, {
+  return new Response(responseStream, {
     headers: {
       "Content-Type": "text/event-stream",
       Connection: "keep-alive",
