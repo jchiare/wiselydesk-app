@@ -107,7 +107,7 @@ export default function Chat({
       ]);
       let savedInput = input;
       setInput("");
-      const res = await fetch("/api/non-streaming-chat", {
+      await fetch("/api/non-streaming-chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
