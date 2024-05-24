@@ -14,6 +14,10 @@ type UseChatSubmitParams = {
   createSupportTicket: boolean;
   inlineSources: boolean;
   lastConversationId?: number;
+  setInput: (input: string) => void;
+  input: string;
+  messages: ChatMessage[];
+  setMessages: (messages: ChatMessage[]) => void;
 };
 
 export const useChatSubmit = ({
@@ -23,10 +27,12 @@ export const useChatSubmit = ({
   model,
   createSupportTicket,
   inlineSources,
-  lastConversationId
+  lastConversationId,
+  setInput,
+  messages,
+  setMessages,
+  input
 }: UseChatSubmitParams) => {
-  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
-  const [input, setInput] = useState<string>("");
   const [aiResponseDone, setAiResponseDone] = useState<boolean>(true);
   const [assistantStreamingResponse, setAssistantStreamingResponse] =
     useState<string>("");
@@ -42,7 +48,7 @@ export const useChatSubmit = ({
         text: input
       })
     ] as ChatMessage[];
-    console.log("updatedMessages: ", updatedMessages);
+
     // send empty response to indicate to user that a reply is coming
     setMessages([
       ...updatedMessages,
@@ -50,6 +56,7 @@ export const useChatSubmit = ({
     ]);
     setAiResponseDone(false);
     setInput("");
+
     const preparedMessages = transformChatMessageToOpenAi(updatedMessages);
 
     const controller = new AbortController();
@@ -78,7 +85,6 @@ export const useChatSubmit = ({
       },
       openWhenHidden: true,
       onmessage(mes: any) {
-        console.log("Received message: ", mes);
         const event = mes.event as string | undefined;
 
         if (event === "closing_connection") {
@@ -130,6 +136,7 @@ export const useChatSubmit = ({
 
     if (assistantStreamingResponse) {
       // Update the last AI message with the streaming response
+      // @ts-expect-error shhh
       setMessages(prevMessages => {
         const lastAssistantAnswer = prevMessages.slice(-1)[0];
         lastAssistantAnswer.text = assistantStreamingResponse;

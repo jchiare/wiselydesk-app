@@ -19,7 +19,6 @@ import { getVisitorSessionId } from "@/lib/visitor/identify";
 import type { Message } from "@prisma/client";
 import type { Stream } from "openai/streaming";
 import type { OpenAiMessage } from "@/lib/chat/openai-chat-message";
-import type { NextApiResponse } from "next";
 
 const openai = new OpenAI();
 const encoder = new TextEncoder();
@@ -78,65 +77,6 @@ export async function POST(req: Request) {
       4
     )} seconds to create initial conversation and messages`
   );
-
-  // should send Generic Agent message
-  console.log(userInput.trim().toLowerCase());
-  if (userInput.trim().toLowerCase() === "agent") {
-    if (botId === 3) {
-      const agentMessage =
-        "AMBOSS Support is online from Monday to Friday between 9am and 5pm EST. You can create a support ticket here to get an answer later or chat with me and I will do my best to help you with your request. <button create> Create Support Ticket</button create>";
-      const lastMessage = await conversationService.createMessage({
-        text: agentMessage,
-        index: updatedMessages.length + 1,
-        finished: true
-      });
-
-      const text = JSON.stringify({
-        text: agentMessage,
-        conversation_id: lastMessage.conversation_id,
-        message_id: lastMessage.id
-      });
-
-      return new Response(
-        `id: ${Date.now()}\nevent: patched_json_response\ndata: ${text}\n\n`,
-        {
-          headers: {
-            "Content-Type": "text/event-stream",
-            Connection: "keep-alive",
-            "Cache-Control": "no-cache, no-transform",
-            "Content-Encoding": "none"
-          }
-        }
-      );
-    } else if (botId === 4) {
-      const agentMessage =
-        "Der AMBOSS Support ist von Montag bis Freitag zwischen 9-17 Uhr online. Du kannst hier ein Support-Ticket erstellen, um später eine Antwort zu erhalten oder mit mir chatten und ich werde mein Bestes tun, um dich bei deinem Anliegen zu unterstützen.  <button create> Support-Ticket erstellen</button create>";
-      const lastMessage = await conversationService.createMessage({
-        text: agentMessage,
-        index: updatedMessages.length + 1,
-        finished: true
-      });
-
-      return new Response(
-        JSON.stringify({
-          data: {
-            text: agentMessage,
-            conversation_id: lastMessage.conversation_id,
-            message_id: lastMessage.id
-          }
-        }),
-        {
-          headers: {
-            "Content-Type": "text/event-stream",
-            Connection: "keep-alive",
-            "Cache-Control": "no-cache, no-transform",
-            "Content-Encoding": "none"
-          }
-        }
-      );
-    }
-    throw new Error(`Bot ${botId} does not have a generic agent message`);
-  }
 
   const kbaSearchClient = new KbaSearch(botId, prisma);
   const topMatchingArticles =

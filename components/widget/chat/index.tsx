@@ -16,6 +16,8 @@ import { getMessagesFromConversationId } from "@/lib/visitor/identify";
 import { PreviousMessages } from "@/components/widget/chat/previous-messages";
 
 import type { Bot, Conversation, Message } from "@prisma/client";
+import { AgentRequest } from "@/lib/shared/agent-request";
+import ChatMessage from "@/lib/chat/chat-message";
 
 export type SearchParams = {
   create_support_ticket?: boolean;
@@ -46,6 +48,8 @@ export default function Chat({
   const [lastConversationMessages, setLastConversationMessages] = useState<
     Message[]
   >([]);
+  const [input, setInput] = useState<string>("");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const scrollHeightRef = useRef<number>(0);
   const divRef = useRef<HTMLDivElement>(null);
@@ -71,9 +75,6 @@ export default function Chat({
   } = searchParams;
 
   const {
-    messages,
-    input,
-    setInput,
     aiResponseDone,
     onSubmit,
     sources,
@@ -87,8 +88,59 @@ export default function Chat({
     model,
     account,
     inlineSources,
+    setInput,
+    messages,
+    setMessages,
+    input,
     lastConversationId: lastConversation?.id
   });
+
+  async function handleSubmit() {
+    const agentRequestClient = new AgentRequest({
+      botId: bot.id
+    });
+    console.log(agentRequestClient.requestingAgent(input));
+    if (agentRequestClient.requestingAgent(input)) {
+      // call non-streaming backend
+      setMessages(prevMessages => [
+        ...prevMessages,
+        new ChatMessage({ text: input, sender: "user" })
+      ]);
+      let savedInput = input;
+      setInput("");
+      const res = await fetch("/api/non-streaming-chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messagesLength: messages.length,
+          userInput: savedInput,
+          clientApiKey,
+          account,
+          model,
+          conversationId,
+          createSupportTicket,
+          inlineSources
+        })
+      })
+        .then(response => response.json())
+        .then(res => {
+          console.log("res: ", res);
+          setMessages(prevMessages => [
+            ...prevMessages,
+            new ChatMessage({ text: res.data.text, sender: "assistant" })
+          ]);
+          setAiResponseDone(true);
+        })
+        .catch(err => {
+          throw new Error(err);
+        });
+      console.log("res: ", res);
+    } else {
+      onSubmit();
+    }
+  }
 
   useEffect(() => {
     const scope = Sentry.getCurrentScope();
@@ -223,7 +275,7 @@ export default function Chat({
           account={account}
           // @ts-expect-error done with ts for the day
           locale={locale}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
           setInput={setInput}
           input={input}
           aiResponseDone={aiResponseDone}
