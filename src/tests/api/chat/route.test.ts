@@ -1,7 +1,7 @@
 import {
   inputCost,
   outputCost,
-  trimMessageUnder5KTokens
+  trimMessageUnder8KTokens
 } from "@/lib/shared/services/openai/cost";
 import type { OpenAiMessage } from "@/lib/chat/openai-chat-message";
 
@@ -9,15 +9,15 @@ const MOCK_MESSAGE: OpenAiMessage[] = [
   { content: "Test message", role: "user" }
 ];
 
-// Adjusting for a scenario that ensures the input message array is under 5k tokens after processing
-const aLargeString = "This is a large string".repeat(1000); // Make sure this is large enough to test the token limit
+// Adjusting for a scenario that ensures the input message array is under 8k tokens after processing
+const aLargeString = "This is a large string".repeat(2400); // Make sure this is large enough to test the token limit
 
 const MOCK_SYSTEM_MESSAGE_OVER_5K: OpenAiMessage[] = [
   { content: aLargeString, role: "system" }, // Assuming the role "system" indicates system messages
   { content: "Second message", role: "user" }
 ];
 
-const aBigString = "This is a big string".repeat(430);
+const aBigString = "This is a big string".repeat(930);
 
 // Example messages array that would exceed the 5K token limit if not modified
 const MOCK_MESSAGES_OVER_5K: OpenAiMessage[] = [
@@ -28,37 +28,36 @@ const MOCK_MESSAGES_OVER_5K: OpenAiMessage[] = [
 
 describe("inputCost", () => {
   it("calculates cost correctly for gpt-4 with short message", () => {
-    const model = "gpt-4";
+    const model = "gpt-4o";
     const expectedCost =
-      (JSON.stringify(MOCK_MESSAGE).length / 4 / 1000) * 0.03;
+      (JSON.stringify(MOCK_MESSAGE).length / 4 / 1000) * 0.005;
     expect(inputCost(MOCK_MESSAGE, model)).toBeCloseTo(expectedCost);
   });
 
   it("handles large messages by adjusting content before cost calculation for gpt-4", () => {
-    const model = "gpt-4";
+    const model = "gpt-4o";
     // Expect the function to not throw due to message size after adjustment
     expect(() => inputCost(MOCK_MESSAGES_OVER_5K, model)).not.toThrow();
   });
 
   it("large system messages throw error", () => {
-    const model = "gpt-4";
     // Expect the function to throw due to message size
     expect(() =>
-      trimMessageUnder5KTokens(MOCK_SYSTEM_MESSAGE_OVER_5K)
+      trimMessageUnder8KTokens(MOCK_SYSTEM_MESSAGE_OVER_5K)
     ).toThrow();
   });
 
   it("calculates cost with message adjustment for large message arrays", () => {
-    const model = "gpt-4";
+    const model = "gpt-4o";
 
-    const adjustedMessages = trimMessageUnder5KTokens(MOCK_MESSAGES_OVER_5K);
+    const adjustedMessages = trimMessageUnder8KTokens(MOCK_MESSAGES_OVER_5K);
     expect(adjustedMessages.length).toBeLessThan(MOCK_MESSAGES_OVER_5K.length);
     expect(JSON.stringify(adjustedMessages).length).toEqual(
       JSON.stringify([MOCK_MESSAGES_OVER_5K[0], MOCK_MESSAGES_OVER_5K[2]])
         .length
     );
     const expectedCost =
-      (JSON.stringify(adjustedMessages).length / 4 / 1000) * 0.03;
+      (JSON.stringify(adjustedMessages).length / 4 / 1000) * 0.005;
     expect(inputCost(adjustedMessages, model)).toBeCloseTo(expectedCost);
   });
 

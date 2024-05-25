@@ -16,6 +16,10 @@ import { getMessagesFromConversationId } from "@/lib/visitor/identify";
 import { PreviousMessages } from "@/components/widget/chat/previous-messages";
 
 import type { Bot, Conversation, Message } from "@prisma/client";
+import { AgentRequest } from "@/lib/shared/agent-request";
+import ChatMessage from "@/lib/chat/chat-message";
+import { useAtom } from "jotai/react";
+import { conversationIdAtom } from "@/lib/state/atoms";
 
 export type SearchParams = {
   create_support_ticket?: boolean;
@@ -23,6 +27,7 @@ export type SearchParams = {
   locale: string;
   inline_sources?: boolean;
   testSupportModal?: boolean;
+  widgetOpen?: string;
 };
 
 type ChatProps = {
@@ -45,6 +50,11 @@ export default function Chat({
   const [lastConversationMessages, setLastConversationMessages] = useState<
     Message[]
   >([]);
+  const [sources, setSources] = useState<string[]>([]);
+  const [latestMessageId, setLatestMessageId] = useState<number | null>();
+  const [conversationId, setConversationId] = useAtom(conversationIdAtom);
+  const [input, setInput] = useState<string>("");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const scrollHeightRef = useRef<number>(0);
   const divRef = useRef<HTMLDivElement>(null);
@@ -65,29 +75,66 @@ export default function Chat({
     locale = "en",
     create_support_ticket: createSupportTicket = true,
     model = "gpt-4o",
-    inline_sources: inlineSources = false,
+    inline_sources: inlineSources = true,
     testSupportModal = false
   } = searchParams;
 
-  const {
-    messages,
-    input,
-    setInput,
-    aiResponseDone,
-    onSubmit,
-    sources,
-    latestMessageId,
-    conversationId,
-    setAiResponseDone
-  } = useChatSubmit({
-    initialMessages: [],
+  const { aiResponseDone, onSubmit, setAiResponseDone } = useChatSubmit({
     clientApiKey,
     createSupportTicket,
     model,
     account,
     inlineSources,
-    lastConversationId: lastConversation?.id
+    setInput,
+    messages,
+    setMessages,
+    input,
+    setSources,
+    setLatestMessageId,
+    setConversationId,
+    conversationId
   });
+
+  async function handleSubmit() {
+    const agentRequestClient = new AgentRequest({
+      botId: bot.id
+    });
+    if (agentRequestClient.requestingAgent(input)) {
+      // call non-streaming backend
+      setMessages(prevMessages => [
+        ...prevMessages,
+        new ChatMessage({ text: input, sender: "user" })
+      ]);
+      let savedInput = input;
+      setInput("");
+      await fetch("/api/non-streaming-chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messagesLength: messages.length,
+          userInput: savedInput,
+          clientApiKey,
+          conversationId
+        })
+      })
+        .then(response => response.json())
+        .then(res => {
+          setMessages(prevMessages => [
+            ...prevMessages,
+            new ChatMessage({ text: res.data.text, sender: "assistant" })
+          ]);
+          setAiResponseDone(true);
+          setSources([]);
+        })
+        .catch(err => {
+          throw new Error(err);
+        });
+    } else {
+      onSubmit();
+    }
+  }
 
   useEffect(() => {
     const scope = Sentry.getCurrentScope();
@@ -153,7 +200,7 @@ export default function Chat({
   return (
     <div
       ref={divRef}
-      className={`flex h-[calc(100vh-20px)] w-full flex-col items-center overflow-scroll text-[90%] antialiased md:h-[calc(100vh-100px)] ${combineClassNames(
+      className={`flex h-full w-full flex-col items-center overflow-scroll text-[90%] antialiased ${combineClassNames(
         chatTheme.baseSettings
       )} flex-shrink-0 font-medium`}>
       {hasLastConversationMessages && (
@@ -222,7 +269,7 @@ export default function Chat({
           account={account}
           // @ts-expect-error done with ts for the day
           locale={locale}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
           setInput={setInput}
           input={input}
           aiResponseDone={aiResponseDone}
