@@ -1,8 +1,9 @@
 import prisma from "@/lib/prisma";
-import { tagEscalatedChats } from "@/lib/shared/services/analytics/chats/tag-escalated";
+import { createTagsEscalatedChats } from "@/lib/shared/services/analytics/chats/tag-escalated";
 import type { NextRequest } from "next/server";
 import type { MessagesGroupedByConversation } from "@/lib/shared/services/analytics/chats/tag-escalated";
 
+export const maxDuration = 75;
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
@@ -52,10 +53,37 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const taggedChats = await tagEscalatedChats(
+  const taggedChats = await createTagsEscalatedChats(
     messagesGroupedByConversation,
     bot.id
   );
+
+  // update escalation table addings tags
+  try {
+    const taggedChats = await createTagsEscalatedChats(
+      messagesGroupedByConversation,
+      bot.id
+    );
+
+    const updatePromises = taggedChats.map(chat => {
+      return prisma.escalation.update({
+        where: {
+          conversation_id: parseInt(chat.conversationId, 10)
+        },
+        data: {
+          tags: chat.tags.join(",")
+        }
+      });
+    });
+
+    await prisma.$transaction(updatePromises);
+
+    console.log("Batch update successful");
+  } catch (error) {
+    console.error("Error updating escalations:", error);
+  } finally {
+    await prisma.$disconnect();
+  }
 
   return Response.json({
     taggedChats

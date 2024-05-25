@@ -28,7 +28,7 @@ type AiResponse = {
 };
 
 const excludedConversations = ["4399", "4402"];
-export async function tagEscalatedChats(
+export async function createTagsEscalatedChats(
   chats: MessagesGroupedByConversation,
   botId: number
 ): Promise<Response[]> {
@@ -65,7 +65,7 @@ export async function tagEscalatedChats(
     // const usage = message.usage;
     const unparsedResponseText = message.choices[0].message.content;
     if (!unparsedResponseText) {
-      throw new Error(`No response from openai tagEscalatedChats`);
+      throw new Error(`No response from openai createTagsEscalatedChats`);
     }
 
     const responseText = JSON.parse(unparsedResponseText) as AiResponse;
