@@ -153,8 +153,10 @@ export default function SupportTicketModal({
                 autoFocus={name.length === 0}
                 name="name"
                 value={name}
-                className="mt-1 w-full rounded border p-2"
+                required
+                className="mt-1 w-full rounded border p-2 invalid:border-2 invalid:border-red-500 invalid:ring-red-500"
                 onChange={e => setName(e.target.value)}
+                minLength={1}
               />
             </label>
             <label className="mb-2 block ">
@@ -167,7 +169,7 @@ export default function SupportTicketModal({
                 name="email"
                 value={email}
                 required
-                className="mt-1 w-full rounded border p-2"
+                className="mt-1 w-full rounded border p-2 "
                 onChange={e => setEmail(e.target.value)}
               />
             </label>
