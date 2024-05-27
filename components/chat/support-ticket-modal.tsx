@@ -18,7 +18,7 @@ type SupportTicketModalProps = {
   conversationId: string | undefined;
   botId: number;
   locale?: string;
-  supportTicketCreated: boolean;
+  supportTicketCreated?: boolean;
   setSupportTicketCreated?: any;
 };
 
