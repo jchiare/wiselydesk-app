@@ -31,7 +31,7 @@ export default async function RightBar({
     select: { reason: true }
   });
 
-  console.log("publicConversationId: ", publicConversationId);
+  console.log("conversationId: ", conversationId);
 
   const hasNextConversation = await prisma.conversation.findFirst({
     where: {
@@ -40,7 +40,6 @@ export default async function RightBar({
     },
     select: { id: true }
   });
-  console.log("has next: ", hasNextConversation);
 
   return (
     <div className="flex h-full flex-col justify-between space-y-4">
