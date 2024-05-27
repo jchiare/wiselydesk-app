@@ -31,8 +31,6 @@ export default async function RightBar({
     select: { reason: true }
   });
 
-  console.log("conversationId: ", conversationId);
-
   const hasNextConversation = await prisma.conversation.findFirst({
     where: {
       public_id: publicConversationId + 1,
