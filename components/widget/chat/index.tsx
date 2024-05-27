@@ -56,6 +56,8 @@ export default function Chat({
   const [input, setInput] = useState<string>("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isOverflowing, setIsOverflowing] = useState(false);
+  const [supportTicketCreated, setSupportTicketCreated] = useState(false);
+
   const scrollHeightRef = useRef<number>(0);
   const divRef = useRef<HTMLDivElement>(null);
 
@@ -251,6 +253,8 @@ export default function Chat({
             createSupportTicket={createSupportTicket}
             bot={bot}
             isOverflowing={isOverflowing}
+            supportTicketCreated={supportTicketCreated}
+            setSupportTicketCreated={setSupportTicketCreated}
           />
         );
       })}

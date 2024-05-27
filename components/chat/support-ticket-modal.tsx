@@ -18,12 +18,16 @@ type SupportTicketModalProps = {
   conversationId: string | undefined;
   botId: number;
   locale?: string;
+  supportTicketCreated: boolean;
+  setSupportTicketCreated?: any;
 };
 
 export default function SupportTicketModal({
   conversationId,
   botId,
-  locale
+  locale,
+  supportTicketCreated = false,
+  setSupportTicketCreated
 }: SupportTicketModalProps): JSX.Element {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [transcript, setTranscript] = useState("");
@@ -35,7 +39,6 @@ export default function SupportTicketModal({
   const [name, setName] = useLocalStorage<string>("savedName", "");
   const [isLoading, setIsLoading] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [ticketCreated, setTicketCreated] = useState(false);
   const [contactReason, setContactReason] = useState<string | null>(null);
 
   function handleClick() {
@@ -98,7 +101,7 @@ export default function SupportTicketModal({
           closeModal();
           setSubmitSuccess(false);
           localStorage.removeItem("savedAdditionalInfo");
-          setTicketCreated(true);
+          setSupportTicketCreated(true);
           setAdditionalInfo("");
         }, 1700);
       } else {
@@ -126,13 +129,13 @@ export default function SupportTicketModal({
       <button
         aria-label="Create Support Ticket"
         onClick={handleClick}
-        disabled={ticketCreated}
+        disabled={supportTicketCreated}
         className={`rounded ${
-          ticketCreated
+          supportTicketCreated
             ? supportTicketSetting.chatButtonCreated
             : supportTicketSetting.chatButton
         } px-4 py-2 font-bold text-white transition-colors duration-300 `}>
-        {ticketCreated
+        {supportTicketCreated
           ? texti18.supportTicketModal.createdButton[adjustedLocale]
           : texti18.supportTicketModal.createButton[adjustedLocale]}
       </button>
