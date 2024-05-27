@@ -26,6 +26,8 @@ type AgentMessageProps = {
   isPreviousMessages?: boolean;
   isWelcomeMessage?: boolean;
   bgColorOverride?: string;
+  supportTicketCreated?: boolean;
+  setSupportTicketCreated?: any;
 };
 
 export default function AgentDiv({
@@ -44,7 +46,9 @@ export default function AgentDiv({
   isOverflowing,
   isPreviousMessages,
   isWelcomeMessage,
-  bgColorOverride
+  bgColorOverride,
+  supportTicketCreated = false,
+  setSupportTicketCreated
 }: AgentMessageProps): JSX.Element {
   const [_, buttonCreateHtml] = removeSupportButton(text);
 
@@ -81,6 +85,8 @@ export default function AgentDiv({
                     conversationId={conversationId}
                     botId={bot.id}
                     locale={locale}
+                    supportTicketCreated={supportTicketCreated}
+                    setSupportTicketCreated={setSupportTicketCreated}
                   />
                 )}
 
