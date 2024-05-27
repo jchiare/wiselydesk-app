@@ -24,7 +24,7 @@ export default async function ChatbotWidget({
   params: Params;
 }): Promise<JSX.Element> {
   const bot = await prisma.bot.findFirst({
-    where: { client_api_key: searchParams.client_api_key }
+    where: { client_api_key: params.clientApiKey }
   });
   if (!bot) {
     return <div>Bot not found</div>;
