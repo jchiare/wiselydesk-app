@@ -76,6 +76,10 @@ export class ZendeskClient {
     data: CreateTicketData,
     options?: TicketOptions
   ): Promise<ZendeskTicket | undefined> {
+    if (process.env.NODE_ENV === "production" && this.botId === "1") {
+      throw new Error("Cannot create ticket for bot 1 in production");
+    }
+
     const ticket = this.createTicketObject(data, options);
     const url = `https://${this.subdomain}.zendesk.com/api/v2/tickets.json`;
     // todo fix at some point ..

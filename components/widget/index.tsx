@@ -22,7 +22,7 @@ export function Widget({
   const [lastConversation, setLastConversation] = useState<
     Conversation | undefined
   >(undefined);
-  const [conversationId, _] = useAtom(conversationIdAtom);
+  // const [conversationId, _] = useAtom(conversationIdAtom);
 
   async function endConversation(conversationId: number) {
     try {
