@@ -128,6 +128,7 @@ export default function Chat({
             new ChatMessage({ text: res.data.text, sender: "assistant" })
           ]);
           setAiResponseDone(true);
+          setConversationId(conversationId);
           setSources([]);
         })
         .catch(err => {
