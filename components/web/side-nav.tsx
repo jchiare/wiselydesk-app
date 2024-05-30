@@ -1,7 +1,7 @@
-import Image from "next/image";
 import BotSelection from "@/components/web/bot-selection";
 
 import { Session } from "next-auth";
+import { UserProfile } from "@/components/web/user-profile";
 import Navigation from "@/components/web/navigation";
 
 import { type Bot } from "@prisma/client";
@@ -32,14 +32,7 @@ export default async function SideNav({
               <div className="flex items-center">
                 <div>
                   <span className="inline-block h-6 w-6 overflow-hidden rounded-full bg-gray-100">
-                    <Image
-                      src={
-                        session?.user?.image ?? "/profile_picture_backup.png"
-                      }
-                      alt="Profile Picture"
-                      width={40}
-                      height={40}
-                    />
+                    <UserProfile imageUrl={session?.user?.image} />
                   </span>
                 </div>
                 <div className="ml-3">
