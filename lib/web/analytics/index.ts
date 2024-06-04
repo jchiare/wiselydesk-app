@@ -280,8 +280,8 @@ export class Analytics {
     botId: string,
     today: Date
   ): Promise<ConversationAnalyticsData[]> {
-    const oneHundredTwentyDaysAgo = Math.floor(
-      new Date(today).setDate(today.getDate() - 120) / 1000
+    const jan1st2024 = Math.floor(
+      new Date("2024-01-01T00:00:00Z").getTime() / 1000
     );
 
     const conversations = await this.prisma.$queryRaw<RawConversationData[]>`
@@ -311,14 +311,14 @@ export class Analytics {
         JOIN conversation c ON m.conversation_id = c.id
       WHERE
         m.bot_id = ${botId} AND
-        UNIX_TIMESTAMP(m.created_at) >= ${oneHundredTwentyDaysAgo} AND
+        UNIX_TIMESTAMP(m.created_at) >= ${jan1st2024} AND
         c.livemode = 1
       GROUP BY
         c.id, 4
     ) AS conversation
       WHERE
         bot_id = ${botId} AND
-        UNIX_TIMESTAMP(created_at) >= ${oneHundredTwentyDaysAgo}
+        UNIX_TIMESTAMP(created_at) >= ${jan1st2024}
       GROUP BY
       4
     `;
