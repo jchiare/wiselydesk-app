@@ -70,7 +70,7 @@ export default async function WebLayout({
   const orgId = orgChooser(session);
   const bots = await getBots(orgId);
 
-  await setActivity(session.user.internal_user_id, orgId);
+  // await setActivity(session.user.internal_user_id, orgId);
 
   return (
     <div className="m-0 flex h-screen w-full bg-gray-100 p-0">

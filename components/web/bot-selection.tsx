@@ -54,7 +54,7 @@ export default function BotSelection({ bots }: { bots: Bot[] }) {
   return (
     <Listbox value={bot} onChange={handleBotChange}>
       {({ open }) => (
-        <>
+        <div className="h-16">
           <Listbox.Label className="block pt-6 text-center font-medium leading-6 text-white">
             Choose your bot
           </Listbox.Label>
@@ -112,7 +112,7 @@ export default function BotSelection({ bots }: { bots: Bot[] }) {
               </Listbox.Options>
             </Transition>
           </div>
-        </>
+        </div>
       )}
     </Listbox>
   );
