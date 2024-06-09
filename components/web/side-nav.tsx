@@ -20,27 +20,21 @@ export default async function SideNav({
         className="mt-[20px] flex w-full border-t border-gray-300"
       />
 
-      <ul role="list" className="flex flex-1 flex-col gap-y-7">
+      <ul role="list" className="flex flex-1 flex-col justify-between">
         <li>
           <Navigation />
         </li>
-        <li className="-mx-6 mt-auto">
-          <hr className="border text-gray-400" />
-          <div className="flex items-center justify-center gap-x-4 py-3 pr-6 text-sm font-semibold leading-6 text-gray-400 hover:cursor-pointer hover:bg-gray-600">
-            <div className="flex items-center">
-              <div>
-                <span className="inline-block h-6 w-6 overflow-hidden rounded-full bg-gray-100">
-                  <UserProfile imageUrl={session?.user?.image} />
-                </span>
-              </div>
-              <div className="ml-3">
-                {session && session.user && (
-                  <p className="text-sm font-medium text-gray-500 group-hover:text-gray-600">
-                    {session.user.name}
-                  </p>
-                )}
-              </div>
-            </div>
+        <li>
+          <hr className="-mx-6 border text-gray-400" />
+          <div className="flex items-center justify-center py-3 pr-6 text-sm font-semibold leading-6 text-gray-400">
+            <span className="inline-block h-6 w-6 overflow-hidden rounded-full bg-gray-100">
+              <UserProfile imageUrl={session?.user?.image} />
+            </span>
+            {session?.user?.name && (
+              <p className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-600">
+                {session.user.name}
+              </p>
+            )}
           </div>
         </li>
       </ul>
