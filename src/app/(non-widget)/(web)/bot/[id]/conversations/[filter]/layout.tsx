@@ -23,7 +23,7 @@ export default function ConversationsLayout({
           </p>
         </div>
       </div>
-      <div className="-mx-4 mt-8 sm:-mx-0">
+      <div className="mt-8">
         <ConversationsTableFilter filter={params.filter} />
         <>{children}</>
       </div>
