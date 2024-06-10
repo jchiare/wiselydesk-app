@@ -5,6 +5,14 @@ import Navigation from "@/components/web/navigation";
 
 import { type Bot } from "@prisma/client";
 
+function getUserInitials(name: string) {
+  const initials = name
+    .split(" ")
+    .map(part => part[0])
+    .join("");
+  return initials;
+}
+
 export default async function SideNav({
   session,
   bots
@@ -26,13 +34,16 @@ export default async function SideNav({
         </li>
         <li>
           <hr className="-mx-6 border text-gray-400" />
-          <div className="flex items-center justify-center py-3 pr-6 text-sm font-semibold leading-6 text-gray-400">
+          <div className="mx-auto flex items-center justify-center gap-x-2 py-3 text-sm font-semibold leading-6 text-gray-400">
             <span className="inline-block h-6 w-6 overflow-hidden rounded-full bg-gray-100">
               <UserProfile imageUrl={session?.user?.image} />
             </span>
             {session?.user?.name && (
-              <p className="ml-3 text-sm font-medium text-gray-500 group-hover:text-gray-600">
-                {session.user.name}
+              <p className="mr-2 text-sm font-medium text-gray-500 group-hover:text-gray-600">
+                <span className="hidden sm:inline">{session.user.name}</span>
+                <span className="sm:hidden">
+                  {getUserInitials(session.user.name)}
+                </span>
               </p>
             )}
           </div>

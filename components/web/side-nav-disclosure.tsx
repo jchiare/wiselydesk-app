@@ -46,7 +46,7 @@ export default function SideNavDisclosure({
             leave="transition duration-75 ease-out"
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0">
-            <Disclosure.Panel as="ul" className="mt-1 px-2" unmount={true}>
+            <Disclosure.Panel as="ul" unmount={true}>
               {item.children?.map((subItem: NavigationItem) => (
                 <li key={subItem.name}>
                   {/* 44px */}
@@ -57,7 +57,7 @@ export default function SideNavDisclosure({
                       subItem.href === currentItem?.href
                         ? "bg-gray-700"
                         : "hover:bg-gray-700",
-                      "block rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-gray-400"
+                      "block rounded-md text-sm leading-6 text-gray-400"
                     )}>
                     <span className="hidden sm:inline">{subItem.name}</span>
                   </Disclosure.Button>

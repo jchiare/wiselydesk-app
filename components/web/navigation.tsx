@@ -63,9 +63,9 @@ export default function Navigation() {
   );
 
   return (
-    <ul role="list" className="-mx-0 space-y-1">
+    <ul role="list" className="space-y-1">
       <li>
-        <ul role="list" className="-mx-2 space-y-1">
+        <ul role="list" className="space-y-1">
           {navigation.map(item => (
             <li key={item.name}>
               {!item?.children ? (
@@ -75,10 +75,10 @@ export default function Navigation() {
                     item.href === currentItem?.href
                       ? "bg-gray-700"
                       : "hover:bg-gray-700",
-                    "group flex gap-x-3 rounded-md text-sm font-semibold leading-6 text-gray-400"
+                    "flex justify-center gap-x-4 rounded-md text-sm font-semibold leading-6 text-gray-400"
                   )}>
                   <item.icon
-                    className="h-6 w-6 shrink-0 scale-75 text-gray-400 sm:scale-100"
+                    className=" h-4 w-4 shrink-0 text-gray-400 sm:h-6 sm:w-6"
                     aria-hidden="true"
                   />
                   <span className="hidden sm:inline">{item.name}</span>
