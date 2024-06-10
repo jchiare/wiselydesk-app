@@ -75,13 +75,13 @@ export default function Navigation() {
                     item.href === currentItem?.href
                       ? "bg-gray-700"
                       : "hover:bg-gray-700",
-                    "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400"
+                    "group flex gap-x-3 rounded-md text-sm font-semibold leading-6 text-gray-400"
                   )}>
                   <item.icon
-                    className="h-6 w-6 shrink-0 text-gray-400"
+                    className="h-6 w-6 shrink-0 scale-75 text-gray-400 sm:scale-100"
                     aria-hidden="true"
                   />
-                  {item.name}
+                  <span className="hidden sm:inline">{item.name}</span>
                 </Link>
               ) : (
                 <SideNavDisclosure currentItem={currentItem} item={item} />

@@ -27,10 +27,10 @@ export default function SideNavDisclosure({
               "flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-400"
             )}>
             <item.icon
-              className="h-6 w-6 shrink-0 text-gray-400"
+              className="h-6 w-6 shrink-0 scale-75 text-gray-400 sm:scale-100"
               aria-hidden="true"
             />
-            {item.name}
+            <span className="hidden sm:inline">{item.name}</span>
             <ChevronRightIcon
               className={concatClassNames(
                 open ? "rotate-90 text-gray-500" : "text-gray-400",
@@ -59,7 +59,7 @@ export default function SideNavDisclosure({
                         : "hover:bg-gray-700",
                       "block rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-gray-400"
                     )}>
-                    {subItem.name}
+                    <span className="hidden sm:inline">{subItem.name}</span>
                   </Disclosure.Button>
                 </li>
               ))}
