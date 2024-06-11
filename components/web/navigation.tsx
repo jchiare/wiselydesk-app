@@ -63,33 +63,30 @@ export default function Navigation() {
   );
 
   return (
-    <ul role="list" className="-mx-0 space-y-1">
-      <li>
-        <ul role="list" className="-mx-2 space-y-1">
-          {navigation.map(item => (
-            <li key={item.name}>
-              {!item?.children ? (
-                <Link
-                  href={item.href}
-                  className={concatClassNames(
-                    item.href === currentItem?.href
-                      ? "bg-gray-700"
-                      : "hover:bg-gray-700",
-                    "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400"
-                  )}>
-                  <item.icon
-                    className="h-6 w-6 shrink-0 text-gray-400"
-                    aria-hidden="true"
-                  />
-                  {item.name}
-                </Link>
-              ) : (
-                <SideNavDisclosure currentItem={currentItem} item={item} />
-              )}
-            </li>
-          ))}
-        </ul>
-      </li>
+    <ul role="list" className="space-y-1">
+      {navigation.map(item => (
+        <li key={item.name}>
+          {!item?.children ? (
+            <Link
+              href={item.href}
+              className={concatClassNames(
+                item.href === currentItem?.href
+                  ? "bg-gray-700"
+                  : "hover:bg-gray-700",
+                "flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-400"
+                // "flex justify-center gap-x-4 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400"
+              )}>
+              <item.icon
+                className=" h-5 w-5 shrink-0 text-gray-400 sm:h-6 sm:w-6"
+                aria-hidden="true"
+              />
+              <span className="hidden sm:inline">{item.name}</span>
+            </Link>
+          ) : (
+            <SideNavDisclosure currentItem={currentItem} item={item} />
+          )}
+        </li>
+      ))}
     </ul>
   );
 }
