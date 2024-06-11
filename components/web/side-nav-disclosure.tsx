@@ -27,7 +27,7 @@ export default function SideNavDisclosure({
               "flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-400"
             )}>
             <item.icon
-              className="h-4 w-4 shrink-0 text-gray-400 sm:h-6 sm:w-6"
+              className="h-5 w-5 shrink-0 text-gray-400 sm:h-6 sm:w-6"
               aria-hidden="true"
             />
             <span className="hidden sm:inline">{item.name}</span>
