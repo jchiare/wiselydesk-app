@@ -62,11 +62,11 @@ export default async function SingleConversationPage({
   };
 
   return (
-    <div className="flex">
-      <div className="mr-[300px] px-4 py-14 sm:px-6 lg:px-16">
+    <div className="flex flex-col-reverse sm:flex-col">
+      <div className="px-4 py-14 sm:mr-[300px] sm:px-6 lg:px-16">
         <SingleConversation conversation={conversationObject} />
       </div>
-      <div className="fixed right-0 h-screen min-w-[350px] max-w-[350px] border-2 border-y-0 border-gray-300 bg-gray-200">
+      <div className="border-2 border-y-0 border-gray-300 bg-gray-200 sm:fixed sm:right-0 sm:h-screen sm:min-w-[350px] sm:max-w-[350px]">
         <RightBar
           toReview={conversationObject.conversation.to_review}
           ticketDeflected={conversationObject.conversation.ticket_deflected}
