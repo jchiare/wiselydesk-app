@@ -50,23 +50,16 @@ export default function ConversationTable({
       key={conversation.id}
       onClick={() => goToConversation(conversation.public_id)}
       className="hover:cursor-pointer hover:bg-gray-200">
-      <td className={`px-3 py-4 text-sm text-gray-900 `}>
+      <td className={`hidden px-3 py-4 text-sm text-gray-900 sm:table-cell `}>
         {conversation.public_id}
       </td>
       <td
-        className={`w-[50%] py-4 pl-2 pr-3 text-sm font-medium text-gray-900 `}>
+        className={`hidden w-[50%] py-4 pl-2 pr-3 text-sm font-medium text-gray-900 sm:table-cell`}>
         {truncateSummary(conversation.summary)}
-
-        <dl className="font-normal lg:hidden">
-          <dt className="sr-only">ID</dt>
-          <dd className="ml-4 mt-1 truncate text-gray-700">
-            {conversation.public_id}
-          </dd>
-          <dt className="sr-only  sm:hidden">Summary</dt>
-          <dd className="mt-1 truncate text-gray-500 sm:hidden">
-            {truncateSummary(conversation.summary)}
-          </dd>
-        </dl>
+      </td>
+      <td
+        className={`table-cell w-[45%] py-4 pl-2 pr-3 text-sm font-medium text-gray-900 sm:hidden`}>
+        {truncateSummary(conversation.summary, 75)}
       </td>
       <td className={`hidden px-3 py-4 text-sm text-gray-500 sm:table-cell `}>
         {filter === "escalated"
@@ -83,7 +76,7 @@ export default function ConversationTable({
           : "Negative"}
       </td>
       <td
-        className={`hidden overflow-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell `}>
+        className={` table-cell overflow-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500 `}>
         {formatDateTime(conversation.created_at)}
       </td>
     </tr>

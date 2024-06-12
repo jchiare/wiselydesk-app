@@ -76,7 +76,7 @@ export default async function ConversationsPage({
         <tr>
           <th
             scope="col"
-            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+            className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
             ID
           </th>
           <th
@@ -96,8 +96,8 @@ export default async function ConversationsPage({
           </th>
           <th
             scope="col"
-            className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
-            First Message At
+            className=" px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
+            First Message
           </th>
         </tr>
       </thead>
