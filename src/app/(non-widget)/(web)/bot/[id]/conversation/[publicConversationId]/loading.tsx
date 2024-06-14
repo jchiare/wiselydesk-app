@@ -26,7 +26,7 @@ const firstMessage = {
 export default function SingleConversationLoading() {
   return (
     <div className="flex flex-col-reverse sm:flex-col">
-      <div className="px-4 py-14 sm:mr-[300px] sm:px-6 lg:px-16">
+      <div className="p-4 sm:mr-[300px] sm:px-6 sm:py-14 lg:px-16">
         <div>
           <AgentMessage
             text={firstMessage.text}
