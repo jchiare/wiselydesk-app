@@ -27,10 +27,10 @@ export default function SideNavDisclosure({
               "flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-400"
             )}>
             <item.icon
-              className="h-6 w-6 shrink-0 text-gray-400"
+              className="h-5 w-5 shrink-0 text-gray-400 sm:h-6 sm:w-6"
               aria-hidden="true"
             />
-            {item.name}
+            <span className="hidden sm:inline">{item.name}</span>
             <ChevronRightIcon
               className={concatClassNames(
                 open ? "rotate-90 text-gray-500" : "text-gray-400",
@@ -46,7 +46,7 @@ export default function SideNavDisclosure({
             leave="transition duration-75 ease-out"
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0">
-            <Disclosure.Panel as="ul" className="mt-1 px-2" unmount={true}>
+            <Disclosure.Panel as="ul" unmount={false} className="flex flex-col">
               {item.children?.map((subItem: NavigationItem) => (
                 <li key={subItem.name}>
                   {/* 44px */}
@@ -57,9 +57,12 @@ export default function SideNavDisclosure({
                       subItem.href === currentItem?.href
                         ? "bg-gray-700"
                         : "hover:bg-gray-700",
-                      "block rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-gray-400"
+                      "flex justify-center rounded-md p-1 text-sm leading-6 text-gray-400 sm:justify-start sm:pl-3"
                     )}>
-                    {subItem.name}
+                    <span className="hidden sm:inline">{subItem.name}</span>
+                    <span className="inline text-center sm:hidden">
+                      {subItem.name.charAt(0).toUpperCase()}
+                    </span>
                   </Disclosure.Button>
                 </li>
               ))}

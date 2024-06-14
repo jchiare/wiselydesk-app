@@ -134,7 +134,10 @@ export default function Chat({
             new ChatMessage({ text: res.data.text, sender: "assistant" })
           ]);
           setAiResponseDone(true);
-          setConversationId(conversationId);
+          if (!conversationId) {
+            const conversationId = res.data.conversationId;
+            setConversationId(conversationId);
+          }
           setSources([]);
         })
         .catch(err => {
