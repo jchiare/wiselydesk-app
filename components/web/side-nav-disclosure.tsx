@@ -46,7 +46,7 @@ export default function SideNavDisclosure({
             leave="transition duration-75 ease-out"
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0">
-            <Disclosure.Panel as="ul" unmount={true}>
+            <Disclosure.Panel as="ul" unmount={false} className="flex flex-col">
               {item.children?.map((subItem: NavigationItem) => (
                 <li key={subItem.name}>
                   {/* 44px */}
@@ -57,9 +57,12 @@ export default function SideNavDisclosure({
                       subItem.href === currentItem?.href
                         ? "bg-gray-700"
                         : "hover:bg-gray-700",
-                      "block rounded-md text-sm leading-6 text-gray-400"
+                      "flex justify-center rounded-md p-1 text-sm leading-6 text-gray-400 sm:justify-start sm:pl-3"
                     )}>
                     <span className="hidden sm:inline">{subItem.name}</span>
+                    <span className="inline text-center sm:hidden">
+                      {subItem.name.charAt(0).toUpperCase()}
+                    </span>
                   </Disclosure.Button>
                 </li>
               ))}
