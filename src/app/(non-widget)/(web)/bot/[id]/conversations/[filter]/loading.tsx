@@ -7,7 +7,7 @@ export default function LoadingConversations() {
         <tr>
           <th
             scope="col"
-            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+            className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
             ID
           </th>
           <th
@@ -22,13 +22,13 @@ export default function LoadingConversations() {
           </th>
           <th
             scope="col"
-            className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">
+            className="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
             Rating
           </th>
           <th
             scope="col"
             className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-            First Message At
+            First Message
           </th>
         </tr>
       </thead>
