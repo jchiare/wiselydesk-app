@@ -17,7 +17,7 @@ type UseChatSubmitParams = {
   setSources: (sources: string[]) => void;
   setConversationId: any;
   setLatestMessageId: (latestMessageId: number) => void;
-  conversationId: number | undefined;
+  conversationId: number | null;
 };
 
 export const useChatSubmit = ({

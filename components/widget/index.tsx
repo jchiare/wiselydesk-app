@@ -6,6 +6,7 @@ import { useAtom } from "jotai";
 import { conversationIdAtom } from "@/lib/state/atoms";
 import type { Bot, Conversation } from "@prisma/client";
 import type { ChatThemeSettings } from "@/lib/chat/chat-theme";
+import type ChatMessage from "@/lib/chat/chat-message";
 
 export function Widget({
   clientApiKey,
@@ -19,9 +20,8 @@ export function Widget({
   chatTheme: ChatThemeSettings;
 }): JSX.Element {
   const { widgetOpen } = searchParams;
-  const [lastConversation, setLastConversation] = useState<
-    Conversation | undefined
-  >(undefined);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [conversationId, setConversationId] = useState<number | null>(null);
   // const [conversationId, _] = useAtom(conversationIdAtom);
 
   async function endConversation(conversationId: number) {
@@ -44,7 +44,10 @@ export function Widget({
             searchParams={searchParams}
             account={"amboss"}
             bot={bot}
-            lastConversation={lastConversation}
+            messages={messages}
+            setMessages={setMessages}
+            conversationId={conversationId}
+            setConversationId={setConversationId}
           />
         </div>
       )}
