@@ -5,6 +5,23 @@
   </head>
   <body>
     <h1>nothing to see</h1>
-    <script src="amboss-widget.js"></script>
+    <script>
+      var isLocalTesting = localStorage.getItem("wiselydesk-local-testing");
+      if (isLocalTesting === "true") {
+        var script = document.createElement("script");
+        script.src = "amboss-widget.js";
+        document.body.appendChild(script);
+      } else {
+        var password = prompt("Please enter the password:");
+        if (password === "jaycberlin") {
+          localStorage.setItem("wiselydesk-local-testing", "true");
+          var script = document.createElement("script");
+          script.src = "amboss-widget.js";
+          document.body.appendChild(script);
+        } else {
+          window.location.href = "https://www.google.com";
+        }
+      }
+    </script>
   </body>
 </html>
