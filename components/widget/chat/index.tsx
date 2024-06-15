@@ -36,7 +36,11 @@ type ChatProps = {
   account: string;
   bot: Bot;
   clientApiKey: string;
-  lastConversation: Conversation | undefined;
+  lastConversation?: Conversation | undefined;
+  messages: ChatMessage[];
+  setMessages: React.Dispatch<React.SetStateAction<ChatMessage[]>>;
+  conversationId: number | null;
+  setConversationId: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
 export default function Chat({
@@ -45,16 +49,18 @@ export default function Chat({
   account,
   bot,
   clientApiKey,
-  lastConversation
+  lastConversation,
+  messages,
+  setMessages,
+  conversationId,
+  setConversationId
 }: ChatProps): JSX.Element {
   const [lastConversationMessages, setLastConversationMessages] = useState<
     Message[]
   >([]);
   const [sources, setSources] = useState<string[]>([]);
   const [latestMessageId, setLatestMessageId] = useState<number | null>();
-  const [conversationId, setConversationId] = useAtom(conversationIdAtom);
   const [input, setInput] = useState<string>("");
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [supportTicketCreated, setSupportTicketCreated] = useState(false);
 
