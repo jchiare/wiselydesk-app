@@ -42,15 +42,12 @@ export default function SideNav({
           <span className="ml-2 font-medium text-white">Menu</span>
         </button>
       </div>
-      <ul
-        role="list"
+      <div
         className={`${
           isMobileMenuOpen ? "flex" : "hidden"
         } w-full justify-between gap-y-5 border-r border-gray-200 bg-gray-800 sm:w-56 sm:flex-1 sm:flex-col sm:px-6 `}>
-        <li>
-          <Navigation />
-        </li>
-        <li className="hidden sm:block">
+        <Navigation />
+        <div className="hidden sm:block">
           <hr className="-mx-6 border text-gray-400" />
           <div className="mx-auto flex items-center justify-center gap-x-2 py-3 text-sm font-semibold leading-6 text-gray-400">
             <span className="hidden h-6 w-6 overflow-hidden rounded-full bg-gray-100 sm:inline-block">
@@ -65,8 +62,8 @@ export default function SideNav({
               </p>
             )}
           </div>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   );
 }
