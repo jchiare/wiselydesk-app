@@ -45,7 +45,7 @@ export default function SideNav({
       <div
         className={`${
           isMobileMenuOpen ? "flex" : "hidden"
-        } w-full justify-between gap-y-5 border-r border-gray-200 bg-gray-800 sm:w-56 sm:flex-1 sm:flex-col sm:px-6 `}>
+        } w-full flex-col justify-between gap-y-5 border-r border-gray-200 bg-gray-800 sm:w-56 sm:flex-1 sm:px-6 `}>
         <Navigation />
         <div className="hidden sm:block">
           <hr className="-mx-6 border text-gray-400" />
