@@ -63,7 +63,7 @@ export default function Navigation() {
   );
 
   return (
-    <ul role="list" className="space-y-1">
+    <ul role="list" className="flex-row space-y-1">
       {navigation.map(item => (
         <li key={item.name}>
           {!item?.children ? (

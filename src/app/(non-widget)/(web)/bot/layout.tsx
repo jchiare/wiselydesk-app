@@ -73,7 +73,7 @@ export default async function WebLayout({
   // await setActivity(session.user.internal_user_id, orgId);
 
   return (
-    <div className="flex h-screen w-full bg-gray-100">
+    <div className="flex h-screen w-full flex-col bg-gray-100 sm:flex-row">
       <SideNav session={session} bots={bots} />
       <main className="w-full flex-1 overflow-y-scroll sm:w-auto">
         {children}
