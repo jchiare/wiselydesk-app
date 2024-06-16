@@ -23,7 +23,7 @@ export default function SideNav({
   session: Session;
   bots: Bot[];
 }): JSX.Element {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
 
   return (
     <div className="flex flex-col">
@@ -38,9 +38,9 @@ export default function SideNav({
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label={isMobileMenuOpen ? "Close Menu" : "Open Menu"}>
           {isMobileMenuOpen ? (
-            <XMarkIcon className="h-6 w-6" />
+            <XMarkIcon className={`sh-6 w-6`} />
           ) : (
-            <Bars3Icon className="h-6 w-6" />
+            <Bars3Icon className={`sh-6 w-6 `} />
           )}
           <span className="ml-2 font-medium text-white">
             {isMobileMenuOpen ? "Close" : "Menu"}
@@ -49,7 +49,7 @@ export default function SideNav({
       </div>
       <div
         className={`${
-          isMobileMenuOpen ? "flex" : "hidden"
+          isMobileMenuOpen ? "flex sm:hidden" : "hidden sm:flex"
         } w-full flex-col justify-between gap-y-5 border-r border-gray-200 bg-gray-800 sm:w-56 sm:flex-1 sm:px-6 `}>
         <Navigation />
         <div className="hidden sm:block">
