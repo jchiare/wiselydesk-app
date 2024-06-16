@@ -23,7 +23,7 @@ export default function SideNav({
   session: Session;
   bots: Bot[];
 }): JSX.Element {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(true);
 
   return (
     <div className="flex w-full gap-y-5 border-r border-gray-200 bg-gray-800 sm:w-56 sm:flex-col sm:px-6 ">
@@ -33,7 +33,18 @@ export default function SideNav({
         className="mt-[20px] hidden w-full border-t border-gray-300 sm:flex"
       />
 
-      <ul role="list" className="flex flex-1 justify-between sm:flex-col">
+      <button
+        className="flex w-[60%] justify-center p-4 text-gray-500 sm:hidden"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        aria-label="Open Menu">
+        <Bars3Icon className="h-6 w-6" />
+        <span className="ml-2 font-medium text-white">Menu</span>
+      </button>
+      <ul
+        role="list"
+        className={`${
+          isMobileMenuOpen ? "flex" : "hidden"
+        } justify-between sm:flex-1 sm:flex-col`}>
         <li>
           <Navigation />
         </li>
