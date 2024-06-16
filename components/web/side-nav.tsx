@@ -3,7 +3,7 @@ import BotSelection from "@/components/web/bot-selection";
 import { Session } from "next-auth";
 import { UserProfile } from "@/components/web/user-profile";
 import Navigation from "@/components/web/navigation";
-import { Bars3Icon } from "@heroicons/react/24/outline"; // Assuming heroicons is available
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"; // Assuming heroicons is available
 
 import { type Bot } from "@prisma/client";
 import { useState } from "react";
@@ -33,13 +33,18 @@ export default function SideNav({
           aria-hidden="true"
           className="my-5 hidden w-full border-t border-gray-300 sm:flex"
         />
-
         <button
           className="flex w-[60%] justify-center p-4 text-gray-500 sm:hidden"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label="Open Menu">
-          <Bars3Icon className="h-6 w-6" />
-          <span className="ml-2 font-medium text-white">Menu</span>
+          aria-label={isMobileMenuOpen ? "Close Menu" : "Open Menu"}>
+          {isMobileMenuOpen ? (
+            <XMarkIcon className="h-6 w-6" />
+          ) : (
+            <Bars3Icon className="h-6 w-6" />
+          )}
+          <span className="ml-2 font-medium text-white">
+            {isMobileMenuOpen ? "Close" : "Menu"}
+          </span>
         </button>
       </div>
       <div
