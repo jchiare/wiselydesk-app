@@ -63,31 +63,33 @@ export default function Navigation() {
   );
 
   return (
-    <ul role="list" className="space-y-1">
-      {navigation.map(item => (
-        <li key={item.name}>
-          {!item?.children ? (
-            <Link
-              href={item.href}
-              className={concatClassNames(
-                item.href === currentItem?.href
-                  ? "bg-gray-700"
-                  : "hover:bg-gray-700",
-                "flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-400"
-                // "flex justify-center gap-x-4 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400"
-              )}>
-              <item.icon
-                className=" h-5 w-5 shrink-0 text-gray-400 sm:h-6 sm:w-6"
-                aria-hidden="true"
-              />
-              <span className="hidden sm:inline">{item.name}</span>
-            </Link>
-          ) : (
-            <SideNavDisclosure currentItem={currentItem} item={item} />
-          )}
-        </li>
-      ))}
-    </ul>
+    <div className="flex w-full flex-col items-center space-y-1">
+      {navigation.map(item =>
+        !item?.children ? (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={concatClassNames(
+              item.href === currentItem?.href
+                ? "bg-gray-700"
+                : "hover:bg-gray-700",
+              "flex w-full items-center justify-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-400 sm:justify-normal"
+            )}>
+            <item.icon
+              className=" h-5 w-5 shrink-0 text-gray-400 sm:h-6 sm:w-6"
+              aria-hidden="true"
+            />
+            {item.name}
+          </Link>
+        ) : (
+          <SideNavDisclosure
+            key={item.name}
+            currentItem={currentItem}
+            item={item}
+          />
+        )
+      )}
+    </div>
   );
 }
 
