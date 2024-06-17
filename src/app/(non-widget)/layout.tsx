@@ -12,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="box-border h-full w-full antialiased">
+    <html lang="en" className="box-border antialiased">
       <head>
         <link
           rel="icon"
@@ -21,7 +21,7 @@ export default function RootLayout({
           sizes="<generated>"
         />
       </head>
-      <body className="h-full w-full">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }

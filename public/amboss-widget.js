@@ -34,16 +34,6 @@ function isOutsideBusinessHours() {
   );
 }
 
-if (
-  window.location.href.includes("wiselydeskTesting") ||
-  isOutsideBusinessHours()
-) {
-  const isEnglish = url.includes("en-us");
-  createWiselyDeskWidget(isEnglish, wiselyDeskWidgetOpen);
-  hideZendeskWidget("#zw-customLauncher");
-  createSupportWidget(wiselyDeskWidgetOpen);
-}
-
 function hideZendeskWidget(selector) {
   let attempts = 0;
   const maxAttempts = 50; // 10 seconds / 0.2 seconds per attempt
@@ -61,40 +51,53 @@ function hideZendeskWidget(selector) {
   }, 200);
 }
 
-function createWiselyDeskWidget(isEnglish, wiselyDeskWidgetOpen) {
+function createIFrame(isEnglish, wiselyDeskWidgetOpen) {
   let container = document.getElementById("wiselyDeskContainer");
   // Check if the container exists; if not, create it
   if (!container) {
     container = document.createElement("div");
     container.id = "wiselyDeskContainer";
-    container.style = `position: fixed; bottom: 0; right: 0; overflow: hidden; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);`;
+    container.style = `position: fixed; bottom: 0; right: 0; overflow: hidden; max-height: 800px; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);`;
     document.body.appendChild(container);
   }
 
   // Adjust container size based on the widget state
-  container.style.width = wiselyDeskWidgetOpen ? "620px" : "60px";
+  if (window.outerWidth < 600) {
+    container.style.width = wiselyDeskWidgetOpen ? "100vw" : "60px";
+  } else {
+    container.style.width = wiselyDeskWidgetOpen ? "620px" : "60px";
+    container.style.right = "1.25rem";
+  }
+
   container.style.height = "calc(100% - 85px)";
 
   // Always remove the existing iframe and create a new one
   const existingIframe = document.getElementById("wiselyDeskIframe");
-  if (existingIframe) {
-    container.removeChild(existingIframe);
+  if (!existingIframe && wiselyDeskWidgetOpen) {
+    // Create a new iframe
+    const host = url.includes("localhost:3000")
+      ? "http://localhost:3000"
+      : "https://apps.wiselydesk.com";
+    const iframeUrl = isEnglish
+      ? `${host}/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}`
+      : `${host}/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de`;
+    const iframe = document.createElement("iframe");
+    iframe.id = "wiselyDeskIframe";
+    iframe.src = iframeUrl;
+    iframe.style = `width: 100%; height: 100%; border: 0; opacity: 1; transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);`;
+
+    // Append the new iframe to the container
+    container.appendChild(iframe);
+  } else if (existingIframe && !wiselyDeskWidgetOpen) {
+    // Update the existing iframe
+    existingIframe.style.display = "none";
+  } else if (existingIframe && wiselyDeskWidgetOpen) {
+    // Update the existing iframe
+    existingIframe.style.display = "block";
   }
-
-  // Create a new iframe
-  const iframeUrl = isEnglish
-    ? `https://apps.wiselydesk.com/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}`
-    : `https://apps.wiselydesk.com/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de`;
-  const iframe = document.createElement("iframe");
-  iframe.id = "wiselyDeskIframe";
-  iframe.src = iframeUrl;
-  iframe.style = `width: 100%; height: 100%; border: 0; opacity: 1; transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);`;
-
-  // Append the new iframe to the container
-  container.appendChild(iframe);
 }
 
-function createSupportWidget(wiselyDeskWidgetOpen) {
+function createSupportWidgetButton(wiselyDeskWidgetOpen) {
   const widgetContainer = document.createElement("div");
   widgetContainer.innerHTML = `
     <div style="position: fixed; bottom: 12px; right: 12px; height: 60px; width: 60px; transform-origin: center; user-select: none; transition: transform 0.1s ease-in; cursor: pointer;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
@@ -128,6 +131,16 @@ function handleWidgetClick() {
   // Toggle the widget open state
   wiselyDeskWidgetOpen = !wiselyDeskWidgetOpen;
   // Update both widgets with the new state
-  createWiselyDeskWidget(url.includes("en-us"), wiselyDeskWidgetOpen);
-  createSupportWidget(wiselyDeskWidgetOpen);
+  createIFrame(url.includes("en-us"), wiselyDeskWidgetOpen);
+  createSupportWidgetButton(wiselyDeskWidgetOpen);
+}
+
+if (
+  window.location.href.includes("wiselydeskTesting") ||
+  isOutsideBusinessHours()
+) {
+  const isEnglish = url.includes("en-us");
+  createIFrame(isEnglish, wiselyDeskWidgetOpen);
+  hideZendeskWidget("#zw-customLauncher");
+  createSupportWidgetButton(wiselyDeskWidgetOpen);
 }

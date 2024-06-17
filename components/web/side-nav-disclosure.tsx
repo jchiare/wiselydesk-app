@@ -16,7 +16,11 @@ export default function SideNavDisclosure({
   );
 
   return (
-    <Disclosure as="div" defaultOpen={isChildSelected} key={currentItem?.href}>
+    <Disclosure
+      as="div"
+      className="w-full justify-center"
+      defaultOpen={isChildSelected}
+      key={currentItem?.href}>
       {({ open }) => (
         <>
           <Disclosure.Button
@@ -24,17 +28,17 @@ export default function SideNavDisclosure({
               item.href === currentItem?.href
                 ? "bg-gray-700"
                 : "hover:bg-gray-700",
-              "flex w-full items-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-400"
+              "flex w-full items-center justify-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 sm:justify-normal"
             )}>
             <item.icon
-              className="h-6 w-6 shrink-0 text-gray-400"
+              className="h-5 w-5 shrink-0 text-gray-400 sm:h-6 sm:w-6"
               aria-hidden="true"
             />
             {item.name}
             <ChevronRightIcon
               className={concatClassNames(
                 open ? "rotate-90 text-gray-500" : "text-gray-400",
-                "ml-auto h-5 w-5 shrink-0"
+                "h-5 w-5 shrink-0 sm:ml-auto"
               )}
               aria-hidden="true"
             />
@@ -46,9 +50,12 @@ export default function SideNavDisclosure({
             leave="transition duration-75 ease-out"
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0">
-            <Disclosure.Panel as="ul" className="mt-1 px-2" unmount={true}>
+            <Disclosure.Panel
+              as="div"
+              unmount={false}
+              className="flex flex-col space-y-1">
               {item.children?.map((subItem: NavigationItem) => (
-                <li key={subItem.name}>
+                <p key={subItem.name}>
                   {/* 44px */}
                   <Disclosure.Button
                     as="a"
@@ -57,11 +64,11 @@ export default function SideNavDisclosure({
                       subItem.href === currentItem?.href
                         ? "bg-gray-700"
                         : "hover:bg-gray-700",
-                      "block rounded-md py-2 pl-9 pr-2 text-sm leading-6 text-gray-400"
+                      "flex justify-center rounded-md p-1 text-sm leading-6 text-gray-400 sm:justify-start sm:pl-3"
                     )}>
                     {subItem.name}
                   </Disclosure.Button>
-                </li>
+                </p>
               ))}
             </Disclosure.Panel>
           </Transition>

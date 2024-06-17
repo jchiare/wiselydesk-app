@@ -6,7 +6,6 @@ import SupportTicketModal from "@/components/chat/support-ticket-modal";
 import AiWarning from "@/components/chat/ai-warning-widget";
 import Feedback from "@/components/chat/agent/feedback-widget";
 import { removeSupportButton } from "@/lib/shared/services/render-message";
-import type { Bot } from "@prisma/client";
 
 type AgentMessageProps = {
   chatTheme: ChatThemeSettings;
@@ -19,7 +18,7 @@ type AgentMessageProps = {
   latestMessageId?: number | null | undefined;
   conversationId?: string;
   createSupportTicket?: boolean;
-  bot: Bot;
+  botId: number;
   testSupportModal?: boolean;
   isOverflowing?: boolean;
   hasLastConversationMessages?: boolean;
@@ -41,7 +40,7 @@ export default function AgentDiv({
   latestMessageId,
   conversationId,
   createSupportTicket,
-  bot,
+  botId,
   testSupportModal,
   isOverflowing,
   isPreviousMessages,
@@ -83,7 +82,7 @@ export default function AgentDiv({
                 {displaySupportModal && (
                   <SupportTicketModal
                     conversationId={conversationId}
-                    botId={bot.id}
+                    botId={botId}
                     locale={locale}
                     supportTicketCreated={supportTicketCreated}
                     setSupportTicketCreated={setSupportTicketCreated}

@@ -3,6 +3,7 @@ import {
   combineClassNames,
   type ChatThemeSettings
 } from "@/lib/chat/chat-theme";
+import SilhouetteImage from "@/public/silhouette.png";
 
 export default function User({
   text,
@@ -24,8 +25,8 @@ export default function User({
                 width={25}
                 height={25}
                 alt="User Icon"
-                src={"/silhouette.png"}
-                priority={true}
+                src={SilhouetteImage}
+                placeholder="blur"
               />
             </span>
           </span>

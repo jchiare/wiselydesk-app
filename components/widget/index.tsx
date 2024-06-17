@@ -6,23 +6,23 @@ import { useAtom } from "jotai";
 import { conversationIdAtom } from "@/lib/state/atoms";
 import type { Bot, Conversation } from "@prisma/client";
 import type { ChatThemeSettings } from "@/lib/chat/chat-theme";
+import type ChatMessage from "@/lib/chat/chat-message";
 
 export function Widget({
   clientApiKey,
   searchParams,
-  bot,
+  botId,
   chatTheme
 }: {
   clientApiKey: string;
   searchParams: SearchParams;
-  bot: Bot;
+  botId: number;
   chatTheme: ChatThemeSettings;
 }): JSX.Element {
   const { widgetOpen } = searchParams;
-  const [lastConversation, setLastConversation] = useState<
-    Conversation | undefined
-  >(undefined);
-  const [conversationId, _] = useAtom(conversationIdAtom);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [conversationId, setConversationId] = useState<number | null>(null);
+  // const [conversationId, _] = useAtom(conversationIdAtom);
 
   async function endConversation(conversationId: number) {
     try {
@@ -36,15 +36,18 @@ export function Widget({
 
   return (
     <div>
-      {bot && widgetOpen && widgetOpen === "true" && (
-        <div className="transform-origin[bottom_right] pointer-events-auto fixed bottom-[100px] right-5 z-10 h-[min(704px,calc(100%-104px))] max-h-[625px] min-h-[80px] w-[600px] overflow-scroll rounded-lg opacity-100 shadow-lg transition-all duration-200 ease-in-out">
+      {botId && widgetOpen && widgetOpen === "true" && (
+        <div className="transform-origin[bottom_right] pointer-events-auto fixed bottom-[100px] right-0 z-10 h-[calc(100%-104px)] min-h-[80px] w-full overflow-scroll rounded-lg opacity-100 shadow-lg transition-all duration-200 ease-in-out sm:h-[min(704px,calc(100%-104px))] sm:w-[600px]">
           <Chat
             chatTheme={chatTheme}
             clientApiKey={clientApiKey}
             searchParams={searchParams}
             account={"amboss"}
-            bot={bot}
-            lastConversation={lastConversation}
+            botId={botId}
+            messages={messages}
+            setMessages={setMessages}
+            conversationId={conversationId}
+            setConversationId={setConversationId}
           />
         </div>
       )}

@@ -15,7 +15,7 @@ export default function AgentIcon({
             height={40}
             alt="Assistant Icon"
             src={chatTheme.assistantMessageSetting.icon}
-            priority={true}
+            placeholder="blur"
           />
         ) : (
           <svg

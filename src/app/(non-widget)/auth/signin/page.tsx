@@ -57,7 +57,7 @@ export default async function SignIn() {
         <Image
           className="absolute inset-0 h-full w-full object-cover"
           src={signInBg}
-          priority={true}
+          placeholder="blur"
           alt="Sign in picture"
         />
       </div>

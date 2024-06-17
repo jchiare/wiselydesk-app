@@ -64,15 +64,16 @@ export default async function RightBar({
           )}
         </div>
       </div>
-
-      <Note
-        notes={notes}
-        conversationId={conversationId}
-        botId={botId}
-        userId={userId}
-        publicConversationId={publicConversationId}
-        isLoading={isLoading}
-      />
+      <div className="hidden sm:block">
+        <Note
+          notes={notes}
+          conversationId={conversationId}
+          botId={botId}
+          userId={userId}
+          publicConversationId={publicConversationId}
+          isLoading={isLoading}
+        />
+      </div>
     </div>
   );
 }

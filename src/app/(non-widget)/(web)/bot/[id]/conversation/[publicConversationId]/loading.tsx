@@ -25,8 +25,8 @@ const firstMessage = {
 
 export default function SingleConversationLoading() {
   return (
-    <div className="flex">
-      <div className="px-4 py-14 sm:px-6 lg:px-16">
+    <div className="flex flex-col-reverse sm:flex-col">
+      <div className="p-4 sm:mr-[300px] sm:px-6 sm:py-14 lg:px-16">
         <div>
           <AgentMessage
             text={firstMessage.text}
@@ -53,7 +53,7 @@ export default function SingleConversationLoading() {
           />
         </div>
       </div>
-      <div className="h-screen min-w-[350px] max-w-[350px] border-2 border-y-0 border-gray-300 bg-gray-200 blur-sm">
+      <div className="border-2 border-y-0 border-gray-300 bg-gray-200 sm:fixed sm:right-0 sm:h-screen sm:min-w-[350px] sm:max-w-[350px]">
         <RightBar
           conversationId={123}
           botId="123"

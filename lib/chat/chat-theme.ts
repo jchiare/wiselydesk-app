@@ -1,3 +1,5 @@
+import AmbossChatIcon from "@/public/amboss.png";
+
 type BaseSettings = {
   bgColour: string;
   text?: string;
@@ -8,7 +10,7 @@ type MessageSetting = {
   border?: string;
   text: string;
   feedbackColour?: string;
-  icon?: string;
+  icon?: string | typeof AmbossChatIcon;
 };
 
 type SupportTicketSetting = {
@@ -65,7 +67,7 @@ const AMBOSS_BOT_SETTINGS: ChatThemeSettings = {
     bgColour: "bg-[#eef2f5]",
     text: "text-black",
     feedbackColour: "text-black",
-    icon: "/amboss.png"
+    icon: AmbossChatIcon
   },
   userMessageSetting: {
     bgColour: "bg-[#F8FAFC]",
@@ -96,8 +98,6 @@ export function getChatThemeByBotId(botId: number): ChatThemeSettings {
   return accountSettings[botId] ?? BASE_CHAT_SETTINGS;
 }
 
-export const combineClassNames = (
-  settings: Record<string, string | undefined>
-) => {
+export const combineClassNames = (settings: Record<string, string | any>) => {
   return Object.values(settings).filter(Boolean).join(" ");
 };

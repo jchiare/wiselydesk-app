@@ -153,7 +153,6 @@ export default function SupportTicketModal({
               </span>
               <input
                 type="input"
-                autoFocus={name.length === 0}
                 name="name"
                 value={name}
                 required
@@ -168,7 +167,6 @@ export default function SupportTicketModal({
               </span>
               <input
                 type="email"
-                autoFocus={name.length > 0 && email.length === 0}
                 name="email"
                 value={email}
                 required
@@ -183,7 +181,6 @@ export default function SupportTicketModal({
               <textarea
                 name="additional-info"
                 value={additionalInfo}
-                autoFocus={name.length > 0 && email.length > 0}
                 rows={3}
                 placeholder={
                   texti18.supportTicketModal.additionalInfo[adjustedLocale]

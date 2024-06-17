@@ -63,5 +63,5 @@ export async function POST(req: Request) {
     finished: true
   });
 
-  return Response.json({ data: { text: agentText } });
+  return Response.json({ data: { text: agentText, conversationId } });
 }

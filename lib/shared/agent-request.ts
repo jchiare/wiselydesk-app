@@ -8,7 +8,11 @@ export class AgentRequest {
 
   requestingAgent(text: string): boolean {
     this.text = text.trim().toLowerCase();
-    return this.text === "agent" || this.text === "wdtest agent";
+    return (
+      this.text === "agent" ||
+      this.text === "wdtest agent" ||
+      this.text === "live chat"
+    );
   }
 
   getResponse(): string {
