@@ -37,7 +37,7 @@ export function Widget({
   return (
     <div>
       {bot && widgetOpen && widgetOpen === "true" && (
-        <div className="transform-origin[bottom_right] pointer-events-auto fixed bottom-[100px] right-5 z-10 h-[min(704px,calc(100%-104px))] max-h-[625px] min-h-[80px] w-[600px] overflow-scroll rounded-lg opacity-100 shadow-lg transition-all duration-200 ease-in-out">
+        <div className="transform-origin[bottom_right] pointer-events-auto fixed bottom-[100px] right-0 z-10 h-[calc(100%-104px)] min-h-[80px] w-full overflow-scroll rounded-lg opacity-100 shadow-lg transition-all duration-200 ease-in-out sm:h-[min(704px,calc(100%-104px))] sm:w-[600px]">
           <Chat
             chatTheme={chatTheme}
             clientApiKey={clientApiKey}
