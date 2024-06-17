@@ -57,7 +57,7 @@ function createIFrame(isEnglish, wiselyDeskWidgetOpen) {
   if (!container) {
     container = document.createElement("div");
     container.id = "wiselyDeskContainer";
-    container.style = `position: fixed; bottom: 0; right: 0; overflow: hidden; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);`;
+    container.style = `position: fixed; bottom: 0; right: 0; overflow: hidden; max-height: 800px; transition-duration: 250ms; transition-timing-function: cubic-bezier(0.645, 0.045, 0.355, 1);`;
     document.body.appendChild(container);
   }
 
