@@ -62,16 +62,24 @@ function createIFrame(isEnglish, wiselyDeskWidgetOpen) {
   }
 
   // Adjust container size based on the widget state
-  container.style.width = wiselyDeskWidgetOpen ? "620px" : "60px";
+  if (window.outerWidth < 600) {
+    container.style.width = wiselyDeskWidgetOpen ? "100vw" : "60px";
+  } else {
+    container.style.width = wiselyDeskWidgetOpen ? "620px" : "60px";
+  }
+
   container.style.height = "calc(100% - 85px)";
 
   // Always remove the existing iframe and create a new one
   const existingIframe = document.getElementById("wiselyDeskIframe");
   if (!existingIframe && wiselyDeskWidgetOpen) {
     // Create a new iframe
+    const host = url.includes("localhost:3000")
+      ? "http://localhost:3000"
+      : "https://apps.wiselydesk.com";
     const iframeUrl = isEnglish
-      ? `https://apps.wiselydesk.com/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}`
-      : `https://apps.wiselydesk.com/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de`;
+      ? `${host}/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}`
+      : `${host}/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de`;
     const iframe = document.createElement("iframe");
     iframe.id = "wiselyDeskIframe";
     iframe.src = iframeUrl;
