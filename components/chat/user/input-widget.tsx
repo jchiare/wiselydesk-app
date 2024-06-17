@@ -69,7 +69,6 @@ export default function Input({
               <textarea
                 id="userQuestion"
                 tabIndex={1}
-                autoFocus
                 value={input}
                 ref={textAreaRef}
                 placeholder={getText(account)["inputPlaceholder"][locale]}
