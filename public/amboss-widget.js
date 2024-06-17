@@ -66,6 +66,7 @@ function createIFrame(isEnglish, wiselyDeskWidgetOpen) {
     container.style.width = wiselyDeskWidgetOpen ? "100vw" : "60px";
   } else {
     container.style.width = wiselyDeskWidgetOpen ? "620px" : "60px";
+    container.style.right = "1.25rem";
   }
 
   container.style.height = "calc(100% - 85px)";
