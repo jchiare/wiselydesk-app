@@ -8,7 +8,7 @@ import type { Bot, Conversation, Message } from "@prisma/client";
 type Props = {
   chatTheme: ChatThemeSettings;
   account: string;
-  bot: Bot;
+  botId: number;
   createSupportTicket: boolean;
   aiResponseDone: boolean;
   latestMessageId: number | null | undefined;
@@ -22,7 +22,7 @@ type Props = {
 export function PreviousMessages({
   chatTheme,
   account,
-  bot,
+  botId,
   createSupportTicket,
   aiResponseDone,
   locale,
@@ -51,7 +51,7 @@ export function PreviousMessages({
             latestMessageId={latestMessageId}
             conversationId={conversationId?.toString()}
             createSupportTicket={createSupportTicket}
-            bot={bot}
+            botId={botId}
             isOverflowing={false}
             isPreviousMessages={true}
           />

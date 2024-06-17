@@ -34,7 +34,7 @@ type ChatProps = {
   chatTheme: ChatThemeSettings;
   searchParams: SearchParams;
   account: string;
-  bot: Bot;
+  botId: number;
   clientApiKey: string;
   lastConversation?: Conversation | undefined;
   messages: ChatMessage[];
@@ -47,7 +47,7 @@ export default function Chat({
   chatTheme,
   searchParams,
   account,
-  bot,
+  botId,
   clientApiKey,
   lastConversation,
   messages,
@@ -105,7 +105,7 @@ export default function Chat({
 
   async function handleSubmit() {
     const agentRequestClient = new AgentRequest({
-      botId: bot.id
+      botId
     });
     if (agentRequestClient.requestingAgent(input)) {
       // call non-streaming backend
@@ -152,9 +152,9 @@ export default function Chat({
     const scope = Sentry.getCurrentScope();
     if (scope) {
       scope.setTag("conversationId", conversationId);
-      scope.setTag("botId", bot.id);
+      scope.setTag("botId", botId);
     }
-  }, [conversationId, bot]);
+  }, [conversationId, botId]);
 
   const messagesEndRef = useScrollToBottom({
     messages,
@@ -217,7 +217,7 @@ export default function Chat({
       )} flex-shrink-0 font-medium`}>
       {hasLastConversationMessages && (
         <PreviousMessages
-          bot={bot}
+          botId={botId}
           chatTheme={chatTheme}
           account={account}
           createSupportTicket={createSupportTicket}
@@ -239,7 +239,7 @@ export default function Chat({
         isWelcomeMessage={true}
         hasLastConversationMessages={hasLastConversationMessages}
         isLastMessage={messages.length === 0}
-        bot={bot}
+        botId={botId}
         testSupportModal={testSupportModal}
         isOverflowing={isOverflowing}
         bgColorOverride="bg-[#0AA6B8]"
@@ -261,7 +261,7 @@ export default function Chat({
             latestMessageId={latestMessageId}
             conversationId={conversationId?.toString()}
             createSupportTicket={createSupportTicket}
-            bot={bot}
+            botId={botId}
             isOverflowing={isOverflowing}
             supportTicketCreated={supportTicketCreated}
             setSupportTicketCreated={setSupportTicketCreated}

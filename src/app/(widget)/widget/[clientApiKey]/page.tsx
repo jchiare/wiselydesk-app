@@ -23,18 +23,21 @@ export default async function ChatbotWidget({
   searchParams: SearchParams;
   params: Params;
 }): Promise<JSX.Element> {
-  const bot = await prisma.bot.findFirst({
-    where: { client_api_key: params.clientApiKey }
-  });
-  if (!bot) {
-    return <div>Bot not found</div>;
+  const botLookup: Record<string, number> = {
+    qGmNXgVcRRwVpL6i2bIDDYvPc8lJcSvndKE7DUZzq5M: 1,
+    "2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY": 3,
+    hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE: 4
+  };
+  let botId = botLookup[params.clientApiKey];
+  if (!botId) {
+    throw new Error("something wrong with botid");
   }
 
   const chatTheme = getChatTheme("amboss");
 
   return (
     <Widget
-      bot={bot}
+      botId={botId}
       clientApiKey={params.clientApiKey}
       searchParams={searchParams}
       chatTheme={chatTheme}
