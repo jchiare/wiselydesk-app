@@ -228,9 +228,9 @@ async function* makeIterator(
         conversationId: conversationId,
         messageId: aiResponseMessage.id,
         log: {
-          aiMessage,
+          aiMessage: JSON.stringify(aiMessage),
           modelVersion,
-          formattedMessages,
+          formattedMessages: JSON.stringify(formattedMessages),
           responseTime: `${((Date.now() - startTime) / 1000).toFixed(2)}s`
         }
       }
