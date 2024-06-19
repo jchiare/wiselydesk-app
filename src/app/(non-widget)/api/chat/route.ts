@@ -221,21 +221,7 @@ async function* makeIterator(
   };
 
   await conversationService.updateMessage(aiResponseMessage.id, aiMessage);
-  if (process.env.LOG_AI_INPUT && process.env.LOG_AI_INPUT === "true") {
-    console.log("debug ai input: ", {
-      data: {
-        botId: aiResponseMessage.bot_id,
-        conversationId: conversationId,
-        messageId: aiResponseMessage.id,
-        log: {
-          aiMessage: JSON.stringify(aiMessage),
-          modelVersion,
-          formattedMessages: JSON.stringify(formattedMessages),
-          responseTime: `${((Date.now() - startTime) / 1000).toFixed(2)}s`
-        }
-      }
-    });
-  }
+
   await prisma.aiInput.create({
     data: {
       botId: aiResponseMessage.bot_id,
