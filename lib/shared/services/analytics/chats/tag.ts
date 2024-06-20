@@ -1,5 +1,5 @@
 import openai from "@/lib/shared/services/openai";
-import { TAG_AMBOSS_ESCALATED_CHATS } from "@/lib/chat/prompts/tag-category";
+import { TAG_AMBOSS_CHATS } from "@/lib/chat/prompts/tag-category";
 
 type GroupedConversation = {
   // assume they are ordered correctly index: number;
@@ -9,7 +9,7 @@ export type MessagesGroupedByConversation = {
   [conversationId: string]: GroupedConversation[];
 };
 
-type Response = {
+export type TagChatResponse = {
   conversationId: string;
   tags: string[];
   aiGeneratedTags: string[];
@@ -30,8 +30,8 @@ type AiResponse = {
 export async function tagChats(
   chats: MessagesGroupedByConversation,
   botId: number
-): Promise<Response[]> {
-  let taggedChats: Response[] = [];
+): Promise<TagChatResponse[]> {
+  let taggedChats: TagChatResponse[] = [];
 
   for (const conversationId of Object.keys(chats)) {
     const messages = chats[conversationId];
@@ -48,7 +48,7 @@ export async function tagChats(
 
     const message = await openai.chat.completions.create({
       messages: [
-        { role: "system", content: TAG_AMBOSS_ESCALATED_CHATS },
+        { role: "system", content: TAG_AMBOSS_CHATS },
         {
           role: "user",
           content: `Here are the messages from chat: ${formattedMessages}`

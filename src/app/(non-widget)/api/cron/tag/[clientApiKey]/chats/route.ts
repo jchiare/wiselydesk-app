@@ -1,7 +1,8 @@
 import prisma from "@/lib/prisma";
 import {
   tagChats,
-  MessagesGroupedByConversation
+  MessagesGroupedByConversation,
+  TagChatResponse
 } from "@/lib/shared/services/analytics/chats/tag";
 import type { NextRequest } from "next/server";
 
@@ -30,7 +31,9 @@ export async function GET(request: NextRequest) {
     where: {
       bot_id: bot.id,
       created_at: { gte: lastDay }
-    }
+    },
+    select: { id: true },
+    take: 5
   });
 
   if (chatsLastDay.length === 0) {
@@ -63,24 +66,26 @@ export async function GET(request: NextRequest) {
 
     console.log(taggedChats);
 
-    const updatePromises = taggedChats.map(
-      (chat: { conversationId: string; tags: any[] }) => {
-        return prisma.escalation.update({
-          where: {
-            conversation_id: parseInt(chat.conversationId, 10)
-          },
-          data: {
-            tags: chat.tags.join(",")
+    const updatePromises = taggedChats.map((chat: TagChatResponse) => {
+      return prisma.ticketTagging.update({
+        where: {
+          bot_id_ticket_id: {
+            bot_id: bot.id,
+            ticket_id: parseInt(chat.conversationId, 10)
           }
-        });
-      }
-    );
+        },
+        data: {
+          tags: chat.tags.join(","),
+          ai_generated_tags: chat.aiGeneratedTags.join(",")
+        }
+      });
+    });
 
     await prisma.$transaction(updatePromises);
 
     console.log("Batch update successful");
   } catch (error) {
-    console.error("Error updating escalations:", error);
+    console.error("Error updating chats:", JSON.stringify(error));
   } finally {
     await prisma.$disconnect();
     return Response.json({
