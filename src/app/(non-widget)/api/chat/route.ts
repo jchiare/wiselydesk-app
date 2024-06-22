@@ -107,7 +107,8 @@ export async function POST(req: Request) {
   const response = await openai.chat.completions.create({
     model,
     messages: formattedMessages,
-    stream: true
+    stream: true,
+    temperature: 0
   });
 
   // save AI response before finishing to display in web app if
