@@ -20,6 +20,7 @@ import type { Message } from "@prisma/client";
 import type { Stream } from "openai/streaming";
 import type { OpenAiMessage } from "@/lib/chat/openai-chat-message";
 import { LLM } from "@/lib/shared/llm";
+import type { ChatCompletionChunk } from "openai/resources/index.mjs";
 
 const openai = new OpenAI();
 const encoder = new TextEncoder();
@@ -124,7 +125,7 @@ export async function POST(req: Request) {
   });
 
   const iterator = makeIterator(
-    response,
+    response as Stream<ChatCompletionChunk>,
     sources,
     conversationId,
     message.id,
