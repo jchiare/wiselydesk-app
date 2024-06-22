@@ -19,6 +19,7 @@ import { getVisitorSessionId } from "@/lib/visitor/identify";
 import type { Message } from "@prisma/client";
 import type { Stream } from "openai/streaming";
 import type { OpenAiMessage } from "@/lib/chat/openai-chat-message";
+import { LLM } from "@/lib/shared/llm";
 
 const openai = new OpenAI();
 const encoder = new TextEncoder();
@@ -104,11 +105,14 @@ export async function POST(req: Request) {
 
   const inputAiCost = inputCost(formattedMessages, model);
 
-  const response = await openai.chat.completions.create({
-    model,
-    messages: formattedMessages,
-    stream: true
-  });
+  const llm = new LLM(model);
+  const response = await llm.chat(formattedMessages);
+
+  // const response = await openai.chat.completions.create({
+  //   model,
+  //   messages: formattedMessages,
+  //   stream: true
+  // });
 
   // save AI response before finishing to display in web app if
   // user quits mid-conversation
