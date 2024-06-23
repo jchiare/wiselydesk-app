@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { filterFreeAmbossTickets } from "@/lib/shared/services/ticket-analysis";
+// import { filterFreeAmbossTickets } from "@/lib/shared/services/ticket-analysis";
 import { ZendeskApi } from "@/lib/shared/services/zendesk";
 import type { NextRequest } from "next/server";
 
@@ -45,9 +45,7 @@ export async function GET(request: NextRequest) {
     return Response.json({ result: "No Tickets found" }, { status: 200 });
   }
 
-  const ticketIdsAboutFreeAccess = await filterFreeAmbossTickets(
-    ticketSearchResults.results
-  );
+  const ticketIdsAboutFreeAccess: any = [];
   if (ticketIdsAboutFreeAccess.length === 0) {
     console.log("No tickets about free access found");
     return new Response("No tickets about that category", { status: 200 });
