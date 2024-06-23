@@ -46,6 +46,24 @@ export class AnthropicLLM {
     }
   }
 
+  static getText(
+    event: Anthropic.Messages.RawMessageStreamEvent
+  ): string | undefined {
+    switch (event.type) {
+      case "content_block_start":
+        if (event.content_block.type === "text") {
+          return event.content_block.text;
+        }
+        break;
+      case "content_block_delta":
+        if (event.delta.type === "text_delta") {
+          return event.delta.text;
+        }
+        break;
+    }
+    return undefined;
+  }
+
   handleStreamEvent(event: Anthropic.Messages.RawMessageStreamEvent) {
     switch (event.type) {
       case "message_start":
