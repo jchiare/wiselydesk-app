@@ -48,9 +48,6 @@ export default async function SingleConversationPage({
   const messages = await prisma.message.findMany({
     where: {
       conversation_id: conversation.id
-    },
-    orderBy: {
-      created_at: "asc"
     }
   });
 
