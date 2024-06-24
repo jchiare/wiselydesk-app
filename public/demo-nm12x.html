@@ -14,7 +14,7 @@
         document.body.appendChild(script);
       } else {
         var password = prompt("Please enter the password:");
-        if (password === "jaycberlin") {
+        if (password === "jaycberlin" || password.toLowerCase() === "amboss") {
           localStorage.setItem("wiselydesk-local-testing", "true");
           var script = document.createElement("script");
           script.src = "amboss-widget.js";

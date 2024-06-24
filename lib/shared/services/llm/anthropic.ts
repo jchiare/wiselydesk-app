@@ -17,7 +17,7 @@ export class AnthropicLLM {
   ) {
     const {
       model = "claude-3-5-sonnet-20240620",
-      maxTokens = 1000,
+      maxTokens = 2000,
       temperature = 0
     } = options;
 
