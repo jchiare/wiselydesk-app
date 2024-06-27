@@ -18,6 +18,9 @@ export function inputCost(
     case "gpt-3.5-turbo":
       costPerToken = 0.002;
       break;
+    case "claude3.5":
+      costPerToken = 0.003;
+      break;
     default:
       throw new Error("Invalid model: " + model);
   }
@@ -67,6 +70,9 @@ export function outputCost(
       break;
     case "gpt-3.5-turbo":
       costPerToken = 0.002;
+      break;
+    case "claude3.5":
+      costPerToken = 0.012;
       break;
     default:
       throw new Error("Invalid model: " + model);

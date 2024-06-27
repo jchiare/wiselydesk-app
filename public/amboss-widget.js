@@ -78,9 +78,13 @@ function createIFrame(isEnglish, wiselyDeskWidgetOpen) {
     const host = url.includes("localhost:3000")
       ? "http://localhost:3000"
       : "https://apps.wiselydesk.com";
+
+    const modelParam = url.includes("model=claude3.5")
+      ? "&model=claude3.5"
+      : "";
     const iframeUrl = isEnglish
-      ? `${host}/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}`
-      : `${host}/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de`;
+      ? `${host}/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}${modelParam}`
+      : `${host}/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de${modelParam}`;
     const iframe = document.createElement("iframe");
     iframe.id = "wiselyDeskIframe";
     iframe.src = iframeUrl;

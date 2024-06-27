@@ -19,6 +19,8 @@ import { getVisitorSessionId } from "@/lib/visitor/identify";
 import type { Message } from "@prisma/client";
 import type { Stream } from "openai/streaming";
 import type { OpenAiMessage } from "@/lib/chat/openai-chat-message";
+import { AnthropicLLM } from "@/lib/shared/services/llm/anthropic";
+import Anthropic from "@anthropic-ai/sdk";
 
 const openai = new OpenAI();
 const encoder = new TextEncoder();
@@ -95,6 +97,8 @@ export async function POST(req: Request) {
     );
 
   const systemMessage = getSystemMessagePrompt(botId, content);
+  const userAndAgentMessages = trimMessageUnder8KTokens(updatedMessages);
+
   const formattedSystemMessage: OpenAiMessage = {
     role: "system",
     content: systemMessage
@@ -104,11 +108,21 @@ export async function POST(req: Request) {
 
   const inputAiCost = inputCost(formattedMessages, model);
 
-  const response = await openai.chat.completions.create({
-    model,
-    messages: formattedMessages,
-    stream: true
-  });
+  let response;
+  if (model === "claude3.5") {
+    const anthropicLLM = new AnthropicLLM();
+    response = await anthropicLLM.stream(
+      systemMessage,
+      userAndAgentMessages as Anthropic.Messages.MessageParam[]
+    );
+  } else {
+    response = await openai.chat.completions.create({
+      model,
+      messages: formattedMessages,
+      stream: true,
+      temperature: 0
+    });
+  }
 
   // save AI response before finishing to display in web app if
   // user quits mid-conversation
@@ -163,7 +177,7 @@ function iteratorToStream(
 }
 
 async function* makeIterator(
-  response: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>,
+  response: Stream<OpenAI.Chat.Completions.ChatCompletionChunk> | any,
   sources: string[],
   conversationId: number,
   messageId: number,
@@ -177,20 +191,45 @@ async function* makeIterator(
   let fullResponse = "";
   let modelVersion: string | undefined = undefined;
 
-  // @ts-expect-error - TS doesn't know about the toReadableStream method well
+  // @ts-ignore- TS doesn't know about the toReadableStream method well
   for await (const chunk of response.toReadableStream()) {
     const textChunk = decoder.decode(chunk, { stream: true });
     try {
-      const jsonChunk = JSON.parse(
-        textChunk
-      ) as OpenAI.Chat.Completions.ChatCompletionChunk;
-      const skipChunk = shouldSkipChunk(jsonChunk);
+      let jsonChunk:
+        | Anthropic.Messages.RawMessageStreamEvent
+        | OpenAI.Chat.Completions.ChatCompletionChunk;
+      if (model === "claude3.5") {
+        jsonChunk = JSON.parse(
+          textChunk
+        ) as Anthropic.Messages.RawMessageStreamEvent;
+      } else {
+        jsonChunk = JSON.parse(
+          textChunk
+        ) as OpenAI.Chat.Completions.ChatCompletionChunk;
+      }
+      const skipChunk = shouldSkipChunk(jsonChunk, model);
       if (!skipChunk) {
-        const text = parseSSEMessageChunk(jsonChunk);
-        fullResponse += jsonChunk.choices[0]?.delta?.content || "";
+        const text = parseSSEMessageChunk(jsonChunk, model);
+
+        if (model === "claude3.5") {
+          fullResponse +=
+            AnthropicLLM.getText(
+              jsonChunk as Anthropic.Messages.RawMessageStreamEvent
+            ) || "";
+        } else {
+          fullResponse +=
+            (jsonChunk as OpenAI.Chat.Completions.ChatCompletionChunk)
+              .choices[0]?.delta?.content || "";
+        }
 
         if (!modelVersion) {
-          modelVersion = jsonChunk.model;
+          if (model === "claude3.5") {
+            modelVersion = "claude-3-5-sonnet-20240620";
+          } else {
+            modelVersion = (
+              jsonChunk as OpenAI.Chat.Completions.ChatCompletionChunk
+            ).model;
+          }
         }
 
         yield encoder.encode(text);
@@ -240,17 +279,42 @@ async function* makeIterator(
 }
 
 function shouldSkipChunk(
-  chunk: OpenAI.Chat.Completions.ChatCompletionChunk
+  chunk:
+    | OpenAI.Chat.Completions.ChatCompletionChunk
+    | Anthropic.Messages.RawMessageStreamEvent,
+  model: string
 ): boolean {
-  const content = chunk.choices[0]?.delta?.content;
+  if (model === "claude3.5") {
+    const content = AnthropicLLM.getText(
+      chunk as Anthropic.Messages.RawMessageStreamEvent
+    );
+    return content === "" || content === undefined;
+  }
+  const content = (chunk as OpenAI.Chat.Completions.ChatCompletionChunk)
+    .choices[0]?.delta?.content;
   return content === "" || content === undefined;
 }
 
 function parseSSEMessageChunk(
-  chunk: OpenAI.Chat.Completions.ChatCompletionChunk
+  chunk:
+    | OpenAI.Chat.Completions.ChatCompletionChunk
+    | Anthropic.Messages.RawMessageStreamEvent,
+  model: string
 ): string {
-  const text = JSON.stringify({ text: chunk.choices[0]?.delta?.content || "" });
-  return `id: ${Date.now()}\nevent: message\ndata: ${text}\n\n`;
+  let text: string;
+
+  if (model === "claude3.5") {
+    text =
+      AnthropicLLM.getText(chunk as Anthropic.Messages.RawMessageStreamEvent) ||
+      "";
+  } else {
+    text =
+      (chunk as OpenAI.Chat.Completions.ChatCompletionChunk).choices[0]?.delta
+        ?.content || "";
+  }
+
+  const data = JSON.stringify({ text });
+  return `id: ${Date.now()}\nevent: message\ndata: ${data}\n\n`;
 }
 
 function createFinalSSEResponse(

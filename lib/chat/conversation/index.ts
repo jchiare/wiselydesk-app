@@ -37,7 +37,7 @@ export class ConversationService {
 
   async getOrCreateConversation(
     userInput: string,
-    conversationId: number | undefined,
+    conversationId: number | undefined | null,
     sessionId: string | undefined
   ): Promise<void> {
     if (this.isProductionTesting) {
@@ -45,7 +45,7 @@ export class ConversationService {
       return;
     }
 
-    if (conversationId !== undefined) {
+    if (conversationId !== undefined && conversationId !== null) {
       // should probably verify the convoId is valid for the bot and time
       this.conversationId = conversationId;
       return;

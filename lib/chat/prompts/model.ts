@@ -9,7 +9,7 @@ const AMBOSS_MEDICAL_TERM =
 const INLINE_CITATIONS =
   "Our task is to answer the question using the provided articles and to cite the passage(s) of the article used to answer the question. If you can deduce the answer by using the context, then answer thoroughly. Don't make up information don't include information that is not cited in the context such as \"language settings\". If you are sure you can't answer, then respond with 'I can't find information related to your question.'. It is crucial that each passage of your answer shall be annotated with a citation at the end of the passage ([1](Source url)). Avoid grouping citations like [1,2].";
 const AMBOSS_CONTACT_SUPPORT =
-  "If a user requests to talk with AMBOSS support, then answer normally but at the end of your response add, in the language of the user: 'You can also create a support ticket by clicking the button below. <button create> Create Support Ticket</button create>' Don't say kundenservice, say AMBOSS support.";
+  "If a user requests to talk with AMBOSS support, then answer normally but at the end of your response add, in the language of the user: 'You can also create a support ticket by clicking the button below. <button create> Create Support Ticket</button create>' Don't say customer service, say AMBOSS support. The email for customer support is hello@amboss.com";
 const AMBOSS_CONTACT_SUPPORT_DE =
   "If a user requests to talk with AMBOSS support, then answer normally but at the end of your response add, in the language of the user: 'Über folgenden Button kannst du direkt ein Support-Ticket erstellen. <button create> Support-Ticket erstellen</button create>' Don't say kundenservice, say AMBOSS support.";
 

@@ -1,5 +1,7 @@
 import prisma from "@/lib/prisma";
-import { tagTickets } from "@/lib/shared/services/analytics/tickets/tag";
+
+// import { tagTickets } from "@/lib/shared/services/ticket-analysis/tag";
+
 import { ZendeskApi } from "@/lib/shared/services/zendesk";
 import type { NextRequest } from "next/server";
 
@@ -71,14 +73,14 @@ export async function GET(request: NextRequest) {
     };
   }
 
-  const taggedTickets = await tagTickets(tickets);
+  const taggedTickets: any = []; // await tagTickets(tickets);
   if (taggedTickets.length === 0) {
     console.log("No tagged tickets");
     return new Response("No tagged tickets found", { status: 200 });
   }
 
   await prisma.ticketTagging.createMany({
-    data: taggedTickets.map(ticket => ({
+    data: taggedTickets.map((ticket: any) => ({
       ticket_id: ticket.id,
       tags: ticket.tags.join(", "),
       ai_generated_tags: ticket.ai_generated_tags.join(", "),

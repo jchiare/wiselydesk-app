@@ -1,5 +1,4 @@
 import { Widget } from "@/components/widget";
-import prisma from "@/lib/prisma";
 import getChatTheme from "@/lib/chat/chat-theme";
 import type { Metadata } from "next";
 import type { SearchParams } from "@/components/chat";
