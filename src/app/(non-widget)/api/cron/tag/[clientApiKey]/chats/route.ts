@@ -30,10 +30,10 @@ export async function GET(request: NextRequest) {
   const chatsLastDay = await prisma.conversation.findMany({
     where: {
       bot_id: bot.id,
-      created_at: { gte: lastDay }
+      created_at: { gte: lastDay },
+      tag_id: null
     },
-    select: { id: true },
-    take: 5
+    select: { id: true }
   });
 
   if (chatsLastDay.length === 0) {
@@ -58,31 +58,44 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  // update escalation table addings tags
   let taggedChats;
 
   try {
     taggedChats = await tagChats(messagesGroupedByConversation, bot.id);
 
-    console.log(taggedChats);
-
-    const updatePromises = taggedChats.map((chat: TagChatResponse) => {
-      return prisma.ticketTagging.update({
-        where: {
-          bot_id_ticket_id: {
-            bot_id: bot.id,
-            ticket_id: parseInt(chat.conversationId, 10)
-          }
-        },
+    const chatTaggingTransactions = taggedChats.map((chat: TagChatResponse) => {
+      return prisma.chatTagging.create({
         data: {
+          bot_id: chat.botId,
+          conversation_id: parseInt(chat.conversationId, 10),
           tags: chat.tags.join(","),
-          ai_generated_tags: chat.aiGeneratedTags.join(",")
+          ai_generated_tags: chat.aiGeneratedTags.join(","),
+          user_tags: chat.userTags.join(","),
+          cost: chat.cost,
+          updated_at: new Date()
         }
       });
     });
+    console.log(chatTaggingTransactions);
+    const createdChatTaggings = await prisma.$transaction(
+      chatTaggingTransactions
+    );
 
-    await prisma.$transaction(updatePromises);
-
+    const conversationTransactions = taggedChats.map(
+      (chat: TagChatResponse, index: number) => {
+        return prisma.conversation.update({
+          where: {
+            id: parseInt(chat.conversationId, 10)
+          },
+          data: {
+            tag_id: createdChatTaggings.find(
+              tag => tag.conversation_id === parseInt(chat.conversationId, 10)
+            )?.id
+          }
+        });
+      }
+    );
+    await prisma.$transaction(conversationTransactions);
     console.log("Batch update successful");
   } catch (error) {
     console.error("Error updating chats:", JSON.stringify(error));

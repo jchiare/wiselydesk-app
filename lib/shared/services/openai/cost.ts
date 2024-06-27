@@ -28,6 +28,33 @@ export function inputCost(
   return (numTokens / 1000) * costPerToken;
 }
 
+export function inputCostWithTokens(
+  tokens: number | undefined,
+  model: TiktokenModel | string
+): number {
+  if (!tokens) {
+    return 0;
+  }
+  let costPerToken: number;
+  switch (model) {
+    case "gpt-4":
+      costPerToken = 0.03;
+      break;
+    case "gpt-4o":
+      costPerToken = 0.005;
+      break;
+    case "gpt-3.5-turbo":
+      costPerToken = 0.002;
+      break;
+    case "claude3.5":
+      costPerToken = 0.003;
+      break;
+    default:
+      throw new Error("Invalid model: " + model);
+  }
+  return parseFloat(((tokens / 1000) * costPerToken).toFixed(4));
+}
+
 export function trimMessageUnder8KTokens(
   formattedMessage: OpenAiMessage[]
 ): OpenAiMessage[] {
@@ -80,4 +107,31 @@ export function outputCost(
 
   const cost = (numTokens / 1000) * costPerToken;
   return parseFloat(cost.toFixed(4));
+}
+
+export function outputCostWithTokens(
+  tokens: number | undefined,
+  model: TiktokenModel | string
+): number {
+  if (!tokens) {
+    return 0;
+  }
+  let costPerToken: number;
+  switch (model) {
+    case "gpt-4":
+      costPerToken = 0.06;
+      break;
+    case "gpt-4o":
+      costPerToken = 0.015;
+      break;
+    case "gpt-3.5-turbo":
+      costPerToken = 0.002;
+      break;
+    case "claude3.5":
+      costPerToken = 0.012;
+      break;
+    default:
+      throw new Error("Invalid model: " + model);
+  }
+  return parseFloat(((tokens / 1000) * costPerToken).toFixed(4));
 }

@@ -1,5 +1,6 @@
 import openai from "@/lib/shared/services/openai";
 import { TAG_AMBOSS_CHATS } from "@/lib/chat/prompts/tag-category";
+import { inputCostWithTokens, outputCostWithTokens } from "../../openai/cost";
 
 type GroupedConversation = {
   // assume they are ordered correctly index: number;
@@ -15,10 +16,7 @@ export type TagChatResponse = {
   aiGeneratedTags: string[];
   userTags: string[];
   botId: number;
-  tokens: {
-    input_tokens: number | undefined;
-    output_tokens: number | undefined;
-  };
+  cost: number | undefined;
 };
 
 type AiResponse = {
@@ -29,7 +27,8 @@ type AiResponse = {
 
 export async function tagChats(
   chats: MessagesGroupedByConversation,
-  botId: number
+  botId: number,
+  model = "gpt-4o"
 ): Promise<TagChatResponse[]> {
   let taggedChats: TagChatResponse[] = [];
 
@@ -54,7 +53,7 @@ export async function tagChats(
           content: `Here are the messages from chat: ${formattedMessages}`
         }
       ],
-      model: "gpt-4o",
+      model,
       response_format: { type: "json_object" }
     });
 
@@ -65,6 +64,9 @@ export async function tagChats(
     }
 
     const responseText = JSON.parse(unparsedResponseText) as AiResponse;
+    const cost =
+      inputCostWithTokens(message.usage?.prompt_tokens, model) +
+      outputCostWithTokens(message.usage?.completion_tokens, model);
 
     taggedChats.push({
       conversationId,
@@ -72,10 +74,7 @@ export async function tagChats(
       aiGeneratedTags: responseText.ai_generated_tags,
       userTags: responseText.user_tags,
       botId,
-      tokens: {
-        input_tokens: message.usage?.prompt_tokens,
-        output_tokens: message.usage?.completion_tokens
-      }
+      cost
     });
   }
   return taggedChats;
