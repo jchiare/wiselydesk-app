@@ -53,20 +53,22 @@ export function ambossEnglishContextPromptGpt4SupportTicket(
       5. ${chatty ? AMBOSS_MEDICAL_TERM_CHATTY : AMBOSS_MEDICAL_TERM}
       6. Don't translate the name "AMBOSS". AMBOSS must always be directly written as "AMBOSS".
       `;
+  console.log(promptWithoutContext);
 
   return promptWithoutContext + contextPrompt(context);
 }
 
 export function ambossGermanContextPromptGpt4SupportTicket(
   context: Context,
-  createInlineSources: boolean
+  createInlineSources: boolean,
+  chatty: boolean = false
 ): string {
-  const promptWithoutContext: string = `${AMBOSS_STARTING_PROMPT}
+  const promptWithoutContext: string = `${chatty ? AMBOSS_STARTING_PROMPT_CHATTY : AMBOSS_STARTING_PROMPT}
       1. ${createInlineSources ? INLINE_CITATIONS : GPT4_TRUTHFULNESS_PROMPT}
       2. If you don't know the answer or the user seems unhappy or disappointed with your response, respond with the specific text in the language of the user: "Ich kann keine Informationen zu deiner Frage finden. Möchtest Du ein Support-Ticket erstellen? <button create> Support-Ticket erstellen</button create>". We don't want unhappy users to continue chatting with us.
       3. ${AMBOSS_CONTACT_SUPPORT_DE}
       4. ${CREATE_SUPPORT_TICKET_PROMPT_DE}
-      5. ${AMBOSS_MEDICAL_TERM}
+      5. ${chatty ? AMBOSS_MEDICAL_TERM_CHATTY : AMBOSS_MEDICAL_TERM}
       6. Don't translate the name "AMBOSS". AMBOSS must always be directly written as "AMBOSS".
       7. Don't use formal language while using the German language. Use the informal language. Use Du instead of Sie.
       `;

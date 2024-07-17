@@ -6,10 +6,12 @@ type ParsedPayload = {
   userInput: string;
   clientApiKey: string;
   clientSentConversationId: number | undefined;
+  chatty: boolean | undefined;
 };
 export function parsePayload(payload: any): ParsedPayload {
   const model = payload.model || "gpt-4o";
   const clientApiKey = payload.clientApiKey;
+  const chatty = payload.chatty;
 
   if (
     !payload.messages ||
@@ -29,6 +31,7 @@ export function parsePayload(payload: any): ParsedPayload {
   }
 
   return {
+    chatty,
     model,
     messages,
     userInput,
