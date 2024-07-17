@@ -53,7 +53,6 @@ export function ambossEnglishContextPromptGpt4SupportTicket(
       5. ${chatty ? AMBOSS_MEDICAL_TERM_CHATTY : AMBOSS_MEDICAL_TERM}
       6. Don't translate the name "AMBOSS". AMBOSS must always be directly written as "AMBOSS".
       `;
-  console.log(promptWithoutContext);
 
   return promptWithoutContext + contextPrompt(context);
 }
