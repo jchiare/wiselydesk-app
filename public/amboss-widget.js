@@ -82,9 +82,10 @@ function createIFrame(isEnglish, wiselyDeskWidgetOpen) {
     const modelParam = url.includes("model=claude3.5")
       ? "&model=claude3.5"
       : "";
+    const chattyParam = url.includes("chatty=true") ? "&chatty=true" : "";
     const iframeUrl = isEnglish
-      ? `${host}/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}${modelParam}`
-      : `${host}/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de${modelParam}`;
+      ? `${host}/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}${modelParam}${chattyParam}`
+      : `${host}/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de${modelParam}${chattyParam}`;
     const iframe = document.createElement("iframe");
     iframe.id = "wiselyDeskIframe";
     iframe.src = iframeUrl;
