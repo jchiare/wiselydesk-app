@@ -40,8 +40,9 @@ export function parsePayload(payload: any): ParsedPayload {
 }
 
 // put this in redis / cache at some point
-const BOT_ID_MAPPING: Record<string, number> = {
+export const BOT_ID_MAPPING: Record<string, number> = {
   qGmNXgVcRRwVpL6i2bIDDYvPc8lJcSvndKE7DUZzq5M: 1,
+  "12345ApiKey": 2,
   "2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY": 3,
   hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE: 4
 };
