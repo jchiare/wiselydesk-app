@@ -2,6 +2,7 @@ import { Widget } from "@/components/widget";
 import getChatTheme from "@/lib/chat/chat-theme";
 import type { Metadata } from "next";
 import type { SearchParams } from "@/components/chat";
+import { BOT_ID_MAPPING } from "@/lib/chat/conversation/parse-payload";
 
 export const dynamic = "force-dynamic";
 
@@ -22,12 +23,7 @@ export default async function ChatbotWidget({
   searchParams: SearchParams;
   params: Params;
 }): Promise<JSX.Element> {
-  const botLookup: Record<string, number> = {
-    qGmNXgVcRRwVpL6i2bIDDYvPc8lJcSvndKE7DUZzq5M: 1,
-    "2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY": 3,
-    hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE: 4
-  };
-  let botId = botLookup[params.clientApiKey];
+  let botId = BOT_ID_MAPPING[params.clientApiKey];
   if (!botId) {
     throw new Error("something wrong with botid");
   }

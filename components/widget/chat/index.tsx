@@ -28,6 +28,7 @@ export type SearchParams = {
   inline_sources?: boolean;
   testSupportModal?: boolean;
   widgetOpen?: string;
+  chatty?: boolean;
 };
 
 type ChatProps = {
@@ -84,7 +85,8 @@ export default function Chat({
     create_support_ticket: createSupportTicket = true,
     model = "gpt-4o",
     inline_sources: inlineSources = true,
-    testSupportModal = false
+    testSupportModal = false,
+    chatty = false
   } = searchParams;
 
   const { aiResponseDone, onSubmit, setAiResponseDone } = useChatSubmit({
@@ -100,7 +102,8 @@ export default function Chat({
     setSources,
     setLatestMessageId,
     setConversationId,
-    conversationId
+    conversationId,
+    chatty
   });
 
   async function handleSubmit() {

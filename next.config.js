@@ -8,7 +8,11 @@ const nextConfig = {
         pathname: "**"
       }
     ]
-  } //
+  },
+  experimental: {
+    // The instrumentation hook is required for Sentry to work on the serverside
+    instrumentationHook: true
+  }
 };
 
 module.exports = nextConfig;

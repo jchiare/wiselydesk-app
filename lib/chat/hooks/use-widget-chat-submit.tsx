@@ -18,6 +18,7 @@ type UseChatSubmitParams = {
   setConversationId: any;
   setLatestMessageId: (latestMessageId: number) => void;
   conversationId: number | null;
+  chatty?: boolean;
 };
 
 export const useChatSubmit = ({
@@ -33,7 +34,8 @@ export const useChatSubmit = ({
   input,
   setSources,
   setConversationId,
-  setLatestMessageId
+  setLatestMessageId,
+  chatty
 }: UseChatSubmitParams) => {
   const [aiResponseDone, setAiResponseDone] = useState<boolean>(true);
   const [assistantStreamingResponse, setAssistantStreamingResponse] =
@@ -73,7 +75,8 @@ export const useChatSubmit = ({
         model,
         conversationId,
         createSupportTicket,
-        inlineSources
+        inlineSources,
+        chatty
       }),
       signal: controller.signal,
       async onopen() {

@@ -41,7 +41,8 @@ export async function POST(req: Request) {
     messages,
     userInput: uncheckedUserInput,
     clientApiKey,
-    clientSentConversationId
+    clientSentConversationId,
+    chatty
   } = parsePayload(payload);
 
   const botId = parseBotId(clientApiKey);
@@ -96,7 +97,7 @@ export async function POST(req: Request) {
       4
     );
 
-  const systemMessage = getSystemMessagePrompt(botId, content);
+  const systemMessage = getSystemMessagePrompt(botId, content, true, chatty);
   const userAndAgentMessages = trimMessageUnder8KTokens(updatedMessages);
 
   const formattedSystemMessage: OpenAiMessage = {
