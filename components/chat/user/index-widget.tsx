@@ -26,7 +26,6 @@ export default function User({
                 height={25}
                 alt="User Icon"
                 src={SilhouetteImage}
-                placeholder="blur"
               />
             </span>
           </span>
