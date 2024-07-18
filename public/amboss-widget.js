@@ -74,8 +74,8 @@ function createIFrame(isEnglish, wiselyDeskWidgetOpen) {
   // Always remove the existing iframe and create a new one
   const existingIframe = document.getElementById("wiselyDeskIframe");
   if (!existingIframe && wiselyDeskWidgetOpen) {
-    // Create a new iframe
-    const host = url.includes("localhost:3000")
+    const isLocalDevelopment = url.startsWith("http://localhost:3000");
+    const host = isLocalDevelopment
       ? "http://localhost:3000"
       : "https://apps.wiselydesk.com";
 
@@ -83,9 +83,11 @@ function createIFrame(isEnglish, wiselyDeskWidgetOpen) {
       ? "&model=claude3.5"
       : "";
     const chattyParam = url.includes("chatty=true") ? "&chatty=true" : "";
-    const iframeUrl = isEnglish
-      ? `${host}/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}${modelParam}${chattyParam}`
-      : `${host}/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de${modelParam}${chattyParam}`;
+    const iframeUrl = isLocalDevelopment
+      ? `${host}/widget/12345ApiKey?widgetOpen=${wiselyDeskWidgetOpen}${modelParam}${chattyParam}`
+      : isEnglish
+        ? `${host}/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}${modelParam}${chattyParam}`
+        : `${host}/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de${modelParam}${chattyParam}`;
     const iframe = document.createElement("iframe");
     iframe.id = "wiselyDeskIframe";
     iframe.src = iframeUrl;
