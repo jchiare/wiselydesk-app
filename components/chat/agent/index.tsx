@@ -2,7 +2,7 @@ import { type ChatThemeSettings } from "@/lib/chat/chat-theme";
 import AgentIcon from "@/components/chat/agent/icon";
 import AgentMessage from "@/components/chat/agent/message";
 import Sources from "@/components/chat/agent/sources";
-import SupportTicketModal from "@/components/chat/support-ticket-modal";
+import SupportTicketModal from "@/components/widget/chat/support-ticket-modal";
 import AiWarning from "@/components/chat/ai-warning";
 import Feedback from "@/components/chat/agent/feedback";
 import { removeSupportButton } from "@/lib/shared/services/render-message";

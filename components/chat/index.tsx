@@ -9,7 +9,7 @@ import User from "@/components/chat/user";
 import { useChatSubmit } from "@/lib/chat/hooks/use-chat-submit";
 import { useScrollToBottom } from "@/lib/chat/hooks/use-scroll-to-bottom";
 import Input from "@/components/chat/user/input";
-import CancelResponse from "@/components/chat/cancel-response";
+import CancelResponse from "@/components/widget/chat/cancel-response";
 import type { Bot } from "@prisma/client";
 import { useEffect } from "react";
 import * as Sentry from "@sentry/nextjs";

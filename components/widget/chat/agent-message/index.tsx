@@ -1,10 +1,10 @@
 import { type ChatThemeSettings } from "@/lib/chat/chat-theme";
 import AgentIcon from "@/components/chat/agent/icon";
-import AgentMessage from "@/components/chat/agent/message-widget";
-import Sources from "@/components/chat/agent/sources-widget";
-import SupportTicketModal from "@/components/chat/support-ticket-modal";
-import AiWarning from "@/components/chat/ai-warning-widget";
-import Feedback from "@/components/chat/agent/feedback-widget";
+import AgentMessage from "@/components/widget/chat/agent-message/text";
+import Sources from "@/components/widget/chat/agent-message/sources";
+import SupportTicketModal from "@/components/widget/chat/support-ticket-modal";
+import AiWarning from "@/components/widget/chat/agent-message/ai-warning";
+import Feedback from "@/components/widget/chat/agent-message/feedback-buttons";
 import { removeSupportButton } from "@/lib/shared/services/render-message";
 
 type AgentMessageProps = {

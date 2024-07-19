@@ -1,6 +1,6 @@
 "use client";
-import Agent from "@/components/chat/agent/index-widget";
-import User from "@/components/chat/user/index-widget";
+import Agent from "@/components/widget/chat/agent-message";
+import User from "@/components/widget/chat/user-message";
 import type { ChatThemeSettings } from "@/lib/chat/chat-theme";
 import { formatDateTime } from "@/lib/shared/utils";
 import type { Bot, Conversation, Message } from "@prisma/client";

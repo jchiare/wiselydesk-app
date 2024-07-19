@@ -4,12 +4,12 @@ import {
   type ChatThemeSettings
 } from "@/lib/chat/chat-theme";
 import { welcomeReply } from "@/lib/shared/services/welcome-reply";
-import Agent from "@/components/chat/agent/index-widget";
-import User from "@/components/chat/user/index-widget";
+import Agent from "@/components/widget/chat/agent-message";
+import User from "@/components/widget/chat/user-message";
 import { useChatSubmit } from "@/lib/chat/hooks/use-widget-chat-submit";
 import { useScrollToBottom } from "@/lib/chat/hooks/use-scroll-to-bottom";
-import Input from "@/components/chat/user/input-widget";
-import CancelResponse from "@/components/chat/cancel-response";
+import Input from "@/components/widget/chat/input";
+import CancelResponse from "@/components/widget/chat/cancel-response";
 import { useEffect, useRef, useState } from "react";
 import * as Sentry from "@sentry/nextjs";
 import { getMessagesFromConversationId } from "@/lib/visitor/identify";
