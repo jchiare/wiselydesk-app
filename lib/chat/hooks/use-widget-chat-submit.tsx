@@ -76,7 +76,8 @@ export const useChatSubmit = ({
         conversationId,
         createSupportTicket,
         inlineSources,
-        chatty
+        chatty,
+        location: "widget"
       }),
       signal: controller.signal,
       async onopen() {

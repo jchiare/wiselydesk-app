@@ -64,7 +64,8 @@ export const useChatSubmit = ({
         model,
         conversationId,
         createSupportTicket,
-        inlineSources
+        inlineSources,
+        location: "help-center"
       }),
       signal: controller.signal,
       async onopen() {

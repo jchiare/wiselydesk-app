@@ -42,7 +42,8 @@ export async function POST(req: Request) {
     userInput: uncheckedUserInput,
     clientApiKey,
     clientSentConversationId,
-    chatty
+    chatty,
+    location
   } = parsePayload(payload);
 
   const botId = parseBotId(clientApiKey);
@@ -69,6 +70,16 @@ export async function POST(req: Request) {
     text: userInput,
     index: updatedMessages.length,
     finished: true
+  });
+
+  // Track localtion with lowest priority
+  setImmediate(() => {
+    prisma.activity.create({
+      data: {
+        orgId: 3,
+        action: location ?? "no_location"
+      }
+    });
   });
 
   console.log(
