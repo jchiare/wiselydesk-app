@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import { waitUntil } from "@vercel/functions";
 import {
   parsePayload,
   parseBotId,
@@ -73,14 +74,14 @@ export async function POST(req: Request) {
   });
 
   // Track localtion with lowest priority
-  setImmediate(() => {
+  waitUntil(
     prisma.activity.create({
       data: {
         orgId: 3,
         action: location ?? "no_location"
       }
-    });
-  });
+    })
+  );
 
   console.log(
     `Received message for conversation ${conversationId} on bot ${botId}`

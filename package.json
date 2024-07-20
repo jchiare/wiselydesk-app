@@ -24,6 +24,7 @@
     "@radix-ui/react-select": "^2.0.0",
     "@sentry/nextjs": "^8.18.0",
     "@types/chart.js": "^2.9.41",
+    "@vercel/functions": "^1.4.0",
     "chart.js": "^4.4.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
