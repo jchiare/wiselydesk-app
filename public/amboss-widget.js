@@ -142,12 +142,20 @@ function handleWidgetClick() {
   createSupportWidgetButton(wiselyDeskWidgetOpen);
 }
 
-if (
+const isHelpCenterDirect = () =>
+  window.location.href.endsWith("Virtual-AMBOSS-Assistant-Beta") ||
+  window.location.href.endsWith("Virtueller-AMBOSS-Assistent-Beta");
+
+const isEnglish = url.includes("en-us");
+
+const shouldShowWidget = () =>
   window.location.href.includes("wiselydeskTesting") ||
-  isOutsideBusinessHours()
-) {
-  const isEnglish = url.includes("en-us");
-  createIFrame(isEnglish, wiselyDeskWidgetOpen);
+  isOutsideBusinessHours() ||
+  isHelpCenterDirect();
+
+if (shouldShowWidget()) {
+  const widgetOpen = isHelpCenterDirect() ? true : wiselyDeskWidgetOpen;
+  createIFrame(isEnglish, widgetOpen);
   hideZendeskWidget("#zw-customLauncher");
-  createSupportWidgetButton(wiselyDeskWidgetOpen);
+  createSupportWidgetButton(widgetOpen);
 }
