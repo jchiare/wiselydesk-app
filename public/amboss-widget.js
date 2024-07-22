@@ -86,7 +86,7 @@ function createIFrame(isEnglish, wiselyDeskWidgetOpen) {
     const iframeUrl = isLocalDevelopment
       ? `${host}/widget/12345ApiKey?widgetOpen=${wiselyDeskWidgetOpen}${modelParam}${chattyParam}`
       : isEnglish
-        ? `${host}/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}${modelParam}${chattyParam}`
+        ? `${host}/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}${modelParam}&chatty=true`
         : `${host}/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de${modelParam}${chattyParam}`;
     const iframe = document.createElement("iframe");
     iframe.id = "wiselyDeskIframe";
@@ -144,7 +144,8 @@ function handleWidgetClick() {
 
 if (
   window.location.href.includes("wiselydeskTesting") ||
-  isOutsideBusinessHours()
+  isOutsideBusinessHours() ||
+  url.includes("demo-nm12x.html")
 ) {
   const isEnglish = url.includes("en-us");
   createIFrame(isEnglish, wiselyDeskWidgetOpen);
