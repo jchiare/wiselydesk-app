@@ -1,5 +1,5 @@
 import { type ChatThemeSettings } from "@/lib/chat/chat-theme";
-import AgentIcon from "@/components/chat/agent/icon";
+import AgentIcon from "@/components/widget/chat/agent-message/icon";
 import AgentMessage from "@/components/widget/chat/agent-message/text";
 import Sources from "@/components/widget/chat/agent-message/sources";
 import SupportTicketModal from "@/components/widget/chat/support-ticket-modal";

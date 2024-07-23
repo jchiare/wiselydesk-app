@@ -142,10 +142,15 @@ function handleWidgetClick() {
   createSupportWidgetButton(wiselyDeskWidgetOpen);
 }
 
+const ALWAYS_ALLOW_WIDGET_URLS = [
+  "wiselydeskTesting",
+  "demo-nm12x.html",
+  "Virtual-AMBOSS-Assistant-Beta"
+];
+
 if (
-  window.location.href.includes("wiselydeskTesting") ||
-  isOutsideBusinessHours() ||
-  url.includes("demo-nm12x.html")
+  ALWAYS_ALLOW_WIDGET_URLS.some(allowedUrl => url.includes(allowedUrl)) ||
+  isOutsideBusinessHours()
 ) {
   const isEnglish = url.includes("en-us");
   createIFrame(isEnglish, wiselyDeskWidgetOpen);

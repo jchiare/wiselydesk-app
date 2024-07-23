@@ -1,7 +1,7 @@
 import { Widget } from "@/components/widget";
 import getChatTheme from "@/lib/chat/chat-theme";
 import type { Metadata } from "next";
-import type { SearchParams } from "@/components/chat";
+import type { SearchParams } from "@/components/widget/chat";
 import { BOT_ID_MAPPING } from "@/lib/chat/conversation/parse-payload";
 
 export const dynamic = "force-dynamic";

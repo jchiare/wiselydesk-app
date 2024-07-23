@@ -1,10 +1,6 @@
 "use client";
 import { useState } from "react";
 import Chat, { type SearchParams } from "@/components/widget/chat";
-import { identifyVisitor, getLastConversation } from "@/lib/visitor/identify";
-import { useAtom } from "jotai";
-import { conversationIdAtom } from "@/lib/state/atoms";
-import type { Bot, Conversation } from "@prisma/client";
 import type { ChatThemeSettings } from "@/lib/chat/chat-theme";
 import type ChatMessage from "@/lib/chat/chat-message";
 
@@ -22,17 +18,6 @@ export function Widget({
   const { widgetOpen } = searchParams;
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [conversationId, setConversationId] = useState<number | null>(null);
-  // const [conversationId, _] = useAtom(conversationIdAtom);
-
-  async function endConversation(conversationId: number) {
-    try {
-      await fetch(`/api/conversation/${conversationId}/end`, {
-        method: "POST"
-      });
-    } catch (err) {
-      console.error("Error ending conversation:", err);
-    }
-  }
 
   return (
     <div>

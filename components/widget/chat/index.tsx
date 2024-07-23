@@ -18,8 +18,6 @@ import { PreviousMessages } from "@/components/widget/chat/previous-messages";
 import type { Bot, Conversation, Message } from "@prisma/client";
 import { AgentRequest } from "@/lib/shared/agent-request";
 import ChatMessage from "@/lib/chat/chat-message";
-import { useAtom } from "jotai/react";
-import { conversationIdAtom } from "@/lib/state/atoms";
 
 export type SearchParams = {
   create_support_ticket?: boolean;
