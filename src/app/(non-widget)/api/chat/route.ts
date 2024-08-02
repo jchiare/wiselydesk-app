@@ -73,16 +73,6 @@ export async function POST(req: Request) {
     finished: true
   });
 
-  // Track localtion with lowest priority
-  waitUntil(
-    prisma.activity.create({
-      data: {
-        orgId: 3,
-        action: location ?? "no_location"
-      }
-    })
-  );
-
   console.log(
     `Received message for conversation ${conversationId} on bot ${botId}`
   );
