@@ -30,8 +30,7 @@ export async function POST(req: Request) {
 
   await conversationService.getOrCreateConversation(
     userInput,
-    clientSentConversationId,
-    undefined
+    clientSentConversationId
   );
 
   const conversationId = conversationService.getConversationId();
