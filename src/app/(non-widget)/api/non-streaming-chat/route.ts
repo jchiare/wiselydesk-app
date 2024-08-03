@@ -13,23 +13,15 @@ export async function POST(req: Request) {
   const payload = await req.json();
   const clientSentConversationId = payload.conversationId;
   const messagesLength = payload.messagesLength;
-  let userInput = payload.userInput;
-  let productionTesting = false;
-  if (userInput.startsWith("wdtest")) {
-    userInput = userInput.replace("wdtest ", "");
-    productionTesting = true;
-  }
+  const userInput = payload.userInput;
 
   const botId = parseBotId(payload.clientApiKey);
 
-  const conversationService = new ConversationService(
-    prisma,
-    productionTesting,
-    botId
-  );
+  const conversationService = new ConversationService(prisma, userInput, botId);
+  const updatedUserInput = conversationService.getUpdatedUserInput();
 
   await conversationService.getOrCreateConversation(
-    userInput,
+    updatedUserInput,
     clientSentConversationId
   );
 
@@ -37,7 +29,7 @@ export async function POST(req: Request) {
 
   // add user input
   await conversationService.createMessage({
-    text: userInput,
+    text: updatedUserInput,
     index: parseInt(messagesLength, 10) + 1,
     finished: true
   });

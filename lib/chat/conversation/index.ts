@@ -14,18 +14,27 @@ type UpdateMessagePayload = Omit<Payload, "conversationId">;
 
 export class ConversationService {
   private prisma: PrismaClient;
-  private isProductionTesting: boolean;
+  private firstInput: string;
   private conversationId: number | undefined;
   private botId: number;
+  private isProductionTesting: boolean;
+  private WISELYDESK_TESTING_KEYWORD = "wdtest";
 
-  constructor(
-    prisma: PrismaClient,
-    isProductionTesting: boolean,
-    botId: number
-  ) {
+  constructor(prisma: PrismaClient, firstInput: string, botId: number) {
     this.prisma = prisma;
-    this.isProductionTesting = isProductionTesting;
+    this.firstInput = firstInput;
+    this.isProductionTesting = this.checkProductionTesting();
     this.botId = botId;
+    if (this.isProductionTesting) {
+      this.firstInput = this.firstInput.replace(
+        `${this.WISELYDESK_TESTING_KEYWORD} `,
+        ""
+      );
+    }
+  }
+
+  public getUpdatedUserInput(): string {
+    return this.firstInput;
   }
 
   public getConversationId(): number {
@@ -33,6 +42,10 @@ export class ConversationService {
       throw new Error("Conversation ID is undefined");
     }
     return this.conversationId;
+  }
+
+  checkProductionTesting(): boolean {
+    return this.firstInput.startsWith(this.WISELYDESK_TESTING_KEYWORD);
   }
 
   async getOrCreateConversation(

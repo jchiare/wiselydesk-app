@@ -65,7 +65,6 @@ export function parseBotId(clientApiKey: string): number {
   }
   return botId;
 }
-
 export function removeWiselyDeskTestingKeyword(
   messages: OpenAiMessage[],
   userInput: string
@@ -73,14 +72,9 @@ export function removeWiselyDeskTestingKeyword(
   const WISELYDESK_TESTING_KEYWORD = "wdtest";
   const isProductionTesting = userInput.startsWith(WISELYDESK_TESTING_KEYWORD);
 
-  if (isProductionTesting) {
-    // Remove the keyword "wdtest" from the start of the userInput
-    userInput = userInput.substring(WISELYDESK_TESTING_KEYWORD.length).trim();
-    if (messages.length > 0) {
-      // Update the last message in the array with the trimmed userInput
-      messages[messages.length - 1].content = userInput;
-    }
-  }
+  const cleanedUserInput = isProductionTesting
+    ? userInput.replace(`${WISELYDESK_TESTING_KEYWORD} `, "")
+    : userInput;
 
-  return [userInput, messages, isProductionTesting];
+  return [cleanedUserInput, messages, isProductionTesting];
 }
