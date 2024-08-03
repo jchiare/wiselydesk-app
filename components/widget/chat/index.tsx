@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import * as Sentry from "@sentry/nextjs";
 
 import type { Bot, Conversation, Message } from "@prisma/client";
-import { AgentRequest } from "@/lib/shared/agent-request";
+import { AgentRequest } from "@/lib/agent-request";
 import ChatMessage from "@/lib/chat/chat-message";
 
 export type SearchParams = {

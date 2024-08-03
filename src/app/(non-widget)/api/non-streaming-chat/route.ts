@@ -1,7 +1,7 @@
 import { parseBotId } from "@/lib/chat/conversation/parse-payload";
 import { ConversationService } from "@/lib/chat/conversation";
 import prisma from "@/lib/prisma";
-import { AgentRequest } from "@/lib/shared/agent-request";
+import { AgentRequest } from "@/lib/agent-request";
 
 export const maxDuration = 75;
 
