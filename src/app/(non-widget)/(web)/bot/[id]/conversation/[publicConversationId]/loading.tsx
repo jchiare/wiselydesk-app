@@ -23,7 +23,7 @@ const firstMessage = {
   is_helpful: null
 };
 
-export default function SingleConversationLoading() {
+export default function WebConversationLoading() {
   return (
     <div className="flex flex-col-reverse sm:flex-col">
       <div className="p-4 sm:mr-[300px] sm:px-6 sm:py-14 lg:px-16">
