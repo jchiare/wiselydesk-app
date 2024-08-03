@@ -1,6 +1,6 @@
 import RightBar from "@/components/web/conversation/right-bar";
 import type { Metadata } from "next/types";
-import { fetchServerSession } from "@/lib/shared/auth";
+import { fetchServerSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import type { Message } from "@prisma/client";
 import AgentMessage from "@/components/web/conversation/agent-message";

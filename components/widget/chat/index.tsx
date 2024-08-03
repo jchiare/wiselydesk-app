@@ -12,8 +12,6 @@ import Input from "@/components/widget/chat/input";
 import CancelResponse from "@/components/widget/chat/cancel-response";
 import { useEffect, useRef, useState } from "react";
 import * as Sentry from "@sentry/nextjs";
-import { getMessagesFromConversationId } from "@/lib/visitor/identify";
-import { PreviousMessages } from "@/components/widget/chat/previous-messages";
 
 import type { Bot, Conversation, Message } from "@prisma/client";
 import { AgentRequest } from "@/lib/shared/agent-request";
@@ -54,9 +52,6 @@ export default function Chat({
   conversationId,
   setConversationId
 }: ChatProps): JSX.Element {
-  const [lastConversationMessages, setLastConversationMessages] = useState<
-    Message[]
-  >([]);
   const [sources, setSources] = useState<string[]>([]);
   const [latestMessageId, setLatestMessageId] = useState<number | null>();
   const [input, setInput] = useState<string>("");
@@ -65,18 +60,6 @@ export default function Chat({
 
   const scrollHeightRef = useRef<number>(0);
   const divRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (lastConversation) {
-      getMessagesFromConversationId(lastConversation.id).then(messages => {
-        setLastConversationMessages(messages);
-      });
-    }
-  }, [lastConversation]);
-
-  useEffect(() => {
-    checkOverflow();
-  }, [lastConversationMessages]);
 
   const {
     locale = "en",
@@ -159,8 +142,7 @@ export default function Chat({
 
   const messagesEndRef = useScrollToBottom({
     messages,
-    sources,
-    lastConversationMessages
+    sources
   });
 
   useEffect(() => {
@@ -207,30 +189,12 @@ export default function Chat({
     };
   }, []);
 
-  const hasLastConversationMessages =
-    lastConversationMessages && lastConversationMessages.length > 0;
-
   return (
     <div
       ref={divRef}
       className={`flex h-full w-full flex-col items-center overflow-scroll text-[90%] antialiased ${combineClassNames(
         chatTheme.baseSettings
       )} flex-shrink-0 font-medium`}>
-      {hasLastConversationMessages && (
-        <PreviousMessages
-          botId={botId}
-          chatTheme={chatTheme}
-          account={account}
-          createSupportTicket={createSupportTicket}
-          aiResponseDone={aiResponseDone}
-          locale={locale}
-          sources={sources}
-          latestMessageId={latestMessageId}
-          lastConversation={lastConversation}
-          conversationId={conversationId!}
-          lastConversationMessages={lastConversationMessages}
-        />
-      )}
       <Agent
         chatTheme={chatTheme}
         text={welcomeReply(account, locale)}
@@ -238,7 +202,6 @@ export default function Chat({
         key={0}
         aiResponseDone={true}
         isWelcomeMessage={true}
-        hasLastConversationMessages={hasLastConversationMessages}
         isLastMessage={messages.length === 0}
         botId={botId}
         testSupportModal={testSupportModal}

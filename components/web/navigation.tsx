@@ -5,7 +5,7 @@ import {
   ChartBarSquareIcon,
   TagIcon
 } from "@heroicons/react/24/outline";
-import { concatClassNames } from "@/lib/shared/utils";
+import { concatClassNames } from "@/lib/utils";
 import Link from "next/link";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
 

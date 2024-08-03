@@ -1,5 +1,5 @@
 "use client";
-import { formatDateTime } from "@/lib/shared/utils";
+import { formatDateTime } from "@/lib/utils";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
 import { useRouter } from "next/navigation";
 import useRefreshPage from "@/lib/web/use-refresh-page";
@@ -65,15 +65,15 @@ export default function ConversationTable({
         {filter === "escalated"
           ? conversation.escalatedReason
           : conversation.escalated
-          ? "Yes"
-          : ""}
+            ? "Yes"
+            : ""}
       </td>
       <td className={`hidden px-3 py-4 text-sm text-gray-500 lg:table-cell `}>
         {conversation.rating === null
           ? ""
           : conversation.rating
-          ? "Positive"
-          : "Negative"}
+            ? "Positive"
+            : "Negative"}
       </td>
       <td
         className={` table-cell overflow-ellipsis whitespace-nowrap px-3 py-4 text-sm text-gray-500 `}>

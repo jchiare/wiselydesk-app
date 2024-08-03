@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import SideNav from "@/components/web/side-nav";
-import { fetchServerSession } from "@/lib/shared/auth";
-import { orgChooser } from "@/lib/shared/org-chooser";
+import { fetchServerSession } from "@/lib/auth";
+import { orgChooser } from "@/lib/org-chooser";
 import prisma from "@/lib/prisma";
 import { unstable_cache } from "next/cache";
 

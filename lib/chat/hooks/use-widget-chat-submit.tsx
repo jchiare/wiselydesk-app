@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ChatMessage from "@/lib/chat/chat-message";
 import { transformChatMessageToOpenAi } from "@/lib/chat/openai-chat-message";
 import { fetchEventSource } from "@microsoft/fetch-event-source";
-import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
+import { NEXTJS_BACKEND_URL } from "@/lib/constants";
 
 type UseChatSubmitParams = {
   clientApiKey: string;
