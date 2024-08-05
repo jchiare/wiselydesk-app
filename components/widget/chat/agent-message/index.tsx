@@ -21,8 +21,6 @@ type AgentMessageProps = {
   botId: number;
   testSupportModal?: boolean;
   isOverflowing?: boolean;
-  hasLastConversationMessages?: boolean;
-  isPreviousMessages?: boolean;
   isWelcomeMessage?: boolean;
   bgColorOverride?: string;
   supportTicketCreated?: boolean;
@@ -43,7 +41,6 @@ export default function AgentDiv({
   botId,
   testSupportModal,
   isOverflowing,
-  isPreviousMessages,
   isWelcomeMessage,
   bgColorOverride,
   supportTicketCreated = false,
@@ -73,7 +70,6 @@ export default function AgentDiv({
             <div className="flex min-h-[20px] flex-col items-start gap-4 whitespace-pre-wrap ">
               <div className="w-full break-words ">
                 <AgentMessage
-                  isPreviousMessages={isPreviousMessages}
                   chatTheme={chatTheme}
                   aiResponseDone={aiResponseDone}
                   text={text}

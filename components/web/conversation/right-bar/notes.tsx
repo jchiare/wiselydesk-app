@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Note } from "@prisma/client";
-import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
+import { NEXTJS_BACKEND_URL } from "@/lib/constants";
 
 type NotesProps = {
   isLoading?: boolean;

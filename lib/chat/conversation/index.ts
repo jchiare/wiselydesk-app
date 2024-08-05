@@ -14,18 +14,27 @@ type UpdateMessagePayload = Omit<Payload, "conversationId">;
 
 export class ConversationService {
   private prisma: PrismaClient;
-  private isProductionTesting: boolean;
+  private firstInput: string;
   private conversationId: number | undefined;
   private botId: number;
+  private isProductionTesting: boolean;
+  private WISELYDESK_TESTING_KEYWORD = "wdtest";
 
-  constructor(
-    prisma: PrismaClient,
-    isProductionTesting: boolean,
-    botId: number
-  ) {
+  constructor(prisma: PrismaClient, firstInput: string, botId: number) {
     this.prisma = prisma;
-    this.isProductionTesting = isProductionTesting;
+    this.firstInput = firstInput;
+    this.isProductionTesting = this.checkProductionTesting();
     this.botId = botId;
+    if (this.isProductionTesting) {
+      this.firstInput = this.firstInput.replace(
+        `${this.WISELYDESK_TESTING_KEYWORD} `,
+        ""
+      );
+    }
+  }
+
+  public getUpdatedUserInput(): string {
+    return this.firstInput;
   }
 
   public getConversationId(): number {
@@ -35,10 +44,13 @@ export class ConversationService {
     return this.conversationId;
   }
 
+  checkProductionTesting(): boolean {
+    return this.firstInput.startsWith(this.WISELYDESK_TESTING_KEYWORD);
+  }
+
   async getOrCreateConversation(
     userInput: string,
-    conversationId: number | undefined | null,
-    sessionId: string | undefined
+    conversationId: number | undefined | null
   ): Promise<void> {
     if (this.isProductionTesting) {
       this.conversationId = 1;
@@ -51,19 +63,14 @@ export class ConversationService {
       return;
     }
 
-    const newConversationId = (
-      await this.createConversation(userInput, sessionId)
-    ).id;
+    const newConversationId = (await this.createConversation(userInput)).id;
     this.conversationId = newConversationId;
 
     // create welcome message since it's a new conversation
     await this.createWelcomeMessage();
   }
 
-  private async createConversation(
-    userInput: string,
-    sessionId: string | undefined
-  ): Promise<Conversation> {
+  private async createConversation(userInput: string): Promise<Conversation> {
     const startTime = Date.now();
 
     const publicID = await this.getNewPublicIdByBotId(this.botId);
@@ -79,8 +86,7 @@ export class ConversationService {
         public_id: publicID,
         user_id: 3,
         livemode: isConversationLivemode(userInput, this.botId),
-        summary: userInput.slice(0, 255),
-        widgetSessionId: sessionId
+        summary: userInput.slice(0, 255)
       }
     });
 

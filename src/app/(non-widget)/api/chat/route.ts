@@ -1,5 +1,4 @@
 import OpenAI from "openai";
-import { waitUntil } from "@vercel/functions";
 import {
   parsePayload,
   parseBotId,
@@ -15,7 +14,6 @@ import {
   outputCost,
   trimMessageUnder8KTokens
 } from "@/lib/shared/services/openai/cost";
-import { getVisitorSessionId } from "@/lib/visitor/identify";
 
 import type { Message } from "@prisma/client";
 import type { Stream } from "openai/streaming";
@@ -32,15 +30,13 @@ export const maxDuration = 75;
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  const sessionId = await getVisitorSessionId();
-
   const startTime = Date.now();
 
   const payload = await req.json();
   const {
     model,
     messages,
-    userInput: uncheckedUserInput,
+    userInput,
     clientApiKey,
     clientSentConversationId,
     chatty,
@@ -49,27 +45,20 @@ export async function POST(req: Request) {
 
   const botId = parseBotId(clientApiKey);
 
-  const [userInput, updatedMessages, isProductionTesting] =
-    removeWiselyDeskTestingKeyword(messages, uncheckedUserInput);
-
-  const conversationService = new ConversationService(
-    prisma,
-    isProductionTesting,
-    botId
-  );
+  const conversationService = new ConversationService(prisma, userInput, botId);
+  const updatedUserInput = conversationService.getUpdatedUserInput();
 
   await conversationService.getOrCreateConversation(
-    userInput,
-    clientSentConversationId,
-    sessionId
+    updatedUserInput,
+    clientSentConversationId
   );
 
   const conversationId = conversationService.getConversationId();
 
   // add user input
   const message = await conversationService.createMessage({
-    text: userInput,
-    index: updatedMessages.length,
+    text: updatedUserInput,
+    index: messages.length,
     finished: true
   });
 
@@ -85,7 +74,7 @@ export async function POST(req: Request) {
 
   const kbaSearchClient = new KbaSearch(botId, prisma);
   const topMatchingArticles =
-    await kbaSearchClient.getTopKArticlesObject(userInput);
+    await kbaSearchClient.getTopKArticlesObject(updatedUserInput);
 
   console.log(
     `Took ${((Date.now() - startTime) / 1000).toFixed(
@@ -100,13 +89,13 @@ export async function POST(req: Request) {
     );
 
   const systemMessage = getSystemMessagePrompt(botId, content, true, chatty);
-  const userAndAgentMessages = trimMessageUnder8KTokens(updatedMessages);
+  const userAndAgentMessages = trimMessageUnder8KTokens(messages);
 
   const formattedSystemMessage: OpenAiMessage = {
     role: "system",
     content: systemMessage
   };
-  let formattedMessages = [formattedSystemMessage, ...updatedMessages];
+  let formattedMessages = [formattedSystemMessage, ...messages];
   formattedMessages = trimMessageUnder8KTokens(formattedMessages);
 
   const inputAiCost = inputCost(formattedMessages, model);
@@ -131,7 +120,7 @@ export async function POST(req: Request) {
   // user quits mid-conversation
   const aiResponseMessage = await conversationService.createMessage({
     text: "",
-    index: updatedMessages.length + 1,
+    index: messages.length + 1,
     finished: false,
     apiResponseCost: inputAiCost
   });

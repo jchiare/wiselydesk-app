@@ -25,15 +25,12 @@ export const authOptions: NextAuthOptions = {
           orgId = AMBOSS_ORG_ID;
         }
 
-        // const user = await prisma.user.findFirst({ where: { email } });
-
         return {
           id: profile.sub,
           name: profile.name,
           email: profile.email,
           image: profile.picture,
           organization_id: orgId
-          // internal_user_id: user?.id ?? 3 // default to anonymous user
         };
       }
     })

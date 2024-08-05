@@ -1,6 +1,7 @@
 export class AgentRequest {
   botId: number;
   text?: string;
+  userRequestAgent = ["agent", "wdtest agent", "live chat"];
 
   constructor({ botId }: { botId: number }) {
     this.botId = botId;
@@ -8,11 +9,7 @@ export class AgentRequest {
 
   requestingAgent(text: string): boolean {
     this.text = text.trim().toLowerCase();
-    return (
-      this.text === "agent" ||
-      this.text === "wdtest agent" ||
-      this.text === "live chat"
-    );
+    return this.userRequestAgent.includes(this.text);
   }
 
   getResponse(): string {
