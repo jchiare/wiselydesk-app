@@ -1,7 +1,14 @@
 export class AgentRequest {
   botId: number;
   text?: string;
-  userRequestAgent = ["agent", "wdtest agent", "live chat"];
+  userRequestAgent = [
+    "agent",
+    "wdtest agent",
+    "live chat",
+    "connect me to an agent",
+    "talk to support",
+    "support"
+  ];
 
   constructor({ botId }: { botId: number }) {
     this.botId = botId;
