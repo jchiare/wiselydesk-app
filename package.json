@@ -23,7 +23,6 @@
     "@prisma/client": "^5.17.0",
     "@radix-ui/react-select": "^2.1.1",
     "@sentry/nextjs": "^8.18.0",
-    "@vercel/functions": "^1.4.0",
     "chart.js": "^4.4.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
