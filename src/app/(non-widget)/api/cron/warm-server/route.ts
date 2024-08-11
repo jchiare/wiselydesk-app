@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
   const startTime = Date.now();
   try {
     const response = await fetch(
-      "https://apps.wiselydesk.com/widget/12345ApiKey?widgetOpen=true"
+      `https://apps.wiselydesk.com/widget/12345ApiKey?widgetOpen=true&randomTime=${startTime}`
     );
     const endTime = Date.now();
     const duration = endTime - startTime;
