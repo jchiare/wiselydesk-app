@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/widget/12345ApiKey?widgetOpen=true",
+      "path": "https://apps.wiselydesk.com/widget/12345ApiKey?widgetOpen=true",
       "schedule": "*/15 * * * *"
     }
   ]
