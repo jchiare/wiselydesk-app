@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/warm-server",
-      "schedule": "*/15 * * * *"
+      "schedule": "*/10 * * * *"
     }
   ]
 }
