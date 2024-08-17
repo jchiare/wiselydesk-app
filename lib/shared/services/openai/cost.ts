@@ -1,30 +1,30 @@
 import type { OpenAiMessage } from "@/lib/chat/openai-chat-message";
 import type { TiktokenModel } from "js-tiktoken";
 
+function getCostPerToken(
+  model: TiktokenModel | string,
+  isInput: boolean
+): number {
+  switch (model) {
+    case "gpt-4":
+      return isInput ? 0.03 : 0.06;
+    case "gpt-4o":
+      return isInput ? 0.005 : 0.015;
+    case "gpt-3.5-turbo":
+      return 0.002;
+    case "claude3.5":
+      return isInput ? 0.003 : 0.012;
+    default:
+      throw new Error("Invalid model: " + model);
+  }
+}
+
 export function inputCost(
   formattedMessage: OpenAiMessage[],
   model: TiktokenModel | string
 ): number {
   const numTokens = JSON.stringify(formattedMessage).length / 4; // not accurate but better than nothing
-  let costPerToken: number;
-
-  switch (model) {
-    case "gpt-4":
-      costPerToken = 0.03;
-      break;
-    case "gpt-4o":
-      costPerToken = 0.005;
-      break;
-    case "gpt-3.5-turbo":
-      costPerToken = 0.002;
-      break;
-    case "claude3.5":
-      costPerToken = 0.003;
-      break;
-    default:
-      throw new Error("Invalid model: " + model);
-  }
-
+  const costPerToken = getCostPerToken(model, true);
   return (numTokens / 1000) * costPerToken;
 }
 
@@ -35,23 +35,7 @@ export function inputCostWithTokens(
   if (!tokens) {
     return 0;
   }
-  let costPerToken: number;
-  switch (model) {
-    case "gpt-4":
-      costPerToken = 0.03;
-      break;
-    case "gpt-4o":
-      costPerToken = 0.005;
-      break;
-    case "gpt-3.5-turbo":
-      costPerToken = 0.002;
-      break;
-    case "claude3.5":
-      costPerToken = 0.003;
-      break;
-    default:
-      throw new Error("Invalid model: " + model);
-  }
+  const costPerToken = getCostPerToken(model, true);
   return parseFloat(((tokens / 1000) * costPerToken).toFixed(4));
 }
 
@@ -86,25 +70,7 @@ export function outputCost(
   model: TiktokenModel | string
 ): number {
   const numTokens = output.length / 4; // not accurate but better than nothing
-
-  let costPerToken: number;
-  switch (model) {
-    case "gpt-4":
-      costPerToken = 0.06;
-      break;
-    case "gpt-4o":
-      costPerToken = 0.015;
-      break;
-    case "gpt-3.5-turbo":
-      costPerToken = 0.002;
-      break;
-    case "claude3.5":
-      costPerToken = 0.012;
-      break;
-    default:
-      throw new Error("Invalid model: " + model);
-  }
-
+  const costPerToken = getCostPerToken(model, false);
   const cost = (numTokens / 1000) * costPerToken;
   return parseFloat(cost.toFixed(4));
 }
@@ -116,22 +82,6 @@ export function outputCostWithTokens(
   if (!tokens) {
     return 0;
   }
-  let costPerToken: number;
-  switch (model) {
-    case "gpt-4":
-      costPerToken = 0.06;
-      break;
-    case "gpt-4o":
-      costPerToken = 0.015;
-      break;
-    case "gpt-3.5-turbo":
-      costPerToken = 0.002;
-      break;
-    case "claude3.5":
-      costPerToken = 0.012;
-      break;
-    default:
-      throw new Error("Invalid model: " + model);
-  }
+  const costPerToken = getCostPerToken(model, false);
   return parseFloat(((tokens / 1000) * costPerToken).toFixed(4));
 }
