@@ -21,5 +21,5 @@ Please analyze the following customer service chat and provide the most appropri
 The tag should help categorize the email for efficient handling by the AMBOSS customer service team.
 Possible tags include: ${TAG_CATEGORIES}. If none of the tags are relevant to the chat content, then tag the chat as 'uncategorized'.
 Also provide tags for the users information that you are think are relevant to the chat content.
-It's crucial to respond only in JSON format with the keys "ai_generated_tags" (don't include "live_chat" in the tag, we already know it's a live chat), which will be snake cased tags you create, and "tags" which uses the tags given above. Don't explain your reasoning, just provide the JSON.
+It's crucial to respond only in JSON format with the keys "ai_generated_tags", an array, (don't include "live_chat" in the tag, we already know it's a live chat), which will be snake cased tags you create, and "tags", an array, which uses the tags given above. Don't explain your reasoning, just provide the JSON.
   `;
