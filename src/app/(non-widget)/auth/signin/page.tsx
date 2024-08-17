@@ -2,7 +2,7 @@ import SignInButton from "@/src/app/(non-widget)/auth/signin/sign-in-button";
 import Image from "next/image";
 import signInBg from "@/public/signin-screen-bg.png";
 import type { Metadata } from "next/types";
-import { fetchServerSessionSignIn } from "@/lib/shared/auth";
+import { fetchServerSessionSignIn } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 

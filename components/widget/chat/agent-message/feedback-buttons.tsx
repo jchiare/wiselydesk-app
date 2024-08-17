@@ -1,6 +1,6 @@
 "use client";
 import { type ChatThemeSettings } from "@/lib/chat/chat-theme";
-import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
+import { NEXTJS_BACKEND_URL } from "@/lib/constants";
 import { useState } from "react";
 
 type FeedbackProps = {

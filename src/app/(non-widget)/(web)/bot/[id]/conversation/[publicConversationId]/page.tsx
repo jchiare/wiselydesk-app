@@ -1,11 +1,16 @@
-import SingleConversation from "@/components/web/conversation";
 import RightBar from "@/components/web/conversation/right-bar";
-import type { SingleConversationReturnType } from "@/types/single-conversation";
 import type { Metadata } from "next/types";
-import { fetchServerSession } from "@/lib/shared/auth";
+import { fetchServerSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import type { Message } from "@prisma/client";
+import AgentMessage from "@/components/web/conversation/agent-message";
+import UserMessage from "@/components/web/conversation/user-message";
 
 export const dynamic = "force-dynamic";
+
+function isMessageFromUser(message: Message) {
+  return message.index % 2 > 0;
+}
 
 type ParamsType = {
   publicConversationId: string;
@@ -23,7 +28,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function SingleConversationPage({
+export default async function WebConversationPage({
   params
 }: {
   params: ParamsType;
@@ -51,7 +56,7 @@ export default async function SingleConversationPage({
     }
   });
 
-  const conversationObject: SingleConversationReturnType = {
+  const conversationObject = {
     conversation: {
       messages,
       ...conversation
@@ -61,7 +66,29 @@ export default async function SingleConversationPage({
   return (
     <div className="flex flex-col-reverse sm:flex-col">
       <div className="p-4 sm:mr-[300px] sm:px-6 sm:py-14 lg:px-16">
-        <SingleConversation conversation={conversationObject} />
+        <div>
+          {conversationObject.conversation.messages.map(message => {
+            return (
+              <div key={message.id}>
+                {isMessageFromUser(message) ? (
+                  <UserMessage
+                    text={message.text}
+                    sentTime={message.created_at}
+                  />
+                ) : (
+                  <AgentMessage
+                    text={message.text}
+                    sentTime={message.created_at}
+                    sources={message.sources}
+                    isHelpful={message.is_helpful}
+                    isFirstMessage={message.index === 0}
+                    isFinished={message.finished}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
       <div className="border-2 border-y-0 border-gray-300 bg-gray-200 sm:fixed sm:right-0 sm:h-screen sm:min-w-[350px] sm:max-w-[350px]">
         <RightBar

@@ -1,4 +1,4 @@
-import { generateRandomLorem } from "@/lib/shared/utils";
+import { generateRandomLorem } from "@/lib/utils";
 
 export default function LoadingConversations() {
   return (

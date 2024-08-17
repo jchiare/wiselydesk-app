@@ -1,4 +1,4 @@
-import { formatDateTime } from "@/lib/shared/utils";
+import { formatDateTime } from "@/lib/utils";
 import Link from "next/link";
 import renderMessage from "@/lib/shared/services/render-message";
 import ThumbsUpDown from "@/components/web/thumbs-up-down";

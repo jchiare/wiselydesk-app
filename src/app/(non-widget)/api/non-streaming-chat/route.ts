@@ -1,7 +1,7 @@
 import { parseBotId } from "@/lib/chat/conversation/parse-payload";
 import { ConversationService } from "@/lib/chat/conversation";
 import prisma from "@/lib/prisma";
-import { AgentRequest } from "@/lib/shared/agent-request";
+import { AgentRequest } from "@/lib/agent-request";
 
 export const maxDuration = 75;
 
@@ -13,32 +13,23 @@ export async function POST(req: Request) {
   const payload = await req.json();
   const clientSentConversationId = payload.conversationId;
   const messagesLength = payload.messagesLength;
-  let userInput = payload.userInput;
-  let productionTesting = false;
-  if (userInput.startsWith("wdtest")) {
-    userInput = userInput.replace("wdtest ", "");
-    productionTesting = true;
-  }
+  const userInput = payload.userInput;
 
   const botId = parseBotId(payload.clientApiKey);
 
-  const conversationService = new ConversationService(
-    prisma,
-    productionTesting,
-    botId
-  );
+  const conversationService = new ConversationService(prisma, userInput, botId);
+  const updatedUserInput = conversationService.getUpdatedUserInput();
 
   await conversationService.getOrCreateConversation(
-    userInput,
-    clientSentConversationId,
-    undefined
+    updatedUserInput,
+    clientSentConversationId
   );
 
   const conversationId = conversationService.getConversationId();
 
   // add user input
   await conversationService.createMessage({
-    text: userInput,
+    text: updatedUserInput,
     index: parseInt(messagesLength, 10) + 1,
     finished: true
   });

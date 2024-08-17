@@ -6,10 +6,14 @@ type ParsedPayload = {
   userInput: string;
   clientApiKey: string;
   clientSentConversationId: number | undefined;
+  chatty: boolean | undefined;
+  location: string | undefined;
 };
 export function parsePayload(payload: any): ParsedPayload {
   const model = payload.model || "gpt-4o";
   const clientApiKey = payload.clientApiKey;
+  const chatty = payload.chatty;
+  const location = payload.location;
 
   if (
     !payload.messages ||
@@ -29,10 +33,12 @@ export function parsePayload(payload: any): ParsedPayload {
   }
 
   return {
+    chatty,
     model,
     messages,
     userInput,
     clientApiKey,
+    location,
     clientSentConversationId: payload.conversationId
       ? parseInt(payload.conversationId, 10)
       : undefined
@@ -40,8 +46,9 @@ export function parsePayload(payload: any): ParsedPayload {
 }
 
 // put this in redis / cache at some point
-const BOT_ID_MAPPING: Record<string, number> = {
+export const BOT_ID_MAPPING: Record<string, number> = {
   qGmNXgVcRRwVpL6i2bIDDYvPc8lJcSvndKE7DUZzq5M: 1,
+  "12345ApiKey": 2,
   "2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY": 3,
   hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE: 4
 };
@@ -58,7 +65,6 @@ export function parseBotId(clientApiKey: string): number {
   }
   return botId;
 }
-
 export function removeWiselyDeskTestingKeyword(
   messages: OpenAiMessage[],
   userInput: string
@@ -66,14 +72,9 @@ export function removeWiselyDeskTestingKeyword(
   const WISELYDESK_TESTING_KEYWORD = "wdtest";
   const isProductionTesting = userInput.startsWith(WISELYDESK_TESTING_KEYWORD);
 
-  if (isProductionTesting) {
-    // Remove the keyword "wdtest" from the start of the userInput
-    userInput = userInput.substring(WISELYDESK_TESTING_KEYWORD.length).trim();
-    if (messages.length > 0) {
-      // Update the last message in the array with the trimmed userInput
-      messages[messages.length - 1].content = userInput;
-    }
-  }
+  const cleanedUserInput = isProductionTesting
+    ? userInput.replace(`${WISELYDESK_TESTING_KEYWORD} `, "")
+    : userInput;
 
-  return [userInput, messages, isProductionTesting];
+  return [cleanedUserInput, messages, isProductionTesting];
 }

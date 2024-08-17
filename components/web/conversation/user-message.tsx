@@ -1,4 +1,4 @@
-import { formatDateTime } from "@/lib/shared/utils";
+import { formatDateTime } from "@/lib/utils";
 
 export default function UserMessage({
   sentTime,

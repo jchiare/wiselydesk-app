@@ -1,12 +1,10 @@
 import { useRef, useEffect } from "react";
-import type { ChatThemeSettings } from "@/lib/chat/chat-theme";
 import getText from "@/lib/i18n/chat";
 
 export default function Input({
   onSubmit,
   setInput,
   input,
-  chatTheme,
   aiResponseDone,
   account,
   locale
@@ -14,7 +12,6 @@ export default function Input({
   onSubmit: () => void;
   setInput: (input: string) => void;
   input: string;
-  chatTheme: ChatThemeSettings;
   aiResponseDone: boolean;
   account: string;
   locale: "en" | "de";

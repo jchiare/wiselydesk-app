@@ -74,17 +74,20 @@ function createIFrame(isEnglish, wiselyDeskWidgetOpen) {
   // Always remove the existing iframe and create a new one
   const existingIframe = document.getElementById("wiselyDeskIframe");
   if (!existingIframe && wiselyDeskWidgetOpen) {
-    // Create a new iframe
-    const host = url.includes("localhost:3000")
+    const isLocalDevelopment = url.startsWith("http://localhost:3000");
+    const host = isLocalDevelopment
       ? "http://localhost:3000"
       : "https://apps.wiselydesk.com";
 
     const modelParam = url.includes("model=claude3.5")
       ? "&model=claude3.5"
       : "";
-    const iframeUrl = isEnglish
-      ? `${host}/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}${modelParam}`
-      : `${host}/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de${modelParam}`;
+    const chattyParam = url.includes("chatty=true") ? "&chatty=true" : "";
+    const iframeUrl = isLocalDevelopment
+      ? `${host}/widget/12345ApiKey?widgetOpen=${wiselyDeskWidgetOpen}${modelParam}${chattyParam}`
+      : isEnglish
+        ? `${host}/widget/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY?widgetOpen=${wiselyDeskWidgetOpen}${modelParam}&chatty=true`
+        : `${host}/widget/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE?widgetOpen=${wiselyDeskWidgetOpen}&locale=de${modelParam}${chattyParam}`;
     const iframe = document.createElement("iframe");
     iframe.id = "wiselyDeskIframe";
     iframe.src = iframeUrl;
@@ -139,8 +142,14 @@ function handleWidgetClick() {
   createSupportWidgetButton(wiselyDeskWidgetOpen);
 }
 
+const ALWAYS_ALLOW_WIDGET_URLS = [
+  "wiselydeskTesting",
+  "demo-nm12x.html",
+  "Virtual-AMBOSS-Assistant-Beta"
+];
+
 if (
-  window.location.href.includes("wiselydeskTesting") ||
+  ALWAYS_ALLOW_WIDGET_URLS.some(allowedUrl => url.includes(allowedUrl)) ||
   isOutsideBusinessHours()
 ) {
   const isEnglish = url.includes("en-us");

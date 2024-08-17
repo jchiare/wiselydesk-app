@@ -14,14 +14,15 @@ export default function AgentMessage({
   text,
   isLastMessage
 }: AgentMessageProps): JSX.Element {
+  const htmlText = renderMessage(text);
   return (
     <p
-      className={`${chatTheme.assistantMessageSetting.text} text-[100%] ${
+      className={`${chatTheme.assistantMessageSetting.text} text-black ${
         !aiResponseDone &&
         isLastMessage &&
-        `!last:after:mt-1 last:after:animate-assistant-message  last:after:bg-white last:after:text-white last:after:content-['▋']`
+        `!last:after:mt-1 last:after:animate-assistant-message  last:after:text-black last:after:content-['▋']`
       }`}
       // @ts-expect-error some htmlthing
-      dangerouslySetInnerHTML={{ __html: renderMessage(text) }}></p>
+      dangerouslySetInnerHTML={{ __html: htmlText }}></p>
   );
 }

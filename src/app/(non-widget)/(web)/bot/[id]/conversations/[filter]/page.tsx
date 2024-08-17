@@ -1,9 +1,9 @@
 import ConversationsTable from "@/components/web/conversations/table";
 import type { Metadata } from "next";
 import type { Conversation } from "@prisma/client";
-import { orgChooser } from "@/lib/shared/org-chooser";
-import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
-import { fetchServerSession } from "@/lib/shared/auth";
+import { orgChooser } from "@/lib/org-chooser";
+import { NEXTJS_BACKEND_URL } from "@/lib/constants";
+import { fetchServerSession } from "@/lib/auth";
 import type { FilterType } from "@/components/web/conversations/filter-conversations-table";
 
 export const dynamic = "force-dynamic";

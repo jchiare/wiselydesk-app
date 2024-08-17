@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
+import { NEXTJS_BACKEND_URL } from "@/lib/constants";
 
 const TicketDeflected = ({
   ticketDeflected,

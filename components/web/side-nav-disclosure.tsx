@@ -1,7 +1,7 @@
 "use client";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Disclosure, Transition } from "@headlessui/react";
-import { concatClassNames } from "@/lib/shared/utils";
+import { concatClassNames } from "@/lib/utils";
 import type { NavigationItem } from "@/components/web/navigation";
 
 export default function SideNavDisclosure({

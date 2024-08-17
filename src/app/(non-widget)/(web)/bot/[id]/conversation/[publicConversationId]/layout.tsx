@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description: "View a single conversation in WiselyDesk"
 };
 
-export default async function SingleConversationLayout({
+export default async function WebConversationLayout({
   children
 }: {
   children: React.ReactNode;

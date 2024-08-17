@@ -1,6 +1,6 @@
 import ConversationCountChart from "@/components/web/analytics/conversation-chart";
 import EscalationChart from "@/components/web/analytics/escalation-chart";
-import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
+import { NEXTJS_BACKEND_URL } from "@/lib/constants";
 import type { AnalyticsData } from "@/src/app/(non-widget)/(web)/bot/[id]/analytics/[filter]/[frequency]/page";
 
 export type FrequencyType = "daily" | "weekly" | "monthly";

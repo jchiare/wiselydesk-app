@@ -1,28 +1,71 @@
 <!doctype html>
-<html
-  style="width: 100%; height: 100%; max-height: 1000px; box-sizing: border-box">
+<html lang="en">
   <head>
-    <title>My HTML Page</title>
-  </head>
-  <body style="width: 100%; height: 100%">
-    <h1>nothing to see</h1>
-    <script>
-      var isLocalTesting = localStorage.getItem("wiselydesk-local-testing");
-      if (isLocalTesting === "true") {
-        var script = document.createElement("script");
-        script.src = "amboss-widget.js";
-        document.body.appendChild(script);
-      } else {
-        var password = prompt("Please enter the password:");
-        if (password === "jaycberlin" || password.toLowerCase() === "amboss") {
-          localStorage.setItem("wiselydesk-local-testing", "true");
-          var script = document.createElement("script");
-          script.src = "amboss-widget.js";
-          document.body.appendChild(script);
-        } else {
-          window.location.href = "https://www.google.com";
-        }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WiselyDesk Chat Testing</title>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: lightgray;
       }
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+      h1 {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>WiselyDesk Widget Demo</h1>
+      <p>The chat widget is located at the bottom right corner of the page.</p>
+    </div>
+    <script>
+      (function () {
+        const LOCAL_STORAGE_KEY = "wiselydesk-local-testing";
+        const SCRIPT_SRC = "amboss-widget.js";
+        const REDIRECT_URL = "https://www.google.com";
+        const PASSWORDS = ["jaycberlin", "amboss"];
+
+        function loadScript() {
+          const script = document.createElement("script");
+          script.src = SCRIPT_SRC;
+          document.body.appendChild(script);
+        }
+
+        function setLocalTesting() {
+          localStorage.setItem(LOCAL_STORAGE_KEY, "true");
+        }
+
+        function checkPassword(input) {
+          return PASSWORDS.includes(input.toLowerCase());
+        }
+
+        if (localStorage.getItem(LOCAL_STORAGE_KEY) === "true") {
+          loadScript();
+        } else {
+          const password = prompt(
+            "Please enter the password to access the demo:"
+          );
+          if (checkPassword(password)) {
+            setLocalTesting();
+            loadScript();
+          } else {
+            window.location.href = REDIRECT_URL;
+          }
+        }
+      })();
     </script>
   </body>
 </html>

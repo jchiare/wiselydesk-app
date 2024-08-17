@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { NEXTJS_BACKEND_URL } from "@/lib/shared/constants";
+import { NEXTJS_BACKEND_URL } from "@/lib/constants";
 import { useLocalStorage } from "@/lib/chat/hooks/use-local-storage";
 import { getChatThemeByBotId } from "@/lib/chat/chat-theme";
 import { textByBotId } from "@/lib/i18n/chat";

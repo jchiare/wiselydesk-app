@@ -1,12 +1,11 @@
 import { type ChatThemeSettings } from "@/lib/chat/chat-theme";
-import AgentIcon from "@/components/chat/agent/icon";
-import AgentMessage from "@/components/chat/agent/message";
-import Sources from "@/components/chat/agent/sources";
-import SupportTicketModal from "@/components/chat/support-ticket-modal";
-import AiWarning from "@/components/chat/ai-warning";
-import Feedback from "@/components/chat/agent/feedback";
+import AgentIcon from "@/components/widget/chat/agent-message/icon";
+import AgentMessage from "@/components/widget/chat/agent-message/text";
+import Sources from "@/components/widget/chat/agent-message/sources";
+import SupportTicketModal from "@/components/widget/chat/support-ticket-modal";
+import AiWarning from "@/components/widget/chat/agent-message/ai-warning";
+import Feedback from "@/components/widget/chat/agent-message/feedback-buttons";
 import { removeSupportButton } from "@/lib/shared/services/render-message";
-import type { Bot } from "@prisma/client";
 
 type AgentMessageProps = {
   chatTheme: ChatThemeSettings;
@@ -19,9 +18,13 @@ type AgentMessageProps = {
   latestMessageId?: number | null | undefined;
   conversationId?: string;
   createSupportTicket?: boolean;
-  bot: Bot;
+  botId: number;
   testSupportModal?: boolean;
-  bgColourOverride?: string;
+  isOverflowing?: boolean;
+  isWelcomeMessage?: boolean;
+  bgColorOverride?: string;
+  supportTicketCreated?: boolean;
+  setSupportTicketCreated?: any;
 };
 
 export default function AgentDiv({
@@ -35,9 +38,13 @@ export default function AgentDiv({
   latestMessageId,
   conversationId,
   createSupportTicket,
-  bot,
+  botId,
   testSupportModal,
-  bgColourOverride
+  isOverflowing,
+  isWelcomeMessage,
+  bgColorOverride,
+  supportTicketCreated = false,
+  setSupportTicketCreated
 }: AgentMessageProps): JSX.Element {
   const [_, buttonCreateHtml] = removeSupportButton(text);
 
@@ -47,20 +54,21 @@ export default function AgentDiv({
       aiResponseDone &&
       isLastMessage &&
       createSupportTicket);
+
   return (
     <div
       className={`w-full border-b ${
-        (bgColourOverride ?? chatTheme.assistantMessageSetting.bgColour) +
+        (bgColorOverride ?? chatTheme.assistantMessageSetting.bgColour) +
         " " +
         chatTheme.assistantMessageSetting.text
-      }`}>
-      <div className="m-auto flex gap-4 p-2 sm:p-4 md:max-w-2xl md:gap-6 md:py-6 lg:max-w-2xl lg:px-0 xl:max-w-3xl">
+      } ${isLastMessage && isOverflowing ? "pb-[5.5rem]" : "pb-2"}`}>
+      <div className="flex gap-4 px-5 pb-2 pt-4">
         <AgentIcon chatTheme={chatTheme} />
 
-        <div className="relative flex w-full flex-col gap-1 sm:w-[calc(100%-50px)] md:gap-3 lg:w-[calc(100%-115px)]">
+        <div className="relative flex flex-col gap-3 ">
           <div className="flex flex-grow flex-col gap-3">
             <div className="flex min-h-[20px] flex-col items-start gap-4 whitespace-pre-wrap ">
-              <div className="prose prose-invert w-full break-words ">
+              <div className="w-full break-words ">
                 <AgentMessage
                   chatTheme={chatTheme}
                   aiResponseDone={aiResponseDone}
@@ -70,8 +78,10 @@ export default function AgentDiv({
                 {displaySupportModal && (
                   <SupportTicketModal
                     conversationId={conversationId}
-                    botId={bot.id}
+                    botId={botId}
                     locale={locale}
+                    supportTicketCreated={supportTicketCreated}
+                    setSupportTicketCreated={setSupportTicketCreated}
                   />
                 )}
 
@@ -86,15 +96,24 @@ export default function AgentDiv({
               </div>
             </div>
           </div>
-          <Feedback
-            isLastMessage={isLastMessage}
-            chatTheme={chatTheme}
-            messageId={latestMessageId}
-          />
-          {
-            // @ts-expect-error done with ts for the day
-            <AiWarning account={account} locale={locale} />
-          }
+          {!isWelcomeMessage && (
+            <div className="w-[calc(100%-50px)]">
+              {aiResponseDone && (
+                <hr className="my-2 rounded-sm border-0 bg-slate-300 pt-[1px]" />
+              )}
+              <div className="flex items-center justify-between px-2 py-0.5">
+                {/* @ts-expect-error done with ts for the day */}
+                <AiWarning account={account} locale={locale} />
+                {aiResponseDone && (
+                  <Feedback
+                    isLastMessage={isLastMessage}
+                    chatTheme={chatTheme}
+                    messageId={latestMessageId}
+                  />
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
