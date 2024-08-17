@@ -21,11 +21,16 @@ export async function GET(request: NextRequest) {
 
   if (!clientApiKey) return new Response("Missing", { status: 400 });
 
-  const bot = await prisma.bot.findFirst({
-    where: { client_api_key: clientApiKey }
-  });
+  let bot =
+    process.env.NODE_ENV === "development"
+      ? { id: 2 }
+      : await prisma.bot.findFirst({
+          where: { client_api_key: clientApiKey }
+        });
+
   if (!bot) return new Response("Missing", { status: 404 });
 
+  // Section to get the conversations that will be tagged
   const lastDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   const chatsLastDay = await prisma.conversation.findMany({
     where: {
@@ -37,7 +42,8 @@ export async function GET(request: NextRequest) {
   });
 
   if (chatsLastDay.length === 0) {
-    return Response.json({ chats: 0 });
+    console.log("No chats to tag");
+    return Response.json({ recentlyTaggedChats: [] });
   }
 
   const chatIds = chatsLastDay.map(chat => chat.id);
@@ -58,30 +64,31 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  let taggedChats;
-
+  let recentlyTaggedChats;
+  let batchUpdateSuccessful = false;
   try {
-    taggedChats = await tagChats(messagesGroupedByConversation, bot.id);
+    recentlyTaggedChats = await tagChats(messagesGroupedByConversation, bot.id);
 
-    const chatTaggingTransactions = taggedChats.map((chat: TagChatResponse) => {
-      return prisma.chatTagging.create({
-        data: {
-          bot_id: chat.botId,
-          conversation_id: parseInt(chat.conversationId, 10),
-          tags: chat.tags.join(","),
-          ai_generated_tags: chat.aiGeneratedTags.join(","),
-          user_tags: chat.userTags.join(","),
-          cost: chat.cost,
-          updated_at: new Date()
-        }
-      });
-    });
-    console.log(chatTaggingTransactions);
+    const chatTaggingTransactions = recentlyTaggedChats.map(
+      (chat: TagChatResponse) => {
+        return prisma.chatTagging.create({
+          data: {
+            bot_id: chat.botId,
+            conversation_id: parseInt(chat.conversationId, 10),
+            tags: chat.tags.join(","),
+            ai_generated_tags: chat.aiGeneratedTags?.join(",") || undefined,
+            user_tags: chat.userTags?.join(",") || undefined,
+            cost: chat.cost,
+            updated_at: new Date()
+          }
+        });
+      }
+    );
     const createdChatTaggings = await prisma.$transaction(
       chatTaggingTransactions
     );
 
-    const conversationTransactions = taggedChats.map(
+    const conversationTransactions = recentlyTaggedChats.map(
       (chat: TagChatResponse, index: number) => {
         return prisma.conversation.update({
           where: {
@@ -96,13 +103,14 @@ export async function GET(request: NextRequest) {
       }
     );
     await prisma.$transaction(conversationTransactions);
-    console.log("Batch update successful");
+    batchUpdateSuccessful = true;
   } catch (error) {
-    console.error("Error updating chats:", JSON.stringify(error));
+    console.error("Error updating chats:", error);
   } finally {
     await prisma.$disconnect();
     return Response.json({
-      taggedChats
+      recentlyTaggedChats,
+      batchUpdateSuccessful
     });
   }
 }

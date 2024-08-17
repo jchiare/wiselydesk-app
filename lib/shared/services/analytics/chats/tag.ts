@@ -28,7 +28,7 @@ type AiResponse = {
 export async function tagChats(
   chats: MessagesGroupedByConversation,
   botId: number,
-  model = "gpt-4o"
+  model = "gpt-4o-2024-08-06"
 ): Promise<TagChatResponse[]> {
   let taggedChats: TagChatResponse[] = [];
 
@@ -54,7 +54,8 @@ export async function tagChats(
         }
       ],
       model,
-      response_format: { type: "json_object" }
+      response_format: { type: "json_object" },
+      temperature: 0.0
     });
 
     // const usage = message.usage;
@@ -74,7 +75,7 @@ export async function tagChats(
       aiGeneratedTags: responseText.ai_generated_tags,
       userTags: responseText.user_tags,
       botId,
-      cost
+      cost: parseFloat(cost.toFixed(4))
     });
   }
   return taggedChats;
