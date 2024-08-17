@@ -1,6 +1,6 @@
 import nock from "nock";
 import httpMocks from "node-mocks-http";
-import { POST } from "@/src/app/(non-widget)/api/webhook/help-center-update/route";
+import { POST } from "@/src/app/api/webhook/help-center-update/route";
 jest.mock("@prisma/client");
 
 jest.mock("@/lib/shared/services/openai/embeddings", () => {
