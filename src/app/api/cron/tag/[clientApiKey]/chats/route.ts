@@ -71,6 +71,7 @@ export async function GET(request: NextRequest) {
 
     const chatTaggingTransactions = recentlyTaggedChats.map(
       (chat: TagChatResponse) => {
+        console.log(chat);
         return prisma.chatTagging.create({
           data: {
             bot_id: chat.botId,
