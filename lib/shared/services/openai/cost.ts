@@ -10,6 +10,8 @@ function getCostPerToken(
       return isInput ? 0.03 : 0.06;
     case "gpt-4o":
       return isInput ? 0.005 : 0.015;
+    case "gpt-4o-2024-08-06":
+      return isInput ? 0.002 : 0.01;
     case "gpt-3.5-turbo":
       return 0.002;
     case "claude3.5":
