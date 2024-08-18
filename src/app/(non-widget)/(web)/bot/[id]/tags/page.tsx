@@ -32,7 +32,8 @@ export default async function TicketPage({
 }) {
   const botId = parseInt(params.id, 10);
   const taggedChats = await prisma.chatTagging.findMany({
-    where: { bot_id: botId }
+    where: { bot_id: botId },
+    orderBy: { created_at: "desc" }
   });
 
   return (
