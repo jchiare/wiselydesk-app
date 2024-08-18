@@ -76,8 +76,7 @@ export default async function TicketPage({
             <TableCell className="w-fit">
               <Link
                 className="text-blue-600 hover:text-blue-800"
-                href={`/conversation_finder/${taggedChat.conversation_id}`}
-                target="_blank">
+                href={`/conversation_finder/${taggedChat.conversation_id}`}>
                 Link
               </Link>
             </TableCell>
