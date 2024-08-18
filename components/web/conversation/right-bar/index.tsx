@@ -61,11 +61,10 @@ export async function RightBar({
             <p className="text-gray-600">No linked Zendesk ticket</p>
           )}
         </div>
-        {["1", "2"].includes(botId) && (
-          <div className="rounded-md border bg-gray-50 p-4">
-            <Tags conversationId={conversationId} isLoading={isLoading} />
-          </div>
-        )}
+
+        <div className="rounded-md border bg-gray-50 p-4">
+          <Tags conversationId={conversationId} isLoading={isLoading} />
+        </div>
       </div>
       <div className="hidden sm:block">
         <Note

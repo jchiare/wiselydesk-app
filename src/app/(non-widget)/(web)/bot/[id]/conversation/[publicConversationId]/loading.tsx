@@ -56,7 +56,7 @@ export default function WebConversationLoading() {
       <div className="border-2 border-y-0 border-gray-300 bg-gray-200 sm:fixed sm:right-0 sm:h-screen sm:min-w-[350px] sm:max-w-[350px]">
         <RightBar
           conversationId={123}
-          botId="22" // change this back to 1 when amboss has tags
+          botId="2"
           toReview={null}
           userId={123}
           publicConversationId={123}
