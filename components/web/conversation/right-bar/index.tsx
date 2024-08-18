@@ -1,6 +1,7 @@
 import Note from "@/components/web/conversation/right-bar/notes";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
+import { Tags } from "@/components/web/conversation/right-bar/tags";
 import { NavigationButtons } from "@/components/web/conversation/right-bar/navigation";
 
 export default async function RightBar({
@@ -54,7 +55,7 @@ export default async function RightBar({
               </Link>
               {escalation && (
                 <p>
-                  <span className="font-semibold">Why escalate: </span>
+                  <span className="font-semibold">Escalation reason: </span>
                   {escalation.reason}
                 </p>
               )}
@@ -62,6 +63,9 @@ export default async function RightBar({
           ) : (
             <p className="text-gray-600">No linked Zendesk ticket</p>
           )}
+        </div>
+        <div className="rounded-md border bg-gray-50 p-4">
+          <Tags conversationId={conversationId} />
         </div>
       </div>
       <div className="hidden sm:block">
