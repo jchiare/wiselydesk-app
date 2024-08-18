@@ -6,6 +6,7 @@ import prisma from "@/lib/prisma";
 const EMAIL_SUBDOMAIN_REGEX = "@([^.]+)..+$";
 const AMBOSS_ORG_ID = 4;
 const AMBOSS_SECOND_EMAIL = "medicuja";
+const WISELYDESK_EMAIL = "wiselydesk";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -23,6 +24,8 @@ export const authOptions: NextAuthOptions = {
         let orgId = org?.id;
         if (!orgId && emailSubdomain?.trim() === AMBOSS_SECOND_EMAIL) {
           orgId = AMBOSS_ORG_ID;
+        } else if (!orgId && emailSubdomain?.trim() === WISELYDESK_EMAIL) {
+          orgId = 1;
         }
 
         return {

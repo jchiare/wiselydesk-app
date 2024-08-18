@@ -3,7 +3,7 @@ import BotSelection from "@/components/web/bot-selection";
 import { Session } from "next-auth";
 import { UserProfile } from "@/components/web/user-profile";
 import Navigation from "@/components/web/navigation";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"; // Assuming heroicons is available
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import { type Bot } from "@prisma/client";
 import { useState } from "react";

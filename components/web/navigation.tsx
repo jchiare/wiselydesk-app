@@ -22,11 +22,11 @@ const createNavigation = (botId: string) => [
     icon: ChatBubbleBottomCenterTextIcon,
     href: `/bot/${botId}/conversations/all`
   },
-  {
-    name: "Ticket Tags",
-    icon: TagIcon,
-    href: `/bot/${botId}/tickets`
-  },
+  // {
+  //   name: "Chat Tags",
+  //   icon: TagIcon,
+  //   href: `/bot/${botId}/tags`
+  // },
   {
     name: "Analytics",
     icon: ChartBarSquareIcon,
