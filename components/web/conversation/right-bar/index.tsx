@@ -4,10 +4,8 @@ import prisma from "@/lib/prisma";
 import { Tags } from "@/components/web/conversation/right-bar/tags";
 import { NavigationButtons } from "@/components/web/conversation/right-bar/navigation";
 
-export default async function RightBar({
+export async function RightBar({
   isLoading,
-  ticketDeflected,
-  toReview,
   conversationId,
   botId,
   userId,
@@ -15,7 +13,6 @@ export default async function RightBar({
   zendeskTicketUrl
 }: {
   isLoading?: boolean;
-  ticketDeflected: boolean | null;
   toReview: boolean | null;
   conversationId: number;
   botId: string;
@@ -44,7 +41,7 @@ export default async function RightBar({
     <div className="flex h-full flex-col justify-between space-y-4">
       <NavigationButtons hasNextConversation={!!hasNextConversation} />
       <div className="flex-grow space-y-4 px-4 pb-6">
-        <div className="rounded-md border bg-gray-50 p-4">
+        <div className="rounded-md border bg-gray-100 p-4">
           {zendeskTicketUrl ? (
             <>
               <Link
@@ -55,7 +52,7 @@ export default async function RightBar({
               </Link>
               {escalation && (
                 <p>
-                  <span className="font-semibold">Escalation reason: </span>
+                  <span className="font-semibold">Why escalated: </span>
                   {escalation.reason}
                 </p>
               )}
@@ -64,9 +61,11 @@ export default async function RightBar({
             <p className="text-gray-600">No linked Zendesk ticket</p>
           )}
         </div>
-        <div className="rounded-md border bg-gray-50 p-4">
-          <Tags conversationId={conversationId} />
-        </div>
+        {["1", "2"].includes(botId) && (
+          <div className="rounded-md border bg-gray-50 p-4">
+            <Tags conversationId={conversationId} isLoading={isLoading} />
+          </div>
+        )}
       </div>
       <div className="hidden sm:block">
         <Note
