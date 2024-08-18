@@ -61,7 +61,6 @@ export async function tagChats(
       temperature: 0.0
     });
 
-    // const usage = message.usage;
     const responseText = message.choices[0].message.parsed;
     if (!responseText) {
       throw new Error(`No response from openai tagChats`);
