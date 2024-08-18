@@ -1,6 +1,8 @@
 import openai from "@/lib/shared/services/openai";
 import { TAG_AMBOSS_CHATS } from "@/lib/chat/prompts/tag-category";
 import { inputCostWithTokens, outputCostWithTokens } from "../../openai/cost";
+import { zodResponseFormat } from "openai/helpers/zod";
+import { z } from "zod";
 
 type GroupedConversation = {
   // assume they are ordered correctly index: number;
@@ -10,20 +12,21 @@ export type MessagesGroupedByConversation = {
   [conversationId: string]: GroupedConversation[];
 };
 
-export type TagChatResponse = {
-  conversationId: string;
-  tags: string[];
-  aiGeneratedTags: string[];
-  userTags: string[];
-  botId: number;
-  cost: number | undefined;
-};
+const AiResponseEvent = z.object({
+  tags: z.array(z.string()),
+  aiGeneratedTags: z.array(z.string()),
+  userTags: z.array(z.string())
+});
 
-type AiResponse = {
-  ai_generated_tags: string[];
-  tags: string[];
-  user_tags: string[];
-};
+export const TagChatEvent = z
+  .object({
+    conversationId: z.string(),
+    botId: z.number(),
+    cost: z.number().optional()
+  })
+  .merge(AiResponseEvent);
+
+export type TagChatResponse = z.infer<typeof TagChatEvent>;
 
 export async function tagChats(
   chats: MessagesGroupedByConversation,
@@ -45,7 +48,7 @@ export async function tagChats(
       })
       .join("\n");
 
-    const message = await openai.chat.completions.create({
+    const message = await openai.beta.chat.completions.parse({
       messages: [
         { role: "system", content: TAG_AMBOSS_CHATS },
         {
@@ -54,17 +57,16 @@ export async function tagChats(
         }
       ],
       model,
-      response_format: { type: "json_object" },
+      response_format: zodResponseFormat(AiResponseEvent, "event"),
       temperature: 0.0
     });
 
     // const usage = message.usage;
-    const unparsedResponseText = message.choices[0].message.content;
-    if (!unparsedResponseText) {
+    const responseText = message.choices[0].message.parsed;
+    if (!responseText) {
       throw new Error(`No response from openai tagChats`);
     }
 
-    const responseText = JSON.parse(unparsedResponseText) as AiResponse;
     const cost =
       inputCostWithTokens(message.usage?.prompt_tokens, model) +
       outputCostWithTokens(message.usage?.completion_tokens, model);
@@ -72,8 +74,8 @@ export async function tagChats(
     taggedChats.push({
       conversationId,
       tags: responseText.tags,
-      aiGeneratedTags: responseText.ai_generated_tags,
-      userTags: responseText.user_tags,
+      aiGeneratedTags: responseText.aiGeneratedTags,
+      userTags: responseText.userTags,
       botId,
       cost: parseFloat(cost.toFixed(4))
     });
