@@ -27,7 +27,7 @@ const TagList = ({
         ))}
       </ul>
     ) : (
-      <p className={`italic text-gray-500`}>Untagged</p>
+      <p className={`italic text-gray-500`}>No tags</p>
     )}
   </div>
 );
