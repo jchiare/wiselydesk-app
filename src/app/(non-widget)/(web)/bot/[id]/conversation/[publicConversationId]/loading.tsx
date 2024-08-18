@@ -1,6 +1,6 @@
 import AgentMessage from "@/components/web/conversation/agent-message";
-import RightBar from "@/components/web/conversation/right-bar";
 import UserMessage from "@/components/web/conversation/user-message";
+import { RightBar } from "@/components/web/conversation/right-bar";
 
 const aiMessage = {
   text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque hendrerit ligula vel arcu tincidunt, vel varius urna consequat. Integer sit amet lectus quis tortor placerat commodo. Pellentesque fermentum, sapien in viverra dapibus, massa risus viverra elit. <br> <br> nec volutpat lacus sem aliquam arcu. Morbi odio justo, dapibus vel placerat non, maximus nec est. Aliquam erat volutpat. Integer accumsan nisi eget ante maximus aliquam. Proin bibendum metus at tristique scelerisque.",
@@ -56,12 +56,12 @@ export default function WebConversationLoading() {
       <div className="border-2 border-y-0 border-gray-300 bg-gray-200 sm:fixed sm:right-0 sm:h-screen sm:min-w-[350px] sm:max-w-[350px]">
         <RightBar
           conversationId={123}
-          botId="123"
-          ticketDeflected={null}
+          botId="22" // change this back to 1 when amboss has tags
           toReview={null}
           userId={123}
           publicConversationId={123}
           zendeskTicketUrl={null}
+          isLoading={true}
         />
       </div>
     </div>

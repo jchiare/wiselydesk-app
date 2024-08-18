@@ -1,4 +1,4 @@
-import RightBar from "@/components/web/conversation/right-bar";
+import { RightBar } from "@/components/web/conversation/right-bar";
 import type { Metadata } from "next/types";
 import { fetchServerSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
@@ -93,7 +93,6 @@ export default async function WebConversationPage({
       <div className="border-2 border-y-0 border-gray-300 bg-gray-200 sm:fixed sm:right-0 sm:h-screen sm:min-w-[350px] sm:max-w-[350px]">
         <RightBar
           toReview={conversationObject.conversation.to_review}
-          ticketDeflected={conversationObject.conversation.ticket_deflected}
           conversationId={conversationObject.conversation.id}
           zendeskTicketUrl={conversationObject.conversation.zendesk_ticket_url}
           publicConversationId={parseInt(params.publicConversationId, 10)}
