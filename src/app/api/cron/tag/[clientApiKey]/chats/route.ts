@@ -6,7 +6,7 @@ import {
 } from "@/lib/shared/services/analytics/chats/tag";
 import type { NextRequest } from "next/server";
 
-export const maxDuration = 75;
+export const maxDuration = 300;
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
@@ -104,6 +104,7 @@ export async function GET(request: NextRequest) {
     );
     await prisma.$transaction(conversationTransactions);
     batchUpdateSuccessful = true;
+    console.log(`Successfully tagged ${recentlyTaggedChats.length} chats`);
   } catch (error) {
     console.error("Error updating chats:", error);
   } finally {
