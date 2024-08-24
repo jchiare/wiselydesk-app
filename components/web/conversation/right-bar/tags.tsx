@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { TagChat } from "@/lib/chat/tag";
 
 const Tag = ({ text, isLoading }: { text: string; isLoading?: boolean }) => (
   <span
@@ -34,10 +35,12 @@ const TagList = ({
 
 export async function Tags({
   conversationId,
-  isLoading
+  isLoading,
+  botId
 }: {
   conversationId: number;
   isLoading: boolean | undefined;
+  botId: string;
 }) {
   if (isLoading) {
     const fakeTags = ["tagging_bigoverhere"];
@@ -58,7 +61,14 @@ export async function Tags({
   });
 
   if (!chatTags) {
-    return <p className="text-gray-600">Untagged</p>;
+    return (
+      <div className="flex flex-col items-center gap-y-2">
+        <p className="text-gray-600">Untagged</p>
+        <button onClick={() => tagChatButtonClick(botId, conversationId)}>
+          Click to tag
+        </button>
+      </div>
+    );
   }
 
   const parseTags = (tagString: string | null) =>

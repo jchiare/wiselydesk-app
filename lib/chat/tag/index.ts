@@ -7,9 +7,8 @@ import {
 
 export class TagChat {
   private botId: number;
-
-  constructor(botId: number) {
-    this.botId = botId;
+  constructor(botId: number | string) {
+    this.botId = typeof botId === "string" ? parseInt(botId, 10) : botId;
   }
 
   async tagConversation(
