@@ -3,6 +3,7 @@ import {
   ambossGermanContextPromptGpt4SupportTicket,
   georgiaCookiesContextPromptGpt4SupportTicket
 } from "@/lib/chat/prompts/model";
+import { isDevDb } from "@/lib/utils";
 
 export function getSystemMessagePrompt(
   botId: number,
@@ -11,7 +12,7 @@ export function getSystemMessagePrompt(
   chatty: boolean = false
 ): string {
   if (botId === 2) {
-    if (process.env.DATABASE_URL?.includes("ad3l0rv")) {
+    if (isDevDb()) {
       return ambossEnglishContextPromptGpt4SupportTicket(
         context,
         createInlineSources,

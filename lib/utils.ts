@@ -33,3 +33,5 @@ export function generateRandomLorem(minLength = 15, maxLength = 70) {
 
   return lorem.slice(start, start + randomLength);
 }
+
+export const isDevDb = () => process.env.DATABASE_URL?.includes("ad3l0rv");
