@@ -6,11 +6,11 @@
     },
     {
       "path": "/api/cron/tag/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY/chats",
-      "schedule": "0 0 28-31 * *"
+      "schedule": "0 0 30 2 *"
     },
     {
       "path": "/api/cron/tag/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE/chats",
-      "schedule": "0 0 28-31 * *"
+      "schedule": "0 0 30 2 *"
     }
   ]
 }
