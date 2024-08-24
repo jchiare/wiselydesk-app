@@ -5,7 +5,7 @@ import {
   TagChatResponse
 } from "@/lib/shared/services/analytics/chats/tag";
 
-class ConversationTagger {
+export class TagChat {
   private botId: number;
 
   constructor(botId: number) {
@@ -101,5 +101,3 @@ class ConversationTagger {
     };
   }
 }
-
-export { ConversationTagger };

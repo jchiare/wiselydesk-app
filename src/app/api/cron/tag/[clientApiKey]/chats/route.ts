@@ -1,9 +1,5 @@
 import prisma from "@/lib/prisma";
-import {
-  tagChats,
-  MessagesGroupedByConversation,
-  TagChatResponse
-} from "@/lib/shared/services/analytics/chats/tag";
+import { TagChat } from "@/lib/chat/tag";
 import type { NextRequest } from "next/server";
 
 export const maxDuration = 300;
@@ -47,71 +43,14 @@ export async function GET(request: NextRequest) {
   }
 
   const chatIds = chatsLastDay.map(chat => chat.id);
-  const messages = await prisma.message.findMany({
-    where: { conversation_id: { in: chatIds } }
+
+  const conversationTagger = new TagChat(bot.id);
+  const { taggedChats, batchUpdateSuccessful } =
+    await conversationTagger.tagMultipleConversations(chatIds);
+
+  await prisma.$disconnect();
+  return Response.json({
+    recentlyTaggedChats: taggedChats,
+    batchUpdateSuccessful
   });
-
-  const messagesGroupedByConversation: MessagesGroupedByConversation = {};
-
-  for (const message of messages) {
-    const conversationId = message.conversation_id;
-    if (!messagesGroupedByConversation[conversationId]) {
-      messagesGroupedByConversation[conversationId] = [];
-    }
-
-    messagesGroupedByConversation[conversationId].push({
-      text: message.text
-    });
-  }
-
-  let recentlyTaggedChats;
-  let batchUpdateSuccessful = false;
-  try {
-    recentlyTaggedChats = await tagChats(messagesGroupedByConversation, bot.id);
-
-    const chatTaggingTransactions = recentlyTaggedChats.map(
-      (chat: TagChatResponse) => {
-        return prisma.chatTagging.create({
-          data: {
-            bot_id: chat.botId,
-            conversation_id: parseInt(chat.conversationId, 10),
-            tags: chat.tags.join(","),
-            ai_generated_tags: chat.aiGeneratedTags?.join(",") || undefined,
-            user_tags: chat.userTags?.join(",") || undefined,
-            cost: chat.cost,
-            updated_at: new Date()
-          }
-        });
-      }
-    );
-    const createdChatTaggings = await prisma.$transaction(
-      chatTaggingTransactions
-    );
-
-    const conversationTransactions = recentlyTaggedChats.map(
-      (chat: TagChatResponse, index: number) => {
-        return prisma.conversation.update({
-          where: {
-            id: parseInt(chat.conversationId, 10)
-          },
-          data: {
-            tag_id: createdChatTaggings.find(
-              tag => tag.conversation_id === parseInt(chat.conversationId, 10)
-            )?.id
-          }
-        });
-      }
-    );
-    await prisma.$transaction(conversationTransactions);
-    batchUpdateSuccessful = true;
-    console.log(`Successfully tagged ${recentlyTaggedChats.length} chats`);
-  } catch (error) {
-    console.error("Error updating chats:", error);
-  } finally {
-    await prisma.$disconnect();
-    return Response.json({
-      recentlyTaggedChats,
-      batchUpdateSuccessful
-    });
-  }
 }
