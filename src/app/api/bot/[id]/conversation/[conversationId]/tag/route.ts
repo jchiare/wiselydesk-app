@@ -27,6 +27,5 @@ export async function GET(request: Request, { params }: Params) {
 
   const tags = await getTagsServerSide(conversationId, botId);
 
-  console.log("tags get unction, tags: ", tags);
   return Response.json(tags, { status: 200 });
 }
