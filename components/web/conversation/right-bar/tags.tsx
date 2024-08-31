@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import type { ChatTagsType } from "@/lib/data/chat-tags/type";
+import { useRouter } from "next/navigation";
 
 const Tag = ({ text, isLoading }: { text: string; isLoading?: boolean }) => (
   <span
@@ -45,6 +46,7 @@ export function Tags({
   isLoading: boolean | undefined;
   botId: string;
 }) {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [newlyCreatedTags, setNewlyCreatedTags] = useState<
     string[] | null | undefined
@@ -75,6 +77,7 @@ export function Tags({
       console.error("Error creating tags:", error);
     } finally {
       setIsLoading(false);
+      router.refresh();
     }
   };
 
