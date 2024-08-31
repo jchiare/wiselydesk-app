@@ -19,14 +19,7 @@ export async function POST(request: Request, { params }: Params) {
     return Response.json({ tags: null }, { status: 200 });
   }
 
-  return Response.json(
-    {
-      tags: tags.tags,
-      ai_generated_tags: tags.aiGeneratedTags,
-      user_tags: tags.userTags
-    },
-    { status: 200 }
-  );
+  return Response.json(tags, { status: 200 });
 }
 
 export async function GET(request: Request, { params }: Params) {
@@ -34,5 +27,6 @@ export async function GET(request: Request, { params }: Params) {
 
   const tags = await getTagsServerSide(conversationId, botId);
 
+  console.log("tags get unction, tags: ", tags);
   return Response.json(tags, { status: 200 });
 }

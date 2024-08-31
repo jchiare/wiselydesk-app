@@ -68,14 +68,13 @@ export function Tags({
         throw new Error("Failed to create tags");
       }
       const data = (await response.json()) as ChatTagsType;
-
       setNewlyCreatedTags(data.tags);
       setAiGeneratedTags(data.aiGeneratedTags);
       setUserTags(data.userTags);
     } catch (error) {
       console.error("Error creating tags:", error);
     } finally {
-      setTimeout(() => setIsLoading(false), 0);
+      setIsLoading(false);
     }
   };
 
