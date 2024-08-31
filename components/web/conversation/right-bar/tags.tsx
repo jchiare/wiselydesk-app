@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import type { ChatTagsType } from "@/lib/data/chat-tags/type";
 
 const Tag = ({ text, isLoading }: { text: string; isLoading?: boolean }) => (
   <span
@@ -13,13 +14,13 @@ const TagList = ({
   title,
   isLoading
 }: {
-  tags: string[];
+  tags: string[] | undefined | null;
   title: string;
   isLoading?: boolean;
 }) => (
   <div>
     <h3 className={`font-semibold`}>{title}</h3>
-    {tags.length > 0 ? (
+    {tags && tags.length > 0 ? (
       <ul className="flex flex-wrap">
         {tags.map((tag, index) => (
           <li key={index} className="m-1">
@@ -34,46 +35,24 @@ const TagList = ({
 );
 
 export function Tags({
+  tags,
   conversationId,
   isLoading: initialIsLoading,
   botId
 }: {
+  tags: ChatTagsType;
   conversationId: number;
   isLoading: boolean | undefined;
   botId: string;
 }) {
-  const [isLoading, setIsLoading] = useState(initialIsLoading);
-  const [tags, setTags] = useState<string[]>([]);
-  const [aiGeneratedTags, setAiGeneratedTags] = useState<string[]>([]);
-  const [userTags, setUserTags] = useState<string[]>([]);
-
-  const fetchTags = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        `/api/bot/${botId}/conversation/${conversationId}/tag`,
-        {
-          method: "GET",
-          cache: "no-store"
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch tags");
-      }
-      const data = await response.json();
-      setTags(parseTags(data.tags));
-      setAiGeneratedTags(parseTags(data.ai_generated_tags));
-      setUserTags(parseTags(data.user_tags));
-    } catch (error) {
-      console.error("Error fetching tags:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchTags();
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
+  const [newlyCreatedTags, setNewlyCreatedTags] = useState<
+    string[] | null | undefined
+  >(tags.tags);
+  const [aiGeneratedTags, setAiGeneratedTags] = useState<string[] | undefined>(
+    tags.aiGeneratedTags
+  );
+  const [userTags, setUserTags] = useState<string[] | undefined>(tags.userTags);
 
   const createTags = async () => {
     setIsLoading(true);
@@ -82,56 +61,50 @@ export function Tags({
         `/api/bot/${botId}/conversation/${conversationId}/tag`,
         {
           method: "POST",
-          cache: "no-store"
+          cache: "no-cache"
         }
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch tags");
+        throw new Error("Failed to create tags");
       }
-      const data = await response.json();
-      setTags(data.tags ?? []);
-      setAiGeneratedTags(data.ai_generated_tags ?? []);
-      setUserTags(data.user_tags ?? []);
+      const data = (await response.json()) as ChatTagsType;
+
+      setNewlyCreatedTags(data.tags);
+      setAiGeneratedTags(data.aiGeneratedTags);
+      setUserTags(data.userTags);
     } catch (error) {
-      console.error("Error fetching tags:", error);
+      console.error("Error creating tags:", error);
     } finally {
-      setIsLoading(false);
+      setTimeout(() => setIsLoading(false), 0);
     }
   };
 
-  const parseTags = (tagString: string | null) =>
-    tagString
-      ?.split(",")
-      .map(tag => tag.trim())
-      .filter(Boolean) || [];
-
-  if (isLoading) {
+  if (initialIsLoading) {
     const fakeTags = ["tagging_bigoverhere"];
     return (
       <div className="space-y-4">
-        <TagList tags={fakeTags} isLoading={isLoading} title="Tags" />
+        <TagList tags={fakeTags} isLoading={initialIsLoading} title="Tags" />
         <TagList
           tags={fakeTags}
-          isLoading={isLoading}
+          isLoading={initialIsLoading}
           title="AI Generated Tags"
         />
-        <TagList tags={fakeTags} isLoading={isLoading} title="User Tags" />
+        <TagList
+          tags={fakeTags}
+          isLoading={initialIsLoading}
+          title="User Tags"
+        />
       </div>
     );
   }
-
-  if (
-    tags.length === 0 &&
-    aiGeneratedTags.length === 0 &&
-    userTags.length === 0
-  ) {
+  if (newlyCreatedTags === null) {
     return (
       <div className="flex flex-col items-center gap-y-2">
         <p className="text-gray-600">Untagged</p>
         <button
-          onClick={() => createTags()}
+          onClick={createTags}
           disabled={isLoading}
-          className="rounded bg-blue-500 px-4 py-2 text-white transition-colors duration-200 ease-in-out hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:opacity-50">
+          className="rounded bg-blue-500 px-4 py-2 text-white transition-colors ease-in-out hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:opacity-50">
           {isLoading ? "Tagging..." : "Click to tag"}
         </button>
       </div>
@@ -140,7 +113,7 @@ export function Tags({
 
   return (
     <div className="space-y-4">
-      <TagList tags={tags} title="Tags" />
+      <TagList tags={newlyCreatedTags} title="Tags" />
       <TagList tags={aiGeneratedTags} title="AI Generated Tags" />
       <TagList tags={userTags} title="User Tags" />
     </div>

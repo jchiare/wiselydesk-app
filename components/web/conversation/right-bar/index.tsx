@@ -3,6 +3,7 @@ import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { Tags } from "@/components/web/conversation/right-bar/tags";
 import { NavigationButtons } from "@/components/web/conversation/right-bar/navigation";
+import { getTagsServerSide } from "@/lib/data/chat-tags/server";
 
 export async function RightBar({
   isLoading,
@@ -37,6 +38,8 @@ export async function RightBar({
     select: { id: true }
   });
 
+  const tags = await getTagsServerSide(conversationId, botId);
+
   return (
     <div className="flex h-full flex-col justify-between space-y-4">
       <NavigationButtons hasNextConversation={!!hasNextConversation} />
@@ -64,6 +67,7 @@ export async function RightBar({
 
         <div className="rounded-md border bg-gray-50 p-4">
           <Tags
+            tags={tags}
             conversationId={conversationId}
             isLoading={isLoading}
             botId={botId}
