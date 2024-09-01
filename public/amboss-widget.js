@@ -143,7 +143,6 @@ function handleWidgetClick() {
 }
 
 const ALWAYS_ALLOW_WIDGET_URLS = [
-  "wiselydeskTesting",
   "demo-nm12x.html",
   "Virtual-AMBOSS-Assistant-Beta"
 ];
