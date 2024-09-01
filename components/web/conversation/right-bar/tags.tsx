@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { ChatTagsType } from "@/lib/data/chat-tags/type";
 import { useRouter } from "next/navigation";
 
@@ -13,42 +13,14 @@ const Tag = ({ text, isLoading }: { text: string; isLoading?: boolean }) => (
 const TagList = ({
   tags,
   title,
-  tooltipText,
   isLoading
 }: {
   tags: string[] | undefined | null;
   title: string;
-  tooltipText: string;
   isLoading?: boolean;
 }) => (
   <div>
-    <div className="flex items-center gap-x-2">
-      <h3 className={`font-semibold`}>{title}</h3>{" "}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        className="size-5 cursor-help"
-        onMouseEnter={e => {
-          const tooltip = document.createElement("div");
-          tooltip.textContent = tooltipText;
-          tooltip.className =
-            "absolute bg-gray-800 text-white text-xs rounded px-2 py-1";
-          tooltip.style.left = `${e.clientX}px`;
-          tooltip.style.top = `${e.clientY - 30}px`;
-          document.body.appendChild(tooltip);
-        }}
-        onMouseLeave={() => {
-          const tooltip = document.querySelector("div.absolute");
-          if (tooltip) document.body.removeChild(tooltip);
-        }}>
-        <path
-          fillRule="evenodd"
-          d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z"
-          clipRule="evenodd"
-        />
-      </svg>
-    </div>
+    <h3 className={`font-semibold`}>{title}</h3>
     {tags && tags.length > 0 ? (
       <ul className="flex flex-wrap">
         {tags.map((tag, index) => (
@@ -113,23 +85,16 @@ export function Tags({
     const fakeTags = ["tagging_bigoverhere"];
     return (
       <div className="space-y-4">
-        <TagList
-          tags={fakeTags}
-          isLoading={initialIsLoading}
-          title="Tags"
-          tooltipText="Chat tags, chosen by AI from a list of tags"
-        />
+        <TagList tags={fakeTags} isLoading={initialIsLoading} title="Tags" />
         <TagList
           tags={fakeTags}
           isLoading={initialIsLoading}
           title="AI Generated Tags"
-          tooltipText="Chat tags, created by AI"
         />
         <TagList
           tags={fakeTags}
           isLoading={initialIsLoading}
           title="User Tags"
-          tooltipText="Tags about the user, created by AI"
         />
       </div>
     );
@@ -150,21 +115,9 @@ export function Tags({
 
   return (
     <div className="space-y-4">
-      <TagList
-        tags={newlyCreatedTags}
-        title="Tags"
-        tooltipText="Chat tags, chosen by AI from a list of tags"
-      />
-      <TagList
-        tags={aiGeneratedTags}
-        title="AI Generated Tags"
-        tooltipText="Chat tags, created by AI"
-      />
-      <TagList
-        tags={userTags}
-        title="User Tags"
-        tooltipText="Tags about the user, created by AI"
-      />
+      <TagList tags={newlyCreatedTags} title="Tags" />
+      <TagList tags={aiGeneratedTags} title="AI Generated Tags" />
+      <TagList tags={userTags} title="User Tags" />
     </div>
   );
 }
