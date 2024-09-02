@@ -60,15 +60,6 @@ export default async function TicketPage({
               </span>
             </span>
           </TableHead>
-          <TableHead className="relative">
-            User Tags
-            <span className="group inline-block">
-              <InformationCircleIcon className="ml-1.5 inline-block h-4 w-4 text-gray-500 group-hover:text-gray-700" />
-              <span className="absolute left-0 top-full mt-2 hidden rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
-                AI generated tags about the user
-              </span>
-            </span>
-          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -86,9 +77,6 @@ export default async function TicketPage({
             </TableCell>
             <TableCell className="max-w-[100px]">
               {renderTags(taggedChat.ai_generated_tags)}
-            </TableCell>
-            <TableCell className="max-w-[100px]">
-              {renderTags(taggedChat.user_tags)}
             </TableCell>
           </TableRow>
         ))}

@@ -82,7 +82,6 @@ export function Tags({
   const [aiGeneratedTags, setAiGeneratedTags] = useState<string[] | undefined>(
     tags.aiGeneratedTags
   );
-  const [userTags, setUserTags] = useState<string[] | undefined>(tags.userTags);
 
   const createTags = async () => {
     setIsLoading(true);
@@ -100,7 +99,6 @@ export function Tags({
       const data = (await response.json()) as ChatTagsType;
       setNewlyCreatedTags(data.tags);
       setAiGeneratedTags(data.aiGeneratedTags);
-      setUserTags(data.userTags);
     } catch (error) {
       console.error("Error creating tags:", error);
     } finally {
@@ -124,12 +122,6 @@ export function Tags({
           isLoading={initialIsLoading}
           title="AI Generated Tags"
           tooltipText="Chat tags, created by AI"
-        />
-        <TagList
-          tags={fakeTags}
-          isLoading={initialIsLoading}
-          title="User Tags"
-          tooltipText="Tags about the user, created by AI"
         />
       </div>
     );
@@ -159,11 +151,6 @@ export function Tags({
         tags={aiGeneratedTags}
         title="AI Generated Tags"
         tooltipText="Chat tags, created by AI"
-      />
-      <TagList
-        tags={userTags}
-        title="User Tags"
-        tooltipText="Tags about the user, created by AI"
       />
     </div>
   );

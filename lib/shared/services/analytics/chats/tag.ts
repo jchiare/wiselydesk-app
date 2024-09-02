@@ -14,8 +14,7 @@ export type MessagesGroupedByConversation = {
 
 const AiResponseEvent = z.object({
   tags: z.array(z.string()),
-  aiGeneratedTags: z.array(z.string()),
-  userTags: z.array(z.string())
+  aiGeneratedTags: z.array(z.string())
 });
 
 export const TagChatEvent = z
@@ -74,7 +73,6 @@ export async function tagChats(
       conversationId,
       tags: responseText.tags,
       aiGeneratedTags: responseText.aiGeneratedTags,
-      userTags: responseText.userTags,
       botId,
       cost: parseFloat(cost.toFixed(4))
     });
