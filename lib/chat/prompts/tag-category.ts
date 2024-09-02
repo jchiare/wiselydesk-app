@@ -19,8 +19,7 @@ const TAG_CATEGORIES =
 export const TAG_AMBOSS_CHATS = `
 Please analyze the following customer service chat and provide the most appropriate tags based on the chats content and customer inquiry. All odd indexed messages are from the AI and even indexed messages are from the customer.
 The tag should help categorize the email for efficient handling by the AMBOSS customer service team.
-There are three JSON keys to respond with: "tags", "aiGeneratedTags", and "userTags".
+There are two JSON keys to respond with: "tags" and "aiGeneratedTags".
 - For the "tags" key: Possible tags include: ${TAG_CATEGORIES}. If none of the tags are relevant to the chat content, then tag the chat as 'uncategorized'.
 - For the "aiGeneratedTags" key: Create tags based on the chat content that best categorizes the chat.
-- For the "userTags" key: Create tags that would identify the users personal information like location or region and school, if they are a medical_student or doctor, and perhaps what exam they are taking. But don't include PII like email or name
   `;

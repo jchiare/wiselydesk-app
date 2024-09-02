@@ -26,7 +26,6 @@ export async function getTagsServerSide(
 
   return {
     tags: formatChatTags(tags.tags),
-    aiGeneratedTags: formatChatTags(tags.ai_generated_tags),
-    userTags: formatChatTags(tags.user_tags)
+    aiGeneratedTags: formatChatTags(tags.ai_generated_tags)
   };
 }

@@ -55,7 +55,6 @@ export class TagChat {
           conversation_id: parseInt(chat.conversationId, 10),
           tags: chat.tags.join(","),
           ai_generated_tags: chat.aiGeneratedTags?.join(",") || undefined,
-          user_tags: chat.userTags?.join(",") || undefined,
           cost: chat.cost,
           updated_at: new Date()
         }
