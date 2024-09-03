@@ -6,7 +6,7 @@ const config: PlaywrightTestConfig = {
     baseURL: "http://localhost:3000",
     trace: "on-first-retry",
     headless: process.env.HEADED ? false : true,
-    launchOptions: { slowMo: 2000 }
+    launchOptions: { slowMo: 200 }
   },
   projects: [
     {}

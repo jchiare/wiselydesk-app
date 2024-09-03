@@ -13,6 +13,7 @@
     "test:e2e": "start-server-and-test 'npm run start' http://localhost:3000 'playwright test'",
     "test:e2e:dev": "start-server-and-test 'npm run dev' http://localhost:3000 'playwright test'",
     "test:e2e:headed": "HEADED=1 start-server-and-test 'npm run dev' http://localhost:3000 'playwright test'",
+    "test:e2e:headed:debug": "HEADED=1 start-server-and-test 'npm run dev' http://localhost:3000 'playwright test --debug'",
     "postinstall": "prisma generate"
   },
   "dependencies": {
