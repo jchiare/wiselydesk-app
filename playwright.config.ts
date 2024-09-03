@@ -1,62 +1,28 @@
-import { defineConfig, devices } from "@playwright/test";
+import { PlaywrightTestConfig, devices } from "@playwright/test";
 
-const PORT = process.env.PORT || 3000;
-const baseURL = `http://localhost:${PORT}`;
-
-// Reference: https://playwright.dev/docs/test-configuration
-export default defineConfig({
-  timeout: 30 * 1000,
-  testDir: "src/tests/e2e",
-  fullyParallel: false,
-  outputDir: "playwright-report/",
-  forbidOnly: !!process.env.CI,
-  workers: 1,
-  expect: {
-    timeout: 10 * 1000
-  },
-
-  webServer: [
-    {
-      command: "npm run dev:e2e",
-      url: baseURL,
-      reuseExistingServer: !process.env.CI,
-      timeout: 31 * 1000,
-      stdout: "pipe"
-    },
-    {
-      command: "npm run test:e2e:server",
-      url: "http://localhost:5000",
-      reuseExistingServer: !process.env.CI,
-      timeout: 31 * 1000,
-      stdout: "pipe"
-    }
-  ],
-
+const config: PlaywrightTestConfig = {
+  testDir: "./src/tests/e2e/",
   use: {
-    baseURL,
-    trace: "retry-with-trace",
-    bypassCSP: true,
-    launchOptions: {
-      args: ["--disable-web-security"]
-    }
+    baseURL: "http://localhost:3000",
+    trace: "on-first-retry",
+    headless: process.env.HEADED ? false : true,
+    launchOptions: { slowMo: 2000 }
   },
-
   projects: [
-    {
-      name: "Desktop Chrome",
-      use: {
-        ...devices["Desktop Chrome"]
-      }
-    },
-    {
-      name: "Mobile Chrome",
-      use: {
-        ...devices["Pixel 5"]
-      }
-    },
-    {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] }
-    }
+    {}
+    // {
+    // name: "chromium",
+    // use: { ...devices["Desktop Chrome"] }
+    // }
+    // {
+    // name: "firefox",
+    // use: devices["Desktop Firefox"]
+    // }
+    // {
+    // name: "webkit",
+    // use: devices["Desktop Safari"]
+    // }
   ]
-});
+};
+
+export default config;
