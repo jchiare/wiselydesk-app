@@ -8,7 +8,8 @@ const config: PlaywrightTestConfig = {
     launchOptions: { slowMo: 2000 },
     extraHTTPHeaders: {
       "x-vercel-protection-bypass":
-        process.env.VERCEL_AUTOMATION_BYPASS_SECRET || ""
+        process.env.VERCEL_AUTOMATION_BYPASS_SECRET ||
+        "p65XLmSQzZEcyP0EcfJWFVNkhzJbMoAg"
     }
   },
   projects: [
