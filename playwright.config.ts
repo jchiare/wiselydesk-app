@@ -5,7 +5,11 @@ const config: PlaywrightTestConfig = {
   use: {
     trace: "on-first-retry",
     headless: process.env.HEADED ? false : true,
-    launchOptions: { slowMo: 2000 }
+    launchOptions: { slowMo: 2000 },
+    extraHTTPHeaders: {
+      "x-vercel-protection-bypass":
+        process.env.VERCEL_AUTOMATION_BYPASS_SECRET || ""
+    }
   },
   projects: [
     {}
