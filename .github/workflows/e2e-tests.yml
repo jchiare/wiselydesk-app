@@ -3,7 +3,7 @@ on:
   deployment_status:
 jobs:
   test:
-    timeout-minutes: 20
+    timeout-minutes: 10
     runs-on: ubuntu-latest
     if: github.event.deployment_status.state == 'success'
     steps:
@@ -21,7 +21,7 @@ jobs:
         env:
           OPENAI_API_KEY: fake_api_key
 
-      - name: Run E2E tests
-        run: npm run test:e2e
+      - name: Run Playwright tests
+        run: npx playwright test
         env:
           PLAYWRIGHT_TEST_BASE_URL: ${{ github.event.deployment_status.target_url }}
