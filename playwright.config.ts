@@ -3,7 +3,6 @@ import { PlaywrightTestConfig, devices } from "@playwright/test";
 const config: PlaywrightTestConfig = {
   testDir: "./src/tests/e2e/",
   use: {
-    baseURL: "http://localhost:3000",
     trace: "on-first-retry",
     headless: process.env.HEADED ? false : true,
     launchOptions: { slowMo: 2000 }
