@@ -22,7 +22,8 @@ const config: PlaywrightTestConfig = {
     // name: "webkit",
     // use: devices["Desktop Safari"]
     // }
-  ]
+  ],
+  reporter: [["list"], ["json", { outputFile: "test-results.json" }]]
 };
 
 export default config;
