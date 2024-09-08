@@ -10,7 +10,7 @@ test("Demo page interaction", async ({ page }) => {
   });
 
   // Navigate to the demo page
-  await page.goto(`${BASE_URL}/demo-nm12x.html`);
+  await page.goto(`${BASE_URL}/demo-nm12x.html?en-us`);
   // Click the button on the bottom right
   await page.getByRole("button", { name: "Open support widget" }).click();
 

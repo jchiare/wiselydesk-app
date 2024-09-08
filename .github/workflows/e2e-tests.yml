@@ -16,10 +16,10 @@ jobs:
       - name: Install Playwright
         run: npx playwright install --with-deps
 
-      - name: Build the app
-        run: npm run build
-        env:
-          OPENAI_API_KEY: fake_api_key
+      #   - name: Build the app
+      #     run: npm run build
+      #     env:
+      #       OPENAI_API_KEY: fake_api_key
 
       - name: Run Playwright tests
         run: npx playwright test
@@ -28,12 +28,12 @@ jobs:
           DEBUG: pw:api, pw:browser* # Enable detailed Playwright logs
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
 
-      - name: Upload Playwright trace (if test fails)
-        if: failure()
-        run: npx playwright show-trace trace.zip
-      - name: Upload Playwright test results
-        uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: playwright-results
-          path: playwright-report
+    #   - name: Upload Playwright trace (if test fails)
+    #     if: failure()
+    #     run: npx playwright show-trace trace.zip
+    #   - name: Upload Playwright test results
+    #     uses: actions/upload-artifact@v3
+    #     if: failure()
+    #     with:
+    #       name: playwright-results
+    #       path: playwright-report
