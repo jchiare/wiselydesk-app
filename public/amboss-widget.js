@@ -75,9 +75,10 @@ function createIFrame(isEnglish, wiselyDeskWidgetOpen) {
   const existingIframe = document.getElementById("wiselyDeskIframe");
   if (!existingIframe && wiselyDeskWidgetOpen) {
     const isLocalDevelopment = url.startsWith("http://localhost:3000");
-    const isTest = url.startsWith(
-      /https:\/\/wiselydesk-\w{6,10}-wisely-desk.vercel.app\/demo-nm12x.html/
-    );
+    const isTest =
+      /^https:\/\/wiselydesk-\w{6,10}-wisely-desk\.vercel\.app\/demo-nm12x\.html/.test(
+        url
+      );
 
     let host;
     if (isTest) {
