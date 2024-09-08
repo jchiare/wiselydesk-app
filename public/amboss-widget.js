@@ -75,9 +75,20 @@ function createIFrame(isEnglish, wiselyDeskWidgetOpen) {
   const existingIframe = document.getElementById("wiselyDeskIframe");
   if (!existingIframe && wiselyDeskWidgetOpen) {
     const isLocalDevelopment = url.startsWith("http://localhost:3000");
-    const host = isLocalDevelopment
-      ? "http://localhost:3000"
-      : "https://apps.wiselydesk.com";
+    const isTest = url.startsWith(
+      /https:\/\/wiselydesk-\w{6,10}-wisely-desk.vercel.app\/demo-nm12x.html/
+    );
+
+    let host;
+    if (isTest) {
+      host = url.match(
+        /https:\/\/wiselydesk-\w{6,10}-wisely-desk.vercel.app/
+      )[0];
+    } else {
+      host = isLocalDevelopment
+        ? "http://localhost:3000"
+        : "https://apps.wiselydesk.com";
+    }
 
     const modelParam = url.includes("model=claude3.5")
       ? "&model=claude3.5"
