@@ -29,6 +29,6 @@ test("Demo page interaction", async ({ page }) => {
   await expect(
     page
       .frameLocator("#wiselyDeskIframe")
-      .getByText("Hello! How can I assist you today?")
+      .getByText("Hello! How can I assist you today")
   ).toBeVisible();
 });
