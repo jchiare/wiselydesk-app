@@ -62,7 +62,7 @@ export const useChatSubmit = ({
 
     const controller = new AbortController();
 
-    fetchEventSource(`${NEXTJS_BACKEND_URL}/api/chat`, {
+    fetchEventSource(`/api/chat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
