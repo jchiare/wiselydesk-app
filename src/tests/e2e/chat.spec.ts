@@ -19,7 +19,7 @@ test("Demo page interaction", async ({ page }) => {
   await page
     .frameLocator("#wiselyDeskIframe")
     .getByPlaceholder("Ask me your questions!")
-    .fill("hello");
+    .fill("wdtest hello");
 
   await page
     .frameLocator("#wiselyDeskIframe")
@@ -29,8 +29,6 @@ test("Demo page interaction", async ({ page }) => {
   await expect(
     page
       .frameLocator("#wiselyDeskIframe")
-      .getByText(
-        "Hello! How can I assist you today with AMBOSS-related questions?"
-      )
+      .getByText("Hello! How can I assist you today?")
   ).toBeVisible();
 });
