@@ -4,6 +4,7 @@ const config: PlaywrightTestConfig = {
   testDir: "./src/tests/e2e/",
   use: {
     trace: "on-first-retry",
+    screenshot: "only-on-failure",
     headless: process.env.HEADED ? false : true,
     launchOptions: { slowMo: 2000 },
     extraHTTPHeaders: {
