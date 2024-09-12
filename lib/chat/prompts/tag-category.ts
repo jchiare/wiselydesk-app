@@ -16,10 +16,32 @@ It's crucial to respond only in JSON format with the keys "ai_generated_tags", w
 
 const TAG_CATEGORIES =
   "qbank_cancellation, library_membership_cancellation, all_membership_cancellation, bug_report, search, refund_outside_policy, refund_possibly_in_policy, article_content, question_bank_functionality, nejm_integration, article_functionality, question_bank, free_access_due_to_financial_hardship, study_plan_help, log_out_of_devices, b2b_sales_request, troubleshooting, feature_request, access_redemption_issue, request_for_agent";
+
+const categories = [
+  {
+    parent: "billing",
+    child: [
+      "qbank_cancellation",
+      "library_membership_cancellation",
+      "all_membership_cancellation"
+    ]
+  },
+  { parent: "search", child: [] },
+  { parent: "qbank", child: [] },
+  { parent: "article", child: [] },
+  { parent: "membership", child: [] },
+  { parent: "support", child: [] },
+  { parent: "NEJM", child: [] },
+  { parent: "medical_question", child: [] },
+  { parent: "account_settings", child: [] },
+  { parent: "mobile_apps", child: [] }
+];
+
 export const TAG_AMBOSS_CHATS = `
 Please analyze the following customer service chat and provide the most appropriate tags based on the chats content and customer inquiry. All odd indexed messages are from the AI and even indexed messages are from the customer.
 The tag should help categorize the email for efficient handling by the AMBOSS customer service team.
-There are two JSON keys to respond with: "tags" and "aiGeneratedTags".
+There are two categories of tags, one is the root/parent category that is more general and the other is the child category that is more specific. So a parent category could be 'billing' and the child category could be 'refund_request'.
+There are two JSON keys to respond with: "tags" and "aiGeneratedTags". The value of each key should be an object with "parent_tag" (string) and "child_tags" (array of strings) keys respectively.
 - For the "tags" key: Possible tags include: ${TAG_CATEGORIES}. If none of the tags are relevant to the chat content, then tag the chat as 'uncategorized'.
 - For the "aiGeneratedTags" key: Create tags based on the chat content that best categorizes the chat.
   `;

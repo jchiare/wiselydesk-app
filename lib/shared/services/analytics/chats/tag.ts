@@ -12,9 +12,14 @@ export type MessagesGroupedByConversation = {
   [conversationId: string]: GroupedConversation[];
 };
 
+const tagValue = z.object({
+  parent_tag: z.string(),
+  child_tags: z.array(z.string())
+});
+
 const AiResponseEvent = z.object({
-  tags: z.array(z.string()),
-  aiGeneratedTags: z.array(z.string())
+  tags: tagValue,
+  aiGeneratedTags: tagValue
 });
 
 export const TagChatEvent = z
