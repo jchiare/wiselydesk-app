@@ -20,6 +20,10 @@ export default function RootLayout({
           type="image/<generated>"
           sizes="<generated>"
         />
+        <script
+          defer
+          data-domain="wiselydesk.com"
+          src="https://plausible.io/js/script.js"></script>
       </head>
       <body>{children}</body>
     </html>
