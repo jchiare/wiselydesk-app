@@ -1,8 +1,8 @@
-import OpenAI from "openai";
+import type OpenAI from "openai";
+import openai from "@/lib/shared/services/openai";
 import {
   parsePayload,
-  parseBotId,
-  removeWiselyDeskTestingKeyword
+  parseBotId
 } from "@/lib/chat/conversation/parse-payload";
 import { ConversationService } from "@/lib/chat/conversation";
 import prisma from "@/lib/prisma";
@@ -21,7 +21,6 @@ import type { OpenAiMessage } from "@/lib/chat/openai-chat-message";
 import { AnthropicLLM } from "@/lib/shared/services/llm/anthropic";
 import Anthropic from "@anthropic-ai/sdk";
 
-const openai = new OpenAI();
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
 
