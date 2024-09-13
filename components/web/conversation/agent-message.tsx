@@ -1,7 +1,9 @@
+"use client";
 import { formatDateTime } from "@/lib/utils";
 import Link from "next/link";
 import renderMessage from "@/lib/shared/services/render-message";
 import ThumbsUpDown from "@/components/web/thumbs-up-down";
+import { useState } from "react";
 
 const ZENDESK_SOURCE_ARTICLE_REGEX = "/[0-9]+-(.+)-?$";
 const WEBPAGE_SOURCE_ARTICLE_REGEX = "/([^/]+)$";
@@ -74,6 +76,12 @@ export default function AgentMessage({
   isFinished: boolean;
   isLoading?: boolean;
 }): JSX.Element {
+  const [isDebugVisible, setIsDebugVisible] = useState(false);
+
+  const toggleDebug = () => {
+    setIsDebugVisible(!isDebugVisible);
+  };
+
   return (
     <div className="flex items-end">
       <div className="mx-2 my-1 max-w-[60%]">
@@ -99,7 +107,7 @@ export default function AgentMessage({
             </p>
           )}
         </div>
-        <div className="grid grid-cols-2 justify-start">
+        <div className="grid grid-cols-3 justify-start">
           <div className="mt-1 flex space-x-2">
             {!isFirstMessage && (
               <>
@@ -115,11 +123,16 @@ export default function AgentMessage({
             )}
           </div>
           <p
-            className={`mt-1 text-end text-xs text-gray-400 ${
+            className={`mt-1 text-left text-xs text-gray-400 ${
               isLoading ? "blur-sm" : ""
             }`}>
             {formatDateTime(sentTime)}
           </p>
+          <button
+            onClick={toggleDebug}
+            className="text-end text-xs text-blue-500 hover:underline">
+            AI Debug
+          </button>
         </div>
         {sources && (
           <div className="grid">
@@ -144,6 +157,15 @@ export default function AgentMessage({
             </div>
           </div>
         )}
+
+        <div
+          id="debug-section"
+          className={`mt-2 rounded border bg-gray-100 p-2 ${
+            isDebugVisible ? "" : "hidden"
+          }`}>
+          <h3 className="text-sm font-semibold">Debug Information</h3>
+          <p>Details of the AI API call will be displayed here.</p>
+        </div>
       </div>
     </div>
   );
