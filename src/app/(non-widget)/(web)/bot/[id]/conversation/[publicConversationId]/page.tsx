@@ -94,7 +94,6 @@ export default async function WebConversationPage({
     ).map(aiInput => [aiInput.messageId, aiInput.log])
   );
 
-  console.log("AiDebugLog:!! ", AiDebugLog);
   const conversationObject = {
     conversation: {
       messages,
@@ -106,8 +105,6 @@ export default async function WebConversationPage({
     <div className="flex flex-col-reverse sm:flex-col">
       <div className="p-4 sm:mr-[300px] sm:px-6 sm:py-14 lg:px-16">
         {conversationObject.conversation.messages.map(message => {
-          console.log("mesage id: ", message.id);
-
           const { modelVersion, formattedMessages, responseTime } =
             parseAiDebugLog(AiDebugLog.get(message.id) as AiDebugLog) || {};
           return (

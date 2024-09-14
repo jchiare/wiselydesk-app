@@ -192,18 +192,37 @@ export function AgentMessage({
                 <h3 className="text-base font-semibold text-gray-700">
                   AI messages input:
                 </h3>
-                {formattedMessages.map((message, index) => (
-                  <div
-                    key={index + message.content.substring(0, 20)}
-                    className="mt-1">
-                    <p className="text-gray-600">
-                      <strong>Role:</strong> {message.role}
-                    </p>
-                    <p className="text-gray-600">
-                      <strong>Content:</strong> {message.content}
-                    </p>
-                  </div>
-                ))}
+                {formattedMessages.map((message, index) => {
+                  console.log(message.content.split("- Text: <article text>"));
+                  return (
+                    <div
+                      key={index + message.content.substring(0, 20)}
+                      className="mt-1">
+                      <p className="text-gray-600">
+                        <strong>Role:</strong> {message.role}
+                      </p>
+                      <p className="text-gray-600">
+                        {message.role === "system" ? (
+                          <>
+                            <strong>Content:</strong>
+                            <span className="bg-yellow-100">
+                              {
+                                message.content.split(
+                                  "- Text: <article text>"
+                                )[0]
+                              }
+                            </span>
+                            {message.content.split("- Text: <article text>")[1]}
+                          </>
+                        ) : (
+                          <>
+                            <strong>Content:</strong> {message.content}
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
