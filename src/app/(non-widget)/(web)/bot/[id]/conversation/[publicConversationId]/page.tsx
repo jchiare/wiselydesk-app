@@ -30,9 +30,9 @@ export async function generateMetadata({
 }
 
 type AiDebugLog = {
-  modelVersion: string;
-  formattedMessages: { role: string; content: string }[];
-  responseTime: string;
+  modelVersion: string | null;
+  formattedMessages: { role: string; content: string }[] | null;
+  responseTime: string | null;
 };
 
 function parseAiDebugLog(aiDebugLog: AiDebugLog) {
@@ -105,7 +105,11 @@ export default async function WebConversationPage({
       <div className="p-4 sm:mr-[300px] sm:px-6 sm:py-14 lg:px-16">
         {conversationObject.conversation.messages.map(message => {
           const { modelVersion, formattedMessages, responseTime } =
-            parseAiDebugLog(AiDebugLog.get(message.id) as AiDebugLog) || {};
+            parseAiDebugLog(AiDebugLog.get(message.id) as AiDebugLog) || {
+              modelVersion: null,
+              formattedMessages: null,
+              responseTime: null
+            };
           return (
             <div key={message.id}>
               {isMessageFromUser(message) ? (

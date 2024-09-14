@@ -36,6 +36,9 @@ export default function WebConversationLoading() {
             isFirstMessage={true}
             isLoading={true}
             isFinished={true}
+            modelVersion={null}
+            formattedMessages={null}
+            responseTime={null}
           />
           <UserMessage
             text={userMessage.text}
@@ -50,6 +53,9 @@ export default function WebConversationLoading() {
             isFirstMessage={false}
             isLoading={true}
             isFinished={true}
+            modelVersion={null}
+            formattedMessages={null}
+            responseTime={null}
           />
         </div>
       </div>

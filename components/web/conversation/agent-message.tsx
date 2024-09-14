@@ -95,9 +95,9 @@ export function AgentMessage({
   isFirstMessage: boolean;
   isFinished: boolean;
   isLoading?: boolean;
-  modelVersion: string | undefined;
-  formattedMessages: { role: string; content: string }[] | undefined;
-  responseTime: string | undefined;
+  modelVersion: string | null;
+  formattedMessages: { role: string; content: string }[] | null;
+  responseTime: string | null;
 }): JSX.Element {
   const [isDebugVisible, setIsDebugVisible] = useState(false);
 
