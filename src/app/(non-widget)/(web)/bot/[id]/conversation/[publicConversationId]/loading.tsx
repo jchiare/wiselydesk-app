@@ -1,5 +1,5 @@
-import AgentMessage from "@/components/web/conversation/agent-message";
-import UserMessage from "@/components/web/conversation/user-message";
+import { AgentMessage } from "@/components/web/conversation/agent-message";
+import { UserMessage } from "@/components/web/conversation/user-message";
 import { RightBar } from "@/components/web/conversation/right-bar";
 
 const aiMessage = {
@@ -36,6 +36,9 @@ export default function WebConversationLoading() {
             isFirstMessage={true}
             isLoading={true}
             isFinished={true}
+            modelVersion={null}
+            formattedMessages={null}
+            responseTime={null}
           />
           <UserMessage
             text={userMessage.text}
@@ -50,6 +53,9 @@ export default function WebConversationLoading() {
             isFirstMessage={false}
             isLoading={true}
             isFinished={true}
+            modelVersion={null}
+            formattedMessages={null}
+            responseTime={null}
           />
         </div>
       </div>

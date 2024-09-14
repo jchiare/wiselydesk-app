@@ -3,8 +3,9 @@ import type { Metadata } from "next/types";
 import { fetchServerSession } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import type { Message } from "@prisma/client";
-import AgentMessage from "@/components/web/conversation/agent-message";
-import UserMessage from "@/components/web/conversation/user-message";
+import { AgentMessage } from "@/components/web/conversation/agent-message";
+import { UserMessage } from "@/components/web/conversation/user-message";
+import type { JsonObject, JsonValue } from "@prisma/client/runtime/library";
 
 export const dynamic = "force-dynamic";
 
@@ -26,6 +27,23 @@ export async function generateMetadata({
     title: `Conversation #${params.publicConversationId} | WiselyDesk`,
     description: `View conversation #${params.publicConversationId} for bot #${params.id} in WiselyDesk`
   };
+}
+
+type AiDebugLog = {
+  modelVersion: string | null;
+  formattedMessages: { role: string; content: string }[] | null;
+  responseTime: string | null;
+};
+
+function parseAiDebugLog(aiDebugLog: AiDebugLog) {
+  if (aiDebugLog) {
+    return {
+      modelVersion: aiDebugLog.modelVersion,
+      formattedMessages: aiDebugLog.formattedMessages,
+      responseTime: aiDebugLog.responseTime
+    };
+  }
+  return null;
 }
 
 export default async function WebConversationPage({
@@ -56,6 +74,25 @@ export default async function WebConversationPage({
     }
   });
 
+  const messageIds = messages.map(message => message.id);
+
+  const AiDebugLog = new Map(
+    (
+      await prisma.aiInput.findMany({
+        where: {
+          conversationId: conversation.id,
+          messageId: {
+            in: messageIds
+          }
+        },
+        select: {
+          messageId: true,
+          log: true
+        }
+      })
+    ).map(aiInput => [aiInput.messageId, aiInput.log])
+  );
+
   const conversationObject = {
     conversation: {
       messages,
@@ -66,29 +103,36 @@ export default async function WebConversationPage({
   return (
     <div className="flex flex-col-reverse sm:flex-col">
       <div className="p-4 sm:mr-[300px] sm:px-6 sm:py-14 lg:px-16">
-        <div>
-          {conversationObject.conversation.messages.map(message => {
-            return (
-              <div key={message.id}>
-                {isMessageFromUser(message) ? (
-                  <UserMessage
-                    text={message.text}
-                    sentTime={message.created_at}
-                  />
-                ) : (
-                  <AgentMessage
-                    text={message.text}
-                    sentTime={message.created_at}
-                    sources={message.sources}
-                    isHelpful={message.is_helpful}
-                    isFirstMessage={message.index === 0}
-                    isFinished={message.finished}
-                  />
-                )}
-              </div>
-            );
-          })}
-        </div>
+        {conversationObject.conversation.messages.map(message => {
+          const { modelVersion, formattedMessages, responseTime } =
+            parseAiDebugLog(AiDebugLog.get(message.id) as AiDebugLog) || {
+              modelVersion: null,
+              formattedMessages: null,
+              responseTime: null
+            };
+          return (
+            <div key={message.id}>
+              {isMessageFromUser(message) ? (
+                <UserMessage
+                  text={message.text}
+                  sentTime={message.created_at}
+                />
+              ) : (
+                <AgentMessage
+                  text={message.text}
+                  sentTime={message.created_at}
+                  sources={message.sources}
+                  isHelpful={message.is_helpful}
+                  isFirstMessage={message.index === 0}
+                  isFinished={message.finished}
+                  modelVersion={modelVersion}
+                  formattedMessages={formattedMessages}
+                  responseTime={responseTime}
+                />
+              )}
+            </div>
+          );
+        })}
       </div>
       <div className="border-2 border-y-0 border-gray-300 bg-gray-200 sm:fixed sm:right-0 sm:h-screen sm:min-w-[350px] sm:max-w-[350px]">
         <RightBar
