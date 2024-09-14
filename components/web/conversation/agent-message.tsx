@@ -90,83 +90,86 @@ export function AgentMessage({
 
   return (
     <div className="flex items-end">
-      <div className="mx-2 my-1 max-w-[60%]">
-        <div
-          className={`rounded-lg border-2 ${
-            isFinished
-              ? "border-gray-700 bg-gray-600"
-              : "border-red-800 bg-red-600 opacity-80"
-          } p-2 font-medium text-white`}>
-          {isLoading ? (
-            <p
-              className="blur-sm"
-              // @ts-expect-error some htmlthing
-              dangerouslySetInnerHTML={{ __html: renderMessage(text) }}></p>
-          ) : isFinished ? (
-            <p
-              // @ts-expect-error some htmlthing
-              dangerouslySetInnerHTML={{ __html: renderMessage(text) }}></p>
-          ) : (
-            <p>
-              Message did not finish - user likely closed browser window before
-              AI finished responding
-            </p>
-          )}
-        </div>
-        <div className={`my-1 grid grid-cols-2 justify-start`}>
-          <div className="mt-1 flex space-x-2">
-            {!isFirstMessage && (
-              <>
-                <ThumbsUpDown
-                  direction="up"
-                  fill={thumbFill({ direction: "up", isHelpful })}
-                />
-                <ThumbsUpDown
-                  direction="down"
-                  fill={thumbFill({ direction: "down", isHelpful })}
-                />
-              </>
+      <div className="my-1 w-full">
+        <div className="w-[65%]">
+          <div
+            className={`rounded-lg border-2 ${
+              isFinished
+                ? "border-gray-700 bg-gray-600"
+                : "border-red-800 bg-red-600 opacity-80"
+            } p-2 font-medium text-white`}>
+            {isLoading ? (
+              <p
+                className="blur-sm"
+                // @ts-expect-error some htmlthing
+                dangerouslySetInnerHTML={{ __html: renderMessage(text) }}></p>
+            ) : isFinished ? (
+              <p
+                // @ts-expect-error some htmlthing
+                dangerouslySetInnerHTML={{ __html: renderMessage(text) }}></p>
+            ) : (
+              <p>
+                Message did not finish - user likely closed browser window
+                before AI finished responding
+              </p>
             )}
           </div>
-          {isFirstMessage && (
-            <p
-              className={`mt-1 text-right text-xs text-gray-400 ${
-                isLoading ? "blur-sm" : ""
-              }`}>
-              {formatDateTime(sentTime)}
-            </p>
-          )}
-          {!isFirstMessage && (
-            <button
-              onClick={toggleDebug}
-              className="text-end text-xs text-blue-500 hover:underline">
-              AI Debug
-            </button>
+          <div className={`my-1 grid grid-cols-2 justify-start`}>
+            <div className="mt-1 flex space-x-2">
+              {!isFirstMessage && (
+                <>
+                  <ThumbsUpDown
+                    direction="up"
+                    fill={thumbFill({ direction: "up", isHelpful })}
+                  />
+                  <ThumbsUpDown
+                    direction="down"
+                    fill={thumbFill({ direction: "down", isHelpful })}
+                  />
+                </>
+              )}
+            </div>
+            {isFirstMessage && (
+              <p
+                className={`mt-1 text-right text-xs text-gray-400 ${
+                  isLoading ? "blur-sm" : ""
+                }`}>
+                {formatDateTime(sentTime)}
+              </p>
+            )}
+            {!isFirstMessage && (
+              <button
+                onClick={toggleDebug}
+                className="text-end text-xs text-blue-500 hover:underline">
+                AI Debug
+              </button>
+            )}
+          </div>
+          {sources && (
+            <div className="grid">
+              <div>
+                <p>Sources:</p>
+                {uniqueSourcesList(sources).map((source, index) => {
+                  return (
+                    <div key={`${source}${index}`}>
+                      <Link
+                        target="_blank"
+                        key={`${source}${index}`}
+                        href={source}
+                        className={`mr-2 text-sm font-semibold text-[#161651] hover:text-blue-700 hover:underline ${
+                          isLoading ? "blur-sm" : ""
+                        }`}>
+                        {sourceText(source, index)}
+                      </Link>
+                      <br />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           )}
         </div>
-        {sources && (
-          <div className="grid">
-            <div>
-              <p>Sources:</p>
-              {uniqueSourcesList(sources).map((source, index) => {
-                return (
-                  <div key={`${source}${index}`}>
-                    <Link
-                      target="_blank"
-                      key={`${source}${index}`}
-                      href={source}
-                      className={`mr-2 text-sm font-semibold text-[#161651] hover:text-blue-700 hover:underline ${
-                        isLoading ? "blur-sm" : ""
-                      }`}>
-                      {sourceText(source, index)}
-                    </Link>
-                    <br />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
+
         {!isFirstMessage && (
           <div
             id="debug-section"
