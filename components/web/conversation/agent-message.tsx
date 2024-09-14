@@ -59,7 +59,7 @@ function thumbFill({
   return isFilled ? "grey" : "none";
 }
 
-export default function AgentMessage({
+export function AgentMessage({
   sentTime,
   text,
   sources,
@@ -107,7 +107,7 @@ export default function AgentMessage({
             </p>
           )}
         </div>
-        <div className="grid grid-cols-3 justify-start">
+        <div className={`my-1 grid grid-cols-2 justify-start`}>
           <div className="mt-1 flex space-x-2">
             {!isFirstMessage && (
               <>
@@ -122,17 +122,21 @@ export default function AgentMessage({
               </>
             )}
           </div>
-          <p
-            className={`mt-1 text-left text-xs text-gray-400 ${
-              isLoading ? "blur-sm" : ""
-            }`}>
-            {formatDateTime(sentTime)}
-          </p>
-          <button
-            onClick={toggleDebug}
-            className="text-end text-xs text-blue-500 hover:underline">
-            AI Debug
-          </button>
+          {isFirstMessage && (
+            <p
+              className={`mt-1 text-right text-xs text-gray-400 ${
+                isLoading ? "blur-sm" : ""
+              }`}>
+              {formatDateTime(sentTime)}
+            </p>
+          )}
+          {!isFirstMessage && (
+            <button
+              onClick={toggleDebug}
+              className="text-end text-xs text-blue-500 hover:underline">
+              AI Debug
+            </button>
+          )}
         </div>
         {sources && (
           <div className="grid">
@@ -157,15 +161,16 @@ export default function AgentMessage({
             </div>
           </div>
         )}
-
-        <div
-          id="debug-section"
-          className={`mt-2 rounded border bg-gray-100 p-2 ${
-            isDebugVisible ? "" : "hidden"
-          }`}>
-          <h3 className="text-sm font-semibold">Debug Information</h3>
-          <p>Details of the AI API call will be displayed here.</p>
-        </div>
+        {!isFirstMessage && (
+          <div
+            id="debug-section"
+            className={`mt-2 rounded border bg-gray-100 p-2 ${
+              isDebugVisible ? "" : "hidden"
+            }`}>
+            <h3 className="text-sm font-semibold">Debug Information</h3>
+            <p>Details of the AI API call will be displayed here.</p>
+          </div>
+        )}
       </div>
     </div>
   );

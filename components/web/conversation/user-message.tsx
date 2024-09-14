@@ -1,6 +1,6 @@
 import { formatDateTime } from "@/lib/utils";
 
-export default function UserMessage({
+export function UserMessage({
   sentTime,
   text,
   isLoading
@@ -15,11 +15,11 @@ export default function UserMessage({
         <div className="rounded-lg border-2 border-blue-700 bg-blue-600 p-2 font-medium text-white opacity-80">
           <p className={isLoading ? "blur-sm" : ""}>{text}</p>
         </div>
-        <div className="mt-1 flex justify-end">
+        {/* <div className="mt-1 flex justify-end">
           <p className={`text-xs text-gray-400 ${isLoading ? "blur-sm" : ""}`}>
             {formatDateTime(sentTime)}
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );
