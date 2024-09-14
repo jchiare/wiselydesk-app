@@ -46,6 +46,23 @@ function uniqueSourcesList(sources: string): Array<string> {
   return Array.from(new Set(sources?.split(", ")));
 }
 
+const PROMPT_END = "- Text: <article text>";
+const CONTEXT_END = "Article title:";
+function prettyAiDebugOutput(textOutput: string): {
+  prettyPrompt: string;
+  prettyContext: string[];
+} {
+  const splitOnPrompt = textOutput.split(PROMPT_END);
+  const prettyPrompt = splitOnPrompt[0] + PROMPT_END;
+
+  const prettyContext = splitOnPrompt[1]
+    ?.split(CONTEXT_END)
+    .slice(1)
+    .map(item => `${CONTEXT_END}${item}`);
+
+  return { prettyPrompt, prettyContext };
+}
+
 function thumbFill({
   direction,
   isHelpful
@@ -188,12 +205,15 @@ export function AgentMessage({
               </p>
             </div>
             {formattedMessages && formattedMessages.length > 0 && (
-              <div className="mt-2">
+              <div className="mt-2 whitespace-pre-wrap">
                 <h3 className="text-base font-semibold text-gray-700">
                   AI messages input:
                 </h3>
                 {formattedMessages.map((message, index) => {
-                  console.log(message.content.split("- Text: <article text>"));
+                  const { prettyPrompt, prettyContext } = prettyAiDebugOutput(
+                    message.content
+                  );
+
                   return (
                     <div
                       key={index + message.content.substring(0, 20)}
@@ -201,18 +221,20 @@ export function AgentMessage({
                       <p className="text-gray-600">
                         <strong>Role:</strong> {message.role}
                       </p>
-                      <p className="text-gray-600">
+                      <p className="leading-relaxed text-gray-600">
                         {message.role === "system" ? (
                           <>
                             <strong>Content:</strong>
-                            <span className="bg-yellow-100">
-                              {
-                                message.content.split(
-                                  "- Text: <article text>"
-                                )[0]
-                              }
+                            <span className="block rounded bg-yellow-100 p-1">
+                              {prettyPrompt}
                             </span>
-                            {message.content.split("- Text: <article text>")[1]}
+                            {prettyContext.map((context, index) => (
+                              <span
+                                className="my-2 block rounded bg-blue-100 p-1"
+                                key={index + context.slice(0, 15)}>
+                                {context}
+                              </span>
+                            ))}
                           </>
                         ) : (
                           <>

@@ -36,7 +36,6 @@ type AiDebugLog = {
 };
 
 function parseAiDebugLog(aiDebugLog: AiDebugLog) {
-  console.log("aiDebugLog: ", aiDebugLog);
   if (aiDebugLog) {
     return {
       modelVersion: aiDebugLog.modelVersion,

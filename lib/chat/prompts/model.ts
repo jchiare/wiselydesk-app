@@ -25,7 +25,6 @@ function contextPrompt(context: Context): string {
       The Context below is given in the following format:
       - Article title: <article title>
       - Text: <article text>
-  
       Context:
       `;
 
