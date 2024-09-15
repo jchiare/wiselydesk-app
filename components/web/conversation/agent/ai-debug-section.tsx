@@ -20,13 +20,15 @@ type Props = {
   modelVersion: string | null;
   responseTime: string | null;
   formattedMessages: { role: string; content: string }[] | null;
+  userId: number;
 };
 
 export function AiDebugSection({
   isDebugVisible,
   modelVersion,
   responseTime,
-  formattedMessages
+  formattedMessages,
+  userId
 }: Props): JSX.Element {
   return (
     <div
@@ -55,6 +57,8 @@ export function AiDebugSection({
               message.content
             );
 
+            const shouldShowPrompt = userId == 5 || userId === 10;
+
             return (
               <div
                 key={index + message.content.substring(0, 20)}
@@ -66,8 +70,10 @@ export function AiDebugSection({
                   {message.role === "system" ? (
                     <>
                       <strong>Content:</strong>
-                      <span className="block rounded bg-yellow-100 p-1">
-                        {prettyPrompt}
+                      <span
+                        className={`block rounded bg-yellow-100 p-1 ${!shouldShowPrompt && "text-center"}`}>
+                        {/* show prompt to WiselyDesk / Jay only */}
+                        {shouldShowPrompt ? prettyPrompt : "Prompt Hidden"}
                       </span>
                       {prettyContext.map((context, index) => (
                         <span

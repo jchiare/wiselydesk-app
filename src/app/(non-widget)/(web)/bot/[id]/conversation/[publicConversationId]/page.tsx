@@ -5,7 +5,6 @@ import prisma from "@/lib/prisma";
 import type { Message } from "@prisma/client";
 import { AgentMessage } from "@/components/web/conversation/agent/message";
 import { UserMessage } from "@/components/web/conversation/user-message";
-import type { JsonObject, JsonValue } from "@prisma/client/runtime/library";
 
 export const dynamic = "force-dynamic";
 
@@ -128,6 +127,7 @@ export default async function WebConversationPage({
                   modelVersion={modelVersion}
                   formattedMessages={formattedMessages}
                   responseTime={responseTime}
+                  userId={userId}
                 />
               )}
             </div>

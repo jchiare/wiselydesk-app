@@ -70,7 +70,8 @@ export function AgentMessage({
   isFinished,
   modelVersion,
   formattedMessages,
-  responseTime
+  responseTime,
+  userId
 }: {
   text: string | null;
   sentTime: Date | string;
@@ -82,6 +83,7 @@ export function AgentMessage({
   modelVersion: string | null;
   formattedMessages: { role: string; content: string }[] | null;
   responseTime: string | null;
+  userId: number;
 }): JSX.Element {
   const [isDebugVisible, setIsDebugVisible] = useState(false);
 
@@ -177,6 +179,7 @@ export function AgentMessage({
             formattedMessages={formattedMessages}
             modelVersion={modelVersion}
             responseTime={responseTime}
+            userId={userId}
           />
         )}
       </div>
