@@ -56,7 +56,6 @@ export function AiDebugSection({
             const { prettyPrompt, prettyContext } = prettyAiDebugOutput(
               message.content
             );
-
             const shouldShowPrompt = userId == 5 || userId === 10;
 
             return (

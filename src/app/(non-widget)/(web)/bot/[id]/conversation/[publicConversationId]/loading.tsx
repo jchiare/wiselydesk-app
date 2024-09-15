@@ -39,6 +39,7 @@ export default function WebConversationLoading() {
             modelVersion={null}
             formattedMessages={null}
             responseTime={null}
+            userId={2}
           />
           <UserMessage
             text={userMessage.text}
@@ -56,6 +57,7 @@ export default function WebConversationLoading() {
             modelVersion={null}
             formattedMessages={null}
             responseTime={null}
+            userId={3}
           />
         </div>
       </div>
