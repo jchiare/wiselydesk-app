@@ -1,4 +1,4 @@
-import { AgentMessage } from "@/components/web/conversation/agent-message";
+import { AgentMessage } from "@/components/web/conversation/agent/message";
 import { UserMessage } from "@/components/web/conversation/user-message";
 import { RightBar } from "@/components/web/conversation/right-bar";
 
@@ -39,6 +39,7 @@ export default function WebConversationLoading() {
             modelVersion={null}
             formattedMessages={null}
             responseTime={null}
+            userId={2}
           />
           <UserMessage
             text={userMessage.text}
@@ -56,6 +57,7 @@ export default function WebConversationLoading() {
             modelVersion={null}
             formattedMessages={null}
             responseTime={null}
+            userId={3}
           />
         </div>
       </div>

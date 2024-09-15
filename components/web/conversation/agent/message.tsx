@@ -4,6 +4,7 @@ import Link from "next/link";
 import renderMessage from "@/lib/shared/services/render-message";
 import ThumbsUpDown from "@/components/web/thumbs-up-down";
 import { useState } from "react";
+import { AiDebugSection } from "@/components/web/conversation/agent/ai-debug-section";
 
 const ZENDESK_SOURCE_ARTICLE_REGEX = "/[0-9]+-(.+)-?$";
 const WEBPAGE_SOURCE_ARTICLE_REGEX = "/([^/]+)$";
@@ -46,23 +47,6 @@ function uniqueSourcesList(sources: string): Array<string> {
   return Array.from(new Set(sources?.split(", ")));
 }
 
-const PROMPT_END = "- Text: <article text>";
-const CONTEXT_END = "Article title:";
-function prettyAiDebugOutput(textOutput: string): {
-  prettyPrompt: string;
-  prettyContext: string[];
-} {
-  const splitOnPrompt = textOutput.split(PROMPT_END);
-  const prettyPrompt = splitOnPrompt[0] + PROMPT_END;
-
-  const prettyContext = splitOnPrompt[1]
-    ?.split(CONTEXT_END)
-    .slice(1)
-    .map(item => `${CONTEXT_END}${item}`);
-
-  return { prettyPrompt, prettyContext };
-}
-
 function thumbFill({
   direction,
   isHelpful
@@ -86,7 +70,8 @@ export function AgentMessage({
   isFinished,
   modelVersion,
   formattedMessages,
-  responseTime
+  responseTime,
+  userId
 }: {
   text: string | null;
   sentTime: Date | string;
@@ -98,6 +83,7 @@ export function AgentMessage({
   modelVersion: string | null;
   formattedMessages: { role: string; content: string }[] | null;
   responseTime: string | null;
+  userId: number;
 }): JSX.Element {
   const [isDebugVisible, setIsDebugVisible] = useState(false);
 
@@ -188,66 +174,13 @@ export function AgentMessage({
         </div>
 
         {!isFirstMessage && (
-          <div
-            id="debug-section"
-            className={`mt-2 rounded border bg-gray-100 p-4 text-sm shadow-md ${
-              isDebugVisible ? "block" : "hidden"
-            }`}>
-            <h2 className="text-lg font-semibold text-gray-700">
-              AI Debug Information
-            </h2>
-            <div className="mt-2">
-              <p className="text-gray-600">
-                <strong>Model Version:</strong> {modelVersion}
-              </p>
-              <p className="text-gray-600">
-                <strong>Response Time:</strong> {responseTime}
-              </p>
-            </div>
-            {formattedMessages && formattedMessages.length > 0 && (
-              <div className="mt-2 whitespace-pre-wrap">
-                <h3 className="text-base font-semibold text-gray-700">
-                  AI messages input:
-                </h3>
-                {formattedMessages.map((message, index) => {
-                  const { prettyPrompt, prettyContext } = prettyAiDebugOutput(
-                    message.content
-                  );
-
-                  return (
-                    <div
-                      key={index + message.content.substring(0, 20)}
-                      className="mt-1">
-                      <p className="text-gray-600">
-                        <strong>Role:</strong> {message.role}
-                      </p>
-                      <p className="leading-relaxed text-gray-600">
-                        {message.role === "system" ? (
-                          <>
-                            <strong>Content:</strong>
-                            <span className="block rounded bg-yellow-100 p-1">
-                              {prettyPrompt}
-                            </span>
-                            {prettyContext.map((context, index) => (
-                              <span
-                                className="my-2 block rounded bg-blue-100 p-1"
-                                key={index + context.slice(0, 15)}>
-                                {context}
-                              </span>
-                            ))}
-                          </>
-                        ) : (
-                          <>
-                            <strong>Content:</strong> {message.content}
-                          </>
-                        )}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
+          <AiDebugSection
+            isDebugVisible={isDebugVisible}
+            formattedMessages={formattedMessages}
+            modelVersion={modelVersion}
+            responseTime={responseTime}
+            userId={userId}
+          />
         )}
       </div>
     </div>
