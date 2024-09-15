@@ -1,4 +1,4 @@
-import { AgentMessage } from "@/components/web/conversation/agent-message";
+import { AgentMessage } from "@/components/web/conversation/agent/message";
 import { UserMessage } from "@/components/web/conversation/user-message";
 import { RightBar } from "@/components/web/conversation/right-bar";
 
