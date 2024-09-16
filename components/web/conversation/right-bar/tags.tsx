@@ -97,6 +97,7 @@ export function Tags({
         throw new Error("Failed to create tags");
       }
       const data = (await response.json()) as ChatTagsType;
+      console.log("data while creating tags: ", data);
       setNewlyCreatedTags(data.tags);
       setAiGeneratedTags(data.aiGeneratedTags);
     } catch (error) {
@@ -140,6 +141,7 @@ export function Tags({
     );
   }
 
+  console.log("newlyCreatedTags: ", newlyCreatedTags);
   return (
     <div className="space-y-4">
       <TagList

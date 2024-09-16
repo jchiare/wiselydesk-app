@@ -1,3 +1,9 @@
-import { ChatTagsType as localChatTagsType } from "@/lib/data/chat-tags/server";
+type tagsEl = {
+  name: string;
+  children: string[];
+};
 
-export type ChatTagsType = localChatTagsType;
+export type ChatTagsType = {
+  tags: tagsEl;
+  ai_generated_tags: tagsEl;
+};

@@ -13,8 +13,8 @@ export type MessagesGroupedByConversation = {
 };
 
 const tagValue = z.object({
-  parent_tag: z.string(),
-  child_tags: z.array(z.string())
+  name: z.string(),
+  children: z.array(z.string())
 });
 
 const AiResponseEvent = z.object({
@@ -45,12 +45,14 @@ export async function tagChats(
     const formattedMessages = messages
       .map((message, index) => {
         // AI message
-        if (index % 2) {
+        if (index % 2 === 0) {
           return `Message from AI: ${message.text}`;
         }
         return `Message from user: ${message.text}`;
       })
       .join("\n");
+
+    console.log("Formmated Messsages: ", formattedMessages);
 
     const message = await openai.beta.chat.completions.parse({
       messages: [
@@ -66,6 +68,7 @@ export async function tagChats(
     });
 
     const responseText = message.choices[0].message.parsed;
+    console.log("Response Text: ", responseText);
     if (!responseText) {
       throw new Error(`No response from openai tagChats`);
     }

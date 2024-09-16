@@ -1,13 +1,11 @@
 import "server-only";
 import prisma from "@/lib/prisma";
-import { formatChatTags } from "@/lib/data/chat-tags/helper";
-
-export type ChatTagsType = Awaited<ReturnType<typeof getTagsServerSide>>;
+import type { ChatTagsType } from "@/lib/data/chat-tags/type";
 
 export async function getTagsServerSide(
   conversationId: string | number,
   botId: string
-) {
+): Promise<ChatTagsType | { tags: null }> {
   const tags = await prisma.chatTagging.findFirst({
     where: {
       conversation_id:
@@ -16,16 +14,20 @@ export async function getTagsServerSide(
           : conversationId,
       bot_id: parseInt(botId, 10)
     },
-    select: { tags: true, ai_generated_tags: true, user_tags: true }
+    select: { other: true }
   });
-  if (!tags) {
+
+  if (!tags || !tags.other) {
     return {
       tags: null
     };
   }
 
+  // @ts-expect-error
+  const parsedTags = JSON.parse(tags.other) as ChatTagsType;
+
   return {
-    tags: formatChatTags(tags.tags),
-    aiGeneratedTags: formatChatTags(tags.ai_generated_tags)
+    tags: parsedTags.tags,
+    ai_generated_tags: tags.ai_generated_tags
   };
 }

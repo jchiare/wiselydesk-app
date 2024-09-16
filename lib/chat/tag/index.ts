@@ -53,10 +53,20 @@ export class TagChat {
         data: {
           bot_id: chat.botId,
           conversation_id: parseInt(chat.conversationId, 10),
-          tags: chat.tags.join(","),
-          ai_generated_tags: chat.aiGeneratedTags?.join(",") || undefined,
+          tags: chat.tags.name,
+          ai_generated_tags: chat.aiGeneratedTags?.name || undefined,
           cost: chat.cost,
-          updated_at: new Date()
+          updated_at: new Date(),
+          other: {
+            tags: {
+              name: chat.tags.name,
+              children: chat.tags.children
+            },
+            ai_generated_tags: chat.aiGeneratedTags && {
+              name: chat.aiGeneratedTags.name,
+              children: chat.aiGeneratedTags.children
+            }
+          }
         }
       });
 
