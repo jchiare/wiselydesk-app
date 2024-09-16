@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import type { ChatTagsType } from "@/lib/data/chat-tags/type";
+import type { ChatTagsType, ChatTagsElement } from "@/lib/data/chat-tags/type";
 import { useRouter } from "next/navigation";
 
 const Tag = ({ text, isLoading }: { text: string; isLoading?: boolean }) => (
@@ -16,7 +16,7 @@ const TagList = ({
   tooltipText,
   isLoading
 }: {
-  tags: string[] | undefined | null;
+  tags: ChatTagsElement | undefined | null;
   title: string;
   tooltipText: string;
   isLoading?: boolean;
@@ -49,13 +49,20 @@ const TagList = ({
         />
       </svg>
     </div>
-    {tags && tags.length > 0 ? (
+    {tags && tags.name ? (
       <ul className="flex flex-wrap">
-        {tags.map((tag, index) => (
-          <li key={index} className="m-1">
-            <Tag text={tag} isLoading={isLoading} />
-          </li>
-        ))}
+        <li className="m-1">
+          <Tag text={tags.name} isLoading={isLoading} />
+        </li>
+        {tags.children && tags.children.length > 0 && (
+          <ul className="ml-4 flex flex-wrap">
+            {tags.children.map((child, index) => (
+              <li key={index} className="m-1">
+                <Tag text={child} isLoading={isLoading} />
+              </li>
+            ))}
+          </ul>
+        )}
       </ul>
     ) : (
       <p className={`italic text-gray-500`}>No tags</p>
@@ -77,11 +84,11 @@ export function Tags({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [newlyCreatedTags, setNewlyCreatedTags] = useState<
-    string[] | null | undefined
+    ChatTagsElement | null | undefined
   >(tags.tags);
-  const [aiGeneratedTags, setAiGeneratedTags] = useState<string[] | undefined>(
-    tags.aiGeneratedTags
-  );
+  const [aiGeneratedTags, setAiGeneratedTags] = useState<
+    ChatTagsElement | undefined
+  >(tags.ai_generated_tags);
 
   const createTags = async () => {
     setIsLoading(true);
@@ -99,7 +106,7 @@ export function Tags({
       const data = (await response.json()) as ChatTagsType;
       console.log("data while creating tags: ", data);
       setNewlyCreatedTags(data.tags);
-      setAiGeneratedTags(data.aiGeneratedTags);
+      setAiGeneratedTags(data.ai_generated_tags);
     } catch (error) {
       console.error("Error creating tags:", error);
     } finally {
@@ -109,7 +116,10 @@ export function Tags({
   };
 
   if (initialIsLoading) {
-    const fakeTags = ["tagging_bigoverhere"];
+    const fakeTags = {
+      name: "loadingbig_things",
+      children: ["hello", "newyork"]
+    };
     return (
       <div className="space-y-4">
         <TagList

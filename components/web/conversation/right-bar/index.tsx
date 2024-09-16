@@ -66,12 +66,16 @@ export async function RightBar({
         </div>
 
         <div className="rounded-md border bg-gray-50 p-4">
-          <Tags
-            tags={tags}
-            conversationId={conversationId}
-            isLoading={isLoading}
-            botId={botId}
-          />
+          {tags && tags.tags ? (
+            <Tags
+              tags={tags}
+              conversationId={conversationId}
+              isLoading={isLoading}
+              botId={botId}
+            />
+          ) : (
+            <div className="italic text-gray-600">No tags found.</div>
+          )}
         </div>
       </div>
       <div className="hidden sm:block">

@@ -23,11 +23,10 @@ export async function getTagsServerSide(
     };
   }
 
-  // @ts-expect-error
-  const parsedTags = JSON.parse(tags.other) as ChatTagsType;
+  const parsedTags = tags.other as ChatTagsType;
 
   return {
     tags: parsedTags.tags,
-    ai_generated_tags: tags.ai_generated_tags
+    ai_generated_tags: parsedTags.ai_generated_tags
   };
 }
