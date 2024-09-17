@@ -3,9 +3,21 @@ import { useState } from "react";
 import type { ChatTagsType, ChatTagsElement } from "@/lib/data/chat-tags/type";
 import { useRouter } from "next/navigation";
 
-const Tag = ({ text, isLoading }: { text: string; isLoading?: boolean }) => (
+const Tag = ({
+  text,
+  isLoading,
+  isChild
+}: {
+  text: string;
+  isLoading?: boolean;
+  isChild: boolean;
+}) => (
   <span
-    className={`mx-2 my-1 inline-block rounded bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800 dark:bg-blue-200 dark:text-blue-800 ${isLoading ? "blur-sm" : ""}`}>
+    className={`mx-2 my-1 inline-block rounded px-2.5 py-0.5 text-xs font-semibold ${
+      isChild
+        ? "bg-blue-200 text-blue-900 dark:bg-blue-300 dark:text-blue-900"
+        : "bg-blue-100 text-blue-800 dark:bg-blue-200 dark:text-blue-800"
+    } ${isLoading ? "blur-sm" : ""}`}>
     {text}
   </span>
 );
@@ -45,13 +57,13 @@ const TagList = ({
     {tags && tags.name ? (
       <ul className="flex flex-wrap">
         <li className="m-1">
-          <Tag text={tags.name} isLoading={isLoading} />
+          <Tag text={tags.name} isLoading={isLoading} isChild={false} />
         </li>
         {tags.children && tags.children.length > 0 && (
           <ul className="ml-4 flex flex-wrap">
             {tags.children.map((child, index) => (
               <li key={index} className="m-1">
-                <Tag text={child} isLoading={isLoading} />
+                <Tag text={child} isLoading={isLoading} isChild={true} />
               </li>
             ))}
           </ul>
