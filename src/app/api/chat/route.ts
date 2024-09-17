@@ -107,12 +107,17 @@ export async function POST(req: Request) {
       userAndAgentMessages as Anthropic.Messages.MessageParam[]
     );
   } else {
-    response = await openai.chat.completions.create({
-      model,
-      messages: formattedMessages,
-      stream: true,
-      temperature: 0
-    });
+    try {
+      response = await openai.chat.completions.create({
+        model,
+        messages: formattedMessages,
+        stream: true,
+        temperature: 0
+      });
+    } catch (error) {
+      console.error("Error creating AI response", error);
+      return new Response("Error creating AI response", { status: 500 });
+    }
   }
 
   // save AI response before finishing to display in web app if
