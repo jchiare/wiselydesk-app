@@ -111,7 +111,17 @@ export const useChatSubmit = ({
       },
       onclose() {
         console.log("Closing SSE connection!");
-        clearStreamingResponse();
+
+        // Handle case where API call has an error
+        if (assistantStreamingResponse === "") {
+          setAssistantStreamingResponse(
+            "We're sorry, there was an error with our server. Please refresh the page and try again, or contact support."
+          );
+          setTimeout(() => setAiResponseDone(true), 1000);
+        } else {
+          clearStreamingResponse();
+        }
+
         controller.abort();
       },
       // To close the SSE connection client side, you need to throw an error
