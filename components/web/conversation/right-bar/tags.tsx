@@ -9,7 +9,6 @@ const Tag = ({ text, isLoading }: { text: string; isLoading?: boolean }) => (
     {text}
   </span>
 );
-
 const TagList = ({
   tags,
   title,
@@ -23,31 +22,25 @@ const TagList = ({
 }) => (
   <div>
     <div className="flex items-center gap-x-2">
-      <h3 className={`font-semibold`}>{title}</h3>{" "}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="lightgray"
-        className="size-5 cursor-help"
-        onMouseEnter={e => {
-          const tooltip = document.createElement("div");
-          tooltip.textContent = tooltipText;
-          tooltip.className =
-            "absolute bg-gray-800 text-white text-xs rounded px-2 py-1";
-          tooltip.style.left = `${e.clientX}px`;
-          tooltip.style.top = `${e.clientY - 30}px`;
-          document.body.appendChild(tooltip);
-        }}
-        onMouseLeave={() => {
-          const tooltip = document.querySelector("div.absolute");
-          if (tooltip) document.body.removeChild(tooltip);
-        }}>
-        <path
-          fillRule="evenodd"
-          d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z"
-          clipRule="evenodd"
-        />
-      </svg>
+      <h3 className="font-semibold">{title}</h3>
+      <div className="group relative">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="lightgray"
+          className="size-5 cursor-help">
+          <path
+            fillRule="evenodd"
+            d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0Zm-7-4a1 1 0 1 1-2 0 1 1 0 0 1 2 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z"
+            clipRule="evenodd"
+          />
+        </svg>
+        <div className="absolute bottom-full left-1/2 mb-2 hidden -translate-x-1/2 group-hover:block">
+          <div className="whitespace-nowrap rounded bg-gray-800 px-2 py-1 text-xs text-white">
+            {tooltipText}
+          </div>
+        </div>
+      </div>
     </div>
     {tags && tags.name ? (
       <ul className="flex flex-wrap">
@@ -65,7 +58,7 @@ const TagList = ({
         )}
       </ul>
     ) : (
-      <p className={`italic text-gray-500`}>No tags</p>
+      <p className="italic text-gray-500">No tags</p>
     )}
   </div>
 );
@@ -76,7 +69,7 @@ export function Tags({
   isLoading: initialIsLoading,
   botId
 }: {
-  tags: ChatTagsType;
+  tags: ChatTagsType | { tags: null };
   conversationId: number;
   isLoading: boolean | undefined;
   botId: string;
@@ -87,8 +80,8 @@ export function Tags({
     ChatTagsElement | null | undefined
   >(tags.tags);
   const [aiGeneratedTags, setAiGeneratedTags] = useState<
-    ChatTagsElement | undefined
-  >(tags.ai_generated_tags);
+    ChatTagsElement | null | undefined
+  >(tags && "ai_generated_tags" in tags ? tags.ai_generated_tags : null);
 
   const createTags = async () => {
     setIsLoading(true);
