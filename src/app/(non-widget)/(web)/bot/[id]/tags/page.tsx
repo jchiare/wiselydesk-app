@@ -33,6 +33,7 @@ export default async function TicketPage({
   const botId = parseInt(params.id, 10);
   const taggedChats = await prisma.chatTagging.findMany({
     where: { bot_id: botId },
+    select: { id: true, conversation_id: true, other: true },
     orderBy: { created_at: "desc" }
   });
 
@@ -73,10 +74,12 @@ export default async function TicketPage({
               </Link>
             </TableCell>
             <TableCell className="max-w-[100px]">
-              {renderTags(taggedChat.tags)}
+              {/* @ts-expect-error */}
+              {renderTags(taggedChat.other.tags)}
             </TableCell>
             <TableCell className="max-w-[100px]">
-              {renderTags(taggedChat.ai_generated_tags)}
+              {/* @ts-expect-error */}
+              {renderTags(taggedChat.other.aiGeneratedTags)}
             </TableCell>
           </TableRow>
         ))}
