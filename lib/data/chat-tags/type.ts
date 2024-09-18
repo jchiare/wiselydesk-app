@@ -8,7 +8,7 @@ export type ChatTagsType = {
   ai_generated_tags: ChatTagsElement;
 };
 
-export type ChatTagsPostResponse = {
+export type ChatTagsResponse = {
   tags: ChatTagsElement;
   aiGeneratedTags: ChatTagsElement;
 };

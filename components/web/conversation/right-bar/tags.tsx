@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
 import type {
-  ChatTagsPostResponse,
+  ChatTagsResponse,
   ChatTagsElement
 } from "@/lib/data/chat-tags/type";
+import { formatChatTags } from "@/lib/data/chat-tags/helper";
 import { useRouter } from "next/navigation";
 
 const Tag = ({
@@ -84,7 +85,7 @@ export function Tags({
   isLoading: initialIsLoading,
   botId
 }: {
-  tags: ChatTagsPostResponse | { tags: null };
+  tags: ChatTagsResponse | { tags: null };
   conversationId: number;
   isLoading: boolean | undefined;
   botId: string;
@@ -111,7 +112,7 @@ export function Tags({
       if (!response.ok) {
         throw new Error("Failed to create tags");
       }
-      const data = (await response.json()) as ChatTagsPostResponse;
+      const data = (await response.json()) as ChatTagsResponse;
       setNewlyCreatedTags(data.tags);
       setAiGeneratedTags(data.aiGeneratedTags);
     } catch (error) {

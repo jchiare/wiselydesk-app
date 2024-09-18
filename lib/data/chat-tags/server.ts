@@ -1,11 +1,11 @@
 import "server-only";
 import prisma from "@/lib/prisma";
-import type { ChatTagsType } from "@/lib/data/chat-tags/type";
+import type { ChatTagsResponse, ChatTagsType } from "@/lib/data/chat-tags/type";
 
 export async function getTagsServerSide(
   conversationId: string | number,
   botId: string
-): Promise<ChatTagsType | { tags: null }> {
+): Promise<ChatTagsResponse | { tags: null }> {
   const tags = await prisma.chatTagging.findFirst({
     where: {
       conversation_id:
@@ -27,6 +27,6 @@ export async function getTagsServerSide(
 
   return {
     tags: parsedTags.tags,
-    ai_generated_tags: parsedTags.ai_generated_tags
+    aiGeneratedTags: parsedTags.ai_generated_tags
   };
 }
