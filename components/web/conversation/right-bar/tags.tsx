@@ -1,6 +1,9 @@
 "use client";
 import { useState } from "react";
-import type { ChatTagsType, ChatTagsElement } from "@/lib/data/chat-tags/type";
+import type {
+  ChatTagsPostResponse,
+  ChatTagsElement
+} from "@/lib/data/chat-tags/type";
 import { useRouter } from "next/navigation";
 
 const Tag = ({
@@ -81,7 +84,7 @@ export function Tags({
   isLoading: initialIsLoading,
   botId
 }: {
-  tags: ChatTagsType | { tags: null };
+  tags: ChatTagsPostResponse | { tags: null };
   conversationId: number;
   isLoading: boolean | undefined;
   botId: string;
@@ -93,7 +96,7 @@ export function Tags({
   >(tags.tags);
   const [aiGeneratedTags, setAiGeneratedTags] = useState<
     ChatTagsElement | null | undefined
-  >(tags && "ai_generated_tags" in tags ? tags.ai_generated_tags : null);
+  >(tags && "aiGeneratedTags" in tags ? tags.aiGeneratedTags : null);
 
   const createTags = async () => {
     setIsLoading(true);
@@ -108,10 +111,9 @@ export function Tags({
       if (!response.ok) {
         throw new Error("Failed to create tags");
       }
-      const data = (await response.json()) as ChatTagsType;
-      console.log("data while creating tags: ", data);
+      const data = (await response.json()) as ChatTagsPostResponse;
       setNewlyCreatedTags(data.tags);
-      setAiGeneratedTags(data.ai_generated_tags);
+      setAiGeneratedTags(data.aiGeneratedTags);
     } catch (error) {
       console.error("Error creating tags:", error);
     } finally {
@@ -156,7 +158,6 @@ export function Tags({
     );
   }
 
-  console.log("newlyCreatedTags: ", newlyCreatedTags);
   return (
     <div className="space-y-4">
       <TagList
