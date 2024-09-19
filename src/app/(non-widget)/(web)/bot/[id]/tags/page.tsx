@@ -33,11 +33,11 @@ export default async function TicketPage({
   }[];
 
   return (
-    <div className="w-full">
-      <div className="mb-4 text-center text-sm text-gray-500">
+    <div className="flex w-full flex-col items-center">
+      <div className="mb-4 items-center text-sm text-gray-500">
         Chats and Tags
       </div>
-      <div className="p-6 pr-10">
+      <div className="w-[90%] p-6">
         {taggedChats.map((item, index) => (
           <TagList
             key={index + item.conversation_id}
