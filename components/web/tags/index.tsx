@@ -1,24 +1,26 @@
-import type { ChatTagsType } from "@/lib/data/chat-tags/type";
+import type { ChatTagsElement } from "@/lib/data/chat-tags/type";
 
 type TagListProps = {
-  tags: ChatTagsType | null;
+  tags: ChatTagsElement;
   usage: string;
 };
 
 export function TagList({ tags, usage }: TagListProps) {
-  console.log(tags);
-  if (tags === null) {
-    return;
-  }
-  const { tags: nonGeneratedTags, ai_generated_tags: aiGeneratedTags } = tags;
-
   return (
     <div className="mb-4 rounded-lg bg-white p-4 shadow-md">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-sm text-gray-500">{nonGeneratedTags.name}</h2>
-          <h1 className="text-2xl font-bold">{nonGeneratedTags.name}</h1>
-          <p className="text-sm text-gray-500">{nonGeneratedTags.name}</p>
+          <h2 className="text-sm text-gray-500">{tags.name}</h2>
+          <h1 className="text-2xl font-bold">{tags.name}</h1>
+          {tags.children.length > 0 ? (
+            tags.children.map(subTag => (
+              <p key={subTag} className="text-sm text-gray-500">
+                {subTag}
+              </p>
+            ))
+          ) : (
+            <p className="text-sm text-gray-500">No subtags</p>
+          )}
         </div>
         <div className="flex space-x-4">
           {/* Bookmark Icon */}

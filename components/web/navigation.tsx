@@ -25,7 +25,12 @@ const createNavigation = (botId: string) => [
   {
     name: "Chat Tags",
     icon: TagIcon,
-    href: `/bot/${botId}/tags`
+    href: `/bot/${botId}/tags/non_ai`
+  },
+  {
+    name: "AI Chat Tags",
+    icon: TagIcon,
+    href: `/bot/${botId}/tags/ai`
   },
   {
     name: "Analytics",
@@ -61,6 +66,8 @@ export default function Navigation() {
     thirdPathSegment,
     fourthPathSegment
   );
+
+  console.log("currentItem: ", currentItem);
 
   return (
     <div className="flex w-full flex-col items-center space-y-1">
@@ -110,6 +117,18 @@ function findCurrentItem(
       return item;
     } else if (
       thirdPathSegment?.includes(item.name.toLowerCase().slice(0, -1))
+    ) {
+      return item;
+    } else if (
+      thirdPathSegment === "tags" &&
+      fourthPathSegment === "non_ai" &&
+      item.name === "Chat Tags"
+    ) {
+      return item;
+    } else if (
+      thirdPathSegment === "tags" &&
+      fourthPathSegment === "ai" &&
+      item.name === "AI Chat Tags"
     ) {
       return item;
     }
