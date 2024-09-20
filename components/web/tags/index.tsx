@@ -1,27 +1,17 @@
-import type { ChatTagsType } from "@/lib/data/chat-tags/type";
-
 type TagListProps = {
-  tags: ChatTagsType | null;
+  tag: string;
   usage: string;
 };
 
-export function TagList({ tags, usage }: TagListProps) {
-  console.log(tags);
-  if (tags === null) {
-    return;
-  }
-  const { tags: nonGeneratedTags, ai_generated_tags: aiGeneratedTags } = tags;
-
+export function TagList({ tag, usage }: TagListProps) {
   return (
     <div className="mb-4 rounded-lg bg-white p-4 shadow-md">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-sm text-gray-500">{nonGeneratedTags.name}</h2>
-          <h1 className="text-2xl font-bold">{nonGeneratedTags.name}</h1>
-          <p className="text-sm text-gray-500">{nonGeneratedTags.name}</p>
+          <h2 className="text-sm text-gray-500">{usage}</h2>
+          <h1 className="text-2xl font-bold">{tag}</h1>
         </div>
         <div className="flex space-x-4">
-          {/* Bookmark Icon */}
           <button className="text-gray-400">
             <svg
               className="h-6 w-6"
@@ -36,7 +26,6 @@ export function TagList({ tags, usage }: TagListProps) {
                 d="M5 3v18l7-5 7 5V3H5z"></path>
             </svg>
           </button>
-          {/* Link Icon */}
           <button className="text-gray-400">
             <svg
               className="h-6 w-6"
@@ -51,7 +40,6 @@ export function TagList({ tags, usage }: TagListProps) {
                 d="M10 13a5 5 0 010-10h4a5 5 0 010 10M10 11a5 5 0 010 10h4a5 5 0 010-10"></path>
             </svg>
           </button>
-          {/* Settings Icon */}
           <button className="text-gray-400">
             <svg
               className="h-6 w-6"
