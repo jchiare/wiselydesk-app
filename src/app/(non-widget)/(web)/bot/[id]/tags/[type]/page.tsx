@@ -44,7 +44,7 @@ export default async function TicketPage({
   return (
     <div className="flex w-full flex-col items-center">
       <div className="my-4 items-center text-sm text-gray-500">
-        {type !== "ai" ? "None AI generated" : "AI generated"} chat tags
+        {type !== "ai" ? "Not AI generated" : "AI generated"} chat tags
       </div>
       <div className="w-[90%] p-6">
         {sortedTags.map((tag, index) => (
