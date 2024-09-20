@@ -23,13 +23,33 @@ export default async function TicketPage({
     conversation_id: number;
     other: ChatTagsType;
   }[];
+  const escalatedChats = await prisma.escalation.findMany({
+    where: {
+      bot_id: botId,
+      conversation_id: { in: taggedChats.map(chat => chat.conversation_id) },
+      deleted_at: null
+    },
+    select: { conversation_id: true }
+  });
+
+  const escalatedChatIds = new Set(
+    escalatedChats.map(chat => chat.conversation_id)
+  );
 
   let total = 0;
   const parentTagCount: Map<string, number> = new Map();
   const childTagCount: Map<string, number> = new Map();
+  const escalatedTagCount: Map<string, number> = new Map();
   for (const chat of taggedChats) {
     const tags = type === "ai" ? chat.other.ai_generated_tags : chat.other.tags;
     parentTagCount.set(tags.name, (parentTagCount.get(tags.name) || 0) + 1);
+
+    if (escalatedChatIds.has(chat.conversation_id)) {
+      escalatedTagCount.set(
+        tags.name,
+        (escalatedTagCount.get(tags.name) || 0) + 1
+      );
+    }
 
     for (const tag of tags.children) {
       childTagCount.set(tag, (childTagCount.get(tag) || 0) + 1);
@@ -51,7 +71,7 @@ export default async function TicketPage({
           <TagList
             key={index + tag}
             tag={tag}
-            usage={`${parentTagCount.get(tag) || 0} out of ${total} chats (${(((parentTagCount.get(tag) || 0) / total) * 100).toFixed(1)}%) have this tag`}
+            usage={`${parentTagCount.get(tag) || 0} out of ${total} chats (${(((parentTagCount.get(tag) || 0) / total) * 100).toFixed(1)}%) have this tag, ${escalatedTagCount.get(tag) || 0} escalated (${(((escalatedTagCount.get(tag) || 0) / (parentTagCount.get(tag) || 1)) * 100).toFixed(1)}%)`}
           />
         ))}
       </div>
