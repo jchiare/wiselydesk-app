@@ -67,8 +67,6 @@ export default function Navigation() {
     fourthPathSegment
   );
 
-  console.log("currentItem: ", currentItem);
-
   return (
     <div className="flex w-full flex-col items-center space-y-1">
       {navigation.map(item =>
