@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/tag/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE/chats",
       "schedule": "0 0 30 2 *"
+    },
+    {
+      "path": "/api/cron/tag/qGmNXgVcRRwVpL6i2bIDDYvPc8lJcSvndKE7DUZzq5M/chats",
+      "schedule": "0 0 30 2 *"
     }
   ]
 }
