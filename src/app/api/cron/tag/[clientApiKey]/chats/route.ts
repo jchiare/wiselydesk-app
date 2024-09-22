@@ -26,7 +26,6 @@ export async function GET(request: NextRequest) {
 
   if (!bot) return new Response("Missing", { status: 404 });
 
-  // Section to get the conversations that will be tagged
   const lastDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
   const chatsLastDay = await prisma.conversation.findMany({
     where: {
@@ -45,12 +44,13 @@ export async function GET(request: NextRequest) {
   const chatIds = chatsLastDay.map(chat => chat.id);
 
   const conversationTagger = new TagChat(bot.id);
-  const { taggedChats, batchUpdateSuccessful } =
-    await conversationTagger.tagMultipleConversations(chatIds);
+  const taggedChats = [];
+  for (const chatId of chatIds) {
+    const taggedChat = await conversationTagger.tagConversation(chatId);
+    taggedChats.push(taggedChat);
+  }
 
-  await prisma.$disconnect();
   return Response.json({
-    recentlyTaggedChats: taggedChats,
-    batchUpdateSuccessful
+    recentlyTaggedChats: taggedChats
   });
 }

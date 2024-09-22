@@ -4,7 +4,7 @@ import { TagList } from "@/components/web/tags";
 import type { ChatTagsType } from "@/lib/data/chat-tags/type";
 import { Prisma } from "@prisma/client";
 
-export default async function TicketPage({
+export default async function TagsPage({
   params
 }: {
   params: { id: string; type: string };
