@@ -1,3 +1,6 @@
+"use client";
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
+
 type TagListProps = {
   tag: string;
   usage: {
@@ -23,6 +26,12 @@ export function TagList({ tag, usage }: TagListProps) {
     (escalatedCount / (chatsWithTagCount || 1)) *
     100
   ).toFixed(1);
+
+  const sortedSubtags = subtags.sort((a, b) => b.count - a.count);
+  const MAX_VISIBLE_SUBTAGS = 5;
+  const visibleSubtags = sortedSubtags.slice(0, MAX_VISIBLE_SUBTAGS);
+  const hiddenSubtags = sortedSubtags.slice(MAX_VISIBLE_SUBTAGS);
+
   return (
     <div className="mb-4 rounded-lg bg-white p-6 shadow-md">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -53,7 +62,7 @@ export function TagList({ tag, usage }: TagListProps) {
         <h3 className="mb-2 text-base font-semibold text-gray-700">Subtags</h3>
         {subtags.length > 0 ? (
           <div className="flex flex-wrap gap-2">
-            {subtags.map(tag => (
+            {visibleSubtags.map(tag => (
               <div
                 key={tag.name}
                 className="flex items-center rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100">
@@ -63,6 +72,37 @@ export function TagList({ tag, usage }: TagListProps) {
                 </span>
               </div>
             ))}
+            {hiddenSubtags.length > 0 && (
+              <Popover className="relative">
+                <PopoverButton className="flex items-center rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100">
+                  +{hiddenSubtags.length} more
+                </PopoverButton>
+                <PopoverPanel
+                  className="absolute z-10 mt-2 w-64 rounded-md bg-white p-2 shadow-lg ring-1 ring-black ring-opacity-5"
+                  anchor={{
+                    to: "bottom",
+                    gap: "0.5rem",
+                    padding: "8px"
+                  }}
+                  transition
+                  focus>
+                  <div className="max-h-60 overflow-y-auto">
+                    {hiddenSubtags.map(tag => (
+                      <div
+                        key={tag.name}
+                        className="flex items-center justify-between rounded-md p-2 hover:bg-blue-100">
+                        <span className="text-sm font-medium text-blue-600">
+                          {tag.name}
+                        </span>
+                        <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-600">
+                          {tag.count}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </PopoverPanel>
+              </Popover>
+            )}
           </div>
         ) : (
           <p className="text-sm text-gray-500">No subtags</p>
