@@ -28,8 +28,8 @@ export function TagList({ tag, usage }: TagListProps) {
   ).toFixed(1);
 
   const sortedSubtags = subtags.sort((a, b) => b.count - a.count);
-  const visibleSubtags = sortedSubtags.slice(0, 6);
-  const hiddenSubtags = sortedSubtags.slice(0);
+  const visibleSubtags = sortedSubtags.slice(0, 5);
+  const hiddenSubtags = sortedSubtags.slice(5);
 
   return (
     <div className="mb-4 rounded-lg bg-white p-6 shadow-md">
