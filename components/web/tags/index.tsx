@@ -89,11 +89,11 @@ export function TagList({ tag, usage }: TagListProps) {
                     {hiddenSubtags.map(tag => (
                       <div
                         key={tag.name}
-                        className="flex items-center justify-between rounded-md p-2 hover:bg-blue-50">
-                        <span className="text-sm font-medium text-blue-700">
+                        className="flex items-center justify-between rounded-md p-2 hover:bg-blue-100">
+                        <span className="text-sm font-medium text-blue-600">
                           {tag.name}
                         </span>
-                        <span className="rounded-full bg-blue-200 px-2 py-0.5 text-xs font-semibold text-blue-700">
+                        <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-semibold text-blue-600">
                           {tag.count}
                         </span>
                       </div>
