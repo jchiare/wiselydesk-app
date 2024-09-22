@@ -71,7 +71,11 @@ export default async function TagsPage({
           <TagList
             key={index + tag}
             tag={tag}
-            usage={`${parentTagCount.get(tag) || 0} out of ${total} chats (${(((parentTagCount.get(tag) || 0) / total) * 100).toFixed(1)}%) have this tag, ${escalatedTagCount.get(tag) || 0} escalated (${(((escalatedTagCount.get(tag) || 0) / (parentTagCount.get(tag) || 1)) * 100).toFixed(1)}%)`}
+            usage={{
+              chatsWithTagCount: parentTagCount.get(tag) || 0,
+              totalChats: total,
+              escalatedCount: escalatedTagCount.get(tag) || 0
+            }}
           />
         ))}
       </div>

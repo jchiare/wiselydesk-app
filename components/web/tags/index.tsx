@@ -1,59 +1,44 @@
 type TagListProps = {
   tag: string;
-  usage: string;
+  usage: {
+    chatsWithTagCount: number | undefined;
+    totalChats: number;
+    escalatedCount: number | undefined;
+  };
 };
 
 export function TagList({ tag, usage }: TagListProps) {
+  const { chatsWithTagCount = 0, totalChats, escalatedCount = 0 } = usage;
+  const tagPercentage = ((chatsWithTagCount / totalChats) * 100).toFixed(1);
+  const escalatedPercentage = (
+    (escalatedCount / (chatsWithTagCount || 1)) *
+    100
+  ).toFixed(1);
+
   return (
     <div className="mb-4 rounded-lg bg-white p-4 shadow-md">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-sm text-gray-500">{usage}</h2>
           <h1 className="text-2xl font-bold">{tag}</h1>
+          <h2 className="text-sm italic text-gray-500">{`${chatsWithTagCount} out of ${totalChats} chats (${tagPercentage}%)`}</h2>
         </div>
-        <div className="flex space-x-4">
-          <button className="text-gray-400">
+        <div className="flex flex-col justify-start">
+          <p className="flex items-center text-sm italic text-gray-400">
             <svg
-              className="h-6 w-6"
+              xmlns="http://www.w3.org/2000/svg"
               fill="none"
-              stroke="currentColor"
               viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="mr-1 size-4">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 3v18l7-5 7 5V3H5z"></path>
+                d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
+              />
             </svg>
-          </button>
-          <button className="text-gray-400">
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M10 13a5 5 0 010-10h4a5 5 0 010 10M10 11a5 5 0 010 10h4a5 5 0 010-10"></path>
-            </svg>
-          </button>
-          <button className="text-gray-400">
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M19.428 15.341A8 8 0 1120 12v1a9 9 0 11-1.338 2.34"></path>
-            </svg>
-          </button>
+            {`${escalatedCount} escalated (${escalatedPercentage}%)`}
+          </p>
         </div>
       </div>
     </div>

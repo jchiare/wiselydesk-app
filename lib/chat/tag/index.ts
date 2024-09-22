@@ -165,32 +165,4 @@ export class TagChat {
       });
     });
   }
-
-  async tagMultipleConversations(conversationIds: number[]): Promise<{
-    taggedChats: TagChatResponse[];
-    batchUpdateSuccessful: boolean;
-  }> {
-    const taggedChats: TagChatResponse[] = [];
-    let batchUpdateSuccessful = false;
-
-    try {
-      for (const conversationId of conversationIds) {
-        const taggedChat = await this.tagConversation(conversationId);
-        if (taggedChat) {
-          taggedChats.push(taggedChat);
-        }
-      }
-      batchUpdateSuccessful = true;
-      console.log(`Successfully tagged ${taggedChats.length} chats`);
-    } catch (error) {
-      console.error("Error updating chats:", error);
-    } finally {
-      await prisma.$disconnect();
-    }
-
-    return {
-      taggedChats,
-      batchUpdateSuccessful
-    };
-  }
 }
