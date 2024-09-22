@@ -1,14 +1,17 @@
 import prisma from "@/lib/prisma";
-
 import { TagList } from "@/components/web/tags";
 import type { ChatTagsType } from "@/lib/data/chat-tags/type";
 import { Prisma } from "@prisma/client";
+import { unstable_noStore } from "next/cache";
 
 export default async function TagsPage({
   params
 }: {
   params: { id: string; type: string };
 }) {
+  // Opt out of caching for this route
+  unstable_noStore();
+
   const botId = parseInt(params.id, 10);
   const type = params.type;
   const taggedChats = (await prisma.chatTagging.findMany({
