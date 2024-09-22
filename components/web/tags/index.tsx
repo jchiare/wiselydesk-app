@@ -28,8 +28,9 @@ export function TagList({ tag, usage }: TagListProps) {
   ).toFixed(1);
 
   const sortedSubtags = subtags.sort((a, b) => b.count - a.count);
-  const visibleSubtags = sortedSubtags.slice(0, 5);
-  const hiddenSubtags = sortedSubtags.slice(5);
+  const MAX_VISIBLE_SUBTAGS = 5;
+  const visibleSubtags = sortedSubtags.slice(0, MAX_VISIBLE_SUBTAGS);
+  const hiddenSubtags = sortedSubtags.slice(MAX_VISIBLE_SUBTAGS);
 
   return (
     <div className="mb-4 rounded-lg bg-white p-6 shadow-md">
