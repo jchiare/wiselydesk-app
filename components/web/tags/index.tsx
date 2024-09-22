@@ -4,11 +4,20 @@ type TagListProps = {
     chatsWithTagCount: number | undefined;
     totalChats: number;
     escalatedCount: number | undefined;
+    subtags: {
+      name: string;
+      count: number;
+    }[];
   };
 };
 
 export function TagList({ tag, usage }: TagListProps) {
-  const { chatsWithTagCount = 0, totalChats, escalatedCount = 0 } = usage;
+  const {
+    chatsWithTagCount = 0,
+    totalChats,
+    escalatedCount = 0,
+    subtags
+  } = usage;
   const tagPercentage = ((chatsWithTagCount / totalChats) * 100).toFixed(1);
   const escalatedPercentage = (
     (escalatedCount / (chatsWithTagCount || 1)) *
@@ -20,10 +29,22 @@ export function TagList({ tag, usage }: TagListProps) {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">{tag}</h1>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {subtags.map(tag => (
+              <div
+                key={tag.name}
+                className="flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-sm font-medium text-blue-800">
+                <span>{tag.name}</span>
+                <span className="ml-2 rounded-full bg-blue-200 px-2.5 py-0.5 text-xs font-semibold text-blue-800">
+                  {tag.count}
+                </span>
+              </div>
+            ))}
+          </div>
           <h2 className="text-sm italic text-gray-500">{`${chatsWithTagCount} out of ${totalChats} chats (${tagPercentage}%)`}</h2>
         </div>
         <div className="flex flex-col justify-start">
-          <p className="flex items-center text-sm italic text-gray-400">
+          <p className="flex items-center text-sm text-gray-400">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -37,7 +58,8 @@ export function TagList({ tag, usage }: TagListProps) {
                 d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
               />
             </svg>
-            {`${escalatedCount} escalated (${escalatedPercentage}%)`}
+            {`${escalatedCount} escalated`}
+            <i className="ml-1">{`(${escalatedPercentage}%)`}</i>
           </p>
         </div>
       </div>

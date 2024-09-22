@@ -37,28 +37,45 @@ export default async function TagsPage({
   );
 
   let total = 0;
-  const parentTagCount: Map<string, number> = new Map();
-  const childTagCount: Map<string, number> = new Map();
+  const tagMap: Map<
+    string,
+    { count: number; subtags: { name: string; count: number }[] }
+  > = new Map();
   const escalatedTagCount: Map<string, number> = new Map();
   for (const chat of taggedChats) {
     const tags = type === "ai" ? chat.other.ai_generated_tags : chat.other.tags;
-    parentTagCount.set(tags.name, (parentTagCount.get(tags.name) || 0) + 1);
 
+    const tagInfo = tagMap.get(tags.name);
+    if (tagInfo) {
+      tagInfo.count++;
+      for (const childTag of tags.children) {
+        const existingSubtag = tagInfo.subtags.find(
+          subtag => subtag.name === childTag
+        );
+        if (existingSubtag) {
+          existingSubtag.count++;
+        } else {
+          tagInfo.subtags.push({ name: childTag, count: 1 });
+        }
+      }
+    } else {
+      const subtags = tags.children.map(child => ({ name: child, count: 1 }));
+      tagMap.set(tags.name, {
+        count: 1,
+        subtags
+      });
+    }
     if (escalatedChatIds.has(chat.conversation_id)) {
       escalatedTagCount.set(
         tags.name,
         (escalatedTagCount.get(tags.name) || 0) + 1
       );
     }
-
-    for (const tag of tags.children) {
-      childTagCount.set(tag, (childTagCount.get(tag) || 0) + 1);
-    }
     total++;
   }
 
-  const sortedTags = Array.from(parentTagCount.entries())
-    .sort((a, b) => b[1] - a[1])
+  const sortedTags = Array.from(tagMap.entries())
+    .sort((a, b) => b[1].count - a[1].count)
     .map(entry => entry[0]);
 
   return (
@@ -66,15 +83,16 @@ export default async function TagsPage({
       <div className="my-4 items-center text-sm text-gray-500">
         {type !== "ai" ? "Not AI generated" : "AI generated"} chat tags
       </div>
-      <div className="w-[90%] p-6">
+      <div className="w-3/4 p-6">
         {sortedTags.map((tag, index) => (
           <TagList
             key={index + tag}
             tag={tag}
             usage={{
-              chatsWithTagCount: parentTagCount.get(tag) || 0,
+              chatsWithTagCount: tagMap.get(tag)?.count || 0,
               totalChats: total,
-              escalatedCount: escalatedTagCount.get(tag) || 0
+              escalatedCount: escalatedTagCount.get(tag) || 0,
+              subtags: tagMap.get(tag)?.subtags || []
             }}
           />
         ))}
