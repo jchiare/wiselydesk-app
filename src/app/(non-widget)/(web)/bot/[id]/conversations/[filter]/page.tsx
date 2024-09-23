@@ -24,30 +24,36 @@ type ParamsProps = {
 async function getConversations({
   orgId,
   botId,
-  filter
+  filter,
+  tags
 }: {
   orgId: number;
   botId: string;
   filter: string;
+  tags?: string[];
 }) {
-  let url = `${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversations`;
+  let url = new URL(`${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversations`);
 
   switch (filter.toLowerCase()) {
     case "up":
-      url += "?is_helpful=true";
+      url.searchParams.append("is_helpful", "true");
       break;
     case "down":
-      url += "?is_helpful=false";
+      url.searchParams.append("is_helpful", "false");
       break;
     case "escalated":
-      url += "?filter=escalated";
+      url.searchParams.append("filter", "escalated");
       break;
     // No default case needed unless you want to handle unexpected filters
   }
 
+  if (tags && tags.length > 0) {
+    tags.forEach(tag => url.searchParams.append("tags", tag));
+  }
+
   let res;
   try {
-    res = await fetch(url, { cache: "no-cache" });
+    res = await fetch(url.toString(), { cache: "no-cache" });
   } catch (e) {
     console.error(e);
     throw e;
@@ -56,18 +62,26 @@ async function getConversations({
 }
 
 export default async function ConversationsPage({
-  params
+  params,
+  searchParams
 }: {
   params: ParamsProps;
+  searchParams: { tags?: string | string[] };
 }) {
   const { filter = "all", id: botId } = params;
   const session = await fetchServerSession();
 
   const orgId = orgChooser(session);
+  const tags = Array.isArray(searchParams.tags)
+    ? searchParams.tags
+    : searchParams.tags
+      ? [searchParams.tags]
+      : undefined;
   const data = await getConversations({
     orgId,
     botId,
-    filter
+    filter,
+    tags
   });
 
   return (
@@ -96,7 +110,7 @@ export default async function ConversationsPage({
           </th>
           <th
             scope="col"
-            className=" px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
+            className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">
             First Message
           </th>
         </tr>
