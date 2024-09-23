@@ -56,7 +56,7 @@ async function getConversations(
     whereClause.rating = isHelpfulQuery === "true" ? true : false;
   }
 
-  const conversations: ConversationExtended[] =
+  let conversations: ConversationExtended[] =
     await prisma.conversation.findMany({
       where: whereClause,
       orderBy: {
@@ -83,7 +83,13 @@ async function getConversations(
       }
     });
 
-    console.log("chattags: ", chatTags);
+    const taggedConversationIds = new Set(
+      chatTags.map(ct => ct.conversation_id)
+    );
+
+    conversations = conversations.filter(conversation =>
+      taggedConversationIds.has(conversation.id)
+    );
   }
 
   return conversations;
