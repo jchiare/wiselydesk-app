@@ -110,7 +110,6 @@ export const GET = async (req: Request, { params }: Params) => {
 
   const isHelpfulQuery = searchParams.get("is_helpful");
   const tags = searchParams.get("tags");
-  console.log("tags: ", tags);
 
   try {
     const conversations = await getConversations(
@@ -147,34 +146,3 @@ export const GET = async (req: Request, { params }: Params) => {
     });
   }
 };
-
-/*
-  if (tags && tags.length > 0) {
-    const chatTaggings = await prisma.chatTagging.findMany({
-      where: {
-        bot_id: botId,
-        conversation_id: { in: conversations.map(c => c.id) },
-        other: {
-          path: ["tags", "name"],
-          array_contains: tags
-        }
-      },
-      select: {
-        conversation_id: true,
-        other: true
-      }
-    });
-
-    const taggedConversationIds = new Set(
-      chatTaggings.map(ct => ct.conversation_id)
-    );
-    conversations = conversations.filter(c => taggedConversationIds.has(c.id));
-
-    // Add tags to conversations
-    const tagMap = new Map(
-      chatTaggings.map(ct => [ct.conversation_id, ct.other.tags.name])
-    );
-    conversations.forEach(c => {
-      c.tags = tagMap.get(c.id);
-    });
-    */
