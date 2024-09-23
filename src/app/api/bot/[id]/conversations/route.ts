@@ -38,9 +38,9 @@ async function validateBotAndOrg(botId: number, organizationId: number) {
 async function getConversations(
   botId: number,
   isEscalatedQuery: boolean | null,
-  isHelpfulQuery: string | null
+  isHelpfulQuery: string | null,
+  tags: string[] | null
 ): Promise<ConversationExtended[]> {
-  // Construct the where clause conditionally
   const whereClause: any = {
     bot_id: botId,
     created_at: {
@@ -56,13 +56,41 @@ async function getConversations(
     whereClause.rating = isHelpfulQuery === "true" ? true : false;
   }
 
-  const conversations: ConversationExtended[] =
+  let conversations: ConversationExtended[] =
     await prisma.conversation.findMany({
       where: whereClause,
       orderBy: {
         created_at: "desc"
       }
     });
+
+  if (tags && tags.length > 0) {
+    const whereQuery = tags.map(tag => ({
+      bot_id: botId,
+      conversation_id: { in: conversations.map(c => c.id) },
+      other: {
+        path: "$.tags.name",
+        equals: tag
+      }
+    }));
+    const chatTags = await prisma.chatTagging.findMany({
+      where: {
+        OR: whereQuery
+      },
+      select: {
+        conversation_id: true,
+        other: true
+      }
+    });
+
+    const taggedConversationIds = new Set(
+      chatTags.map(ct => ct.conversation_id)
+    );
+
+    conversations = conversations.filter(conversation =>
+      taggedConversationIds.has(conversation.id)
+    );
+  }
 
   return conversations;
 }
@@ -81,12 +109,14 @@ export const GET = async (req: Request, { params }: Params) => {
   const isEscalatedQuery = filterQuery === "escalated";
 
   const isHelpfulQuery = searchParams.get("is_helpful");
+  const tags = searchParams.get("tags");
 
   try {
     const conversations = await getConversations(
       botId,
       isEscalatedQuery,
-      isHelpfulQuery
+      isHelpfulQuery,
+      tags ? tags.split(",") : null
     );
 
     if (isEscalatedQuery) {
