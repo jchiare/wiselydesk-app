@@ -1,4 +1,7 @@
+"use client";
 import { Subtags } from "./subtags";
+import useCustomQueryString from "@/lib/web/use-custom-query-string";
+import { useRouter } from "next/navigation";
 
 type TagListProps = {
   tag: string;
@@ -28,8 +31,19 @@ export function TagList({ tag, usage }: TagListProps) {
 
   const sortedSubtags = subtags.sort((a, b) => b.count - a.count);
 
+  const { getBotId, createQueryString } = useCustomQueryString();
+  const router = useRouter();
+
+  const handleClick = () => {
+    const botId = getBotId();
+    const queryString = createQueryString("tags", tag);
+    router.push(`/bot/${botId}/conversations/all?${queryString}`);
+  };
+
   return (
-    <div className="mb-4 rounded-lg bg-white p-6 shadow-md">
+    <div
+      className="mb-4 cursor-pointer rounded-lg bg-white p-6 shadow-md transition-colors duration-200 hover:bg-blue-50"
+      onClick={handleClick}>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between">
         <div className="mb-4 md:mb-0">
           <h1 className="text-2xl font-bold text-gray-800">{tag}</h1>
@@ -51,7 +65,7 @@ export function TagList({ tag, usage }: TagListProps) {
               d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"
             />
           </svg>
-          <span>{`${escalatedCount} escalated (${escalatedPercentage}%)`}</span>
+          <span>{`${escalatedPercentage}% escalated`}</span>
         </div>
       </div>
       <Subtags subtags={sortedSubtags} />
