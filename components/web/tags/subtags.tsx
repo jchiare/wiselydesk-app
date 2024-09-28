@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
+import { useRouter } from "next/navigation";
+import useCustomQueryString from "@/lib/web/use-custom-query-string";
 
 interface SubtagProps {
   name: string;
@@ -9,12 +11,27 @@ interface SubtagProps {
 
 interface SubtagsProps {
   subtags: SubtagProps[];
+  parentTag: string;
 }
 
-export function Subtags({ subtags }: SubtagsProps): React.ReactElement {
+export function Subtags({
+  subtags,
+  parentTag
+}: SubtagsProps): React.ReactElement {
   const MAX_VISIBLE_SUBTAGS = 4;
   const visibleSubtags = subtags.slice(0, MAX_VISIBLE_SUBTAGS);
   const hiddenSubtags = subtags.slice(MAX_VISIBLE_SUBTAGS);
+
+  const router = useRouter();
+  const { getBotId, createQueryString } = useCustomQueryString();
+
+  const handleSubtagClick = (childrenTag: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    const botId = getBotId();
+    const queryString = createQueryString("tags", parentTag);
+    const fullQueryString = `${queryString}&${createQueryString("childrenTags", childrenTag)}`;
+    router.push(`/bot/${botId}/conversations/all?${fullQueryString}`);
+  };
 
   return (
     <div className="mt-4">
@@ -23,7 +40,8 @@ export function Subtags({ subtags }: SubtagsProps): React.ReactElement {
           {visibleSubtags.map(tag => (
             <div
               key={tag.name}
-              className="flex items-center rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100">
+              className="flex cursor-pointer items-center rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700 transition-colors hover:bg-blue-100"
+              onClick={event => handleSubtagClick(tag.name, event)}>
               <span>{tag.name}</span>
               <span className="ml-2 rounded-full bg-blue-200 px-2 py-0.5 text-xs font-semibold">
                 {tag.count}
@@ -60,7 +78,8 @@ export function Subtags({ subtags }: SubtagsProps): React.ReactElement {
                   {hiddenSubtags.map(tag => (
                     <div
                       key={tag.name}
-                      className="flex items-center justify-between rounded-md p-2 hover:bg-blue-100">
+                      className="flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-blue-100"
+                      onClick={event => handleSubtagClick(tag.name, event)}>
                       <span className="text-sm font-medium text-blue-600">
                         {tag.name}
                       </span>

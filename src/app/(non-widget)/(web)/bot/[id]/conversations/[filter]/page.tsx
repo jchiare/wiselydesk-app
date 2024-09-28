@@ -25,12 +25,14 @@ async function getConversations({
   orgId,
   botId,
   filter,
-  tags
+  tags,
+  childrenTags
 }: {
   orgId: number;
   botId: string;
   filter: string;
   tags?: string[];
+  childrenTags?: string[];
 }) {
   let url = new URL(`${NEXTJS_BACKEND_URL}/api/bot/${botId}/conversations`);
 
@@ -51,6 +53,10 @@ async function getConversations({
     tags.forEach(tag => url.searchParams.append("tags", tag));
   }
 
+  if (childrenTags && childrenTags.length > 0) {
+    childrenTags.forEach(tag => url.searchParams.append("childrenTags", tag));
+  }
+
   let res;
   try {
     res = await fetch(url.toString(), { cache: "no-cache" });
@@ -66,7 +72,7 @@ export default async function ConversationsPage({
   searchParams
 }: {
   params: ParamsProps;
-  searchParams: { tags?: string | string[] };
+  searchParams: { tags?: string | string[]; childrenTags?: string | string[] };
 }) {
   const { filter = "all", id: botId } = params;
   const session = await fetchServerSession();
@@ -77,11 +83,17 @@ export default async function ConversationsPage({
     : searchParams.tags
       ? [searchParams.tags]
       : undefined;
+  const childrenTags = Array.isArray(searchParams.childrenTags)
+    ? searchParams.childrenTags
+    : searchParams.childrenTags
+      ? [searchParams.childrenTags]
+      : undefined;
   const data = await getConversations({
     orgId,
     botId,
     filter,
-    tags
+    tags,
+    childrenTags
   });
 
   return (

@@ -68,7 +68,7 @@ export function TagList({ tag, usage }: TagListProps) {
           <span>{`${escalatedPercentage}% escalated`}</span>
         </div>
       </div>
-      <Subtags subtags={sortedSubtags} />
+      <Subtags subtags={sortedSubtags} parentTag={tag} />
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { type Conversation } from "@prisma/client";
+import { Prisma, type Conversation } from "@prisma/client";
 
 type Params = {
   params: {
@@ -39,7 +39,8 @@ async function getConversations(
   botId: number,
   isEscalatedQuery: boolean | null,
   isHelpfulQuery: string | null,
-  tags: string[] | null
+  tags: string[] | null,
+  childrenTags: string[] | null
 ): Promise<ConversationExtended[]> {
   const whereClause: any = {
     bot_id: botId,
@@ -64,7 +65,26 @@ async function getConversations(
       }
     });
 
-  if (tags && tags.length > 0) {
+  if (childrenTags && childrenTags.length > 0) {
+    const childTag = childrenTags[0];
+
+    const query = Prisma.sql`
+      SELECT conversation_id, other
+      FROM chat_tagging
+      WHERE bot_id = ${botId}
+      AND conversation_id IN (${Prisma.join(conversations.map(c => c.id))})
+      AND JSON_CONTAINS(JSON_EXTRACT(other, '$.tags.children'), ${JSON.stringify(childTag)})
+    `;
+    const chatTags = await prisma.$queryRaw(query);
+
+    const taggedConversationIds = new Set(
+      (chatTags as { conversation_id: number }[]).map(ct => ct.conversation_id)
+    );
+
+    conversations = conversations.filter(conversation =>
+      taggedConversationIds.has(conversation.id)
+    );
+  } else if (tags && tags.length > 0) {
     const whereQuery = tags.map(tag => ({
       bot_id: botId,
       conversation_id: { in: conversations.map(c => c.id) },
@@ -73,6 +93,7 @@ async function getConversations(
         equals: tag
       }
     }));
+
     const chatTags = await prisma.chatTagging.findMany({
       where: {
         OR: whereQuery
@@ -110,13 +131,15 @@ export const GET = async (req: Request, { params }: Params) => {
 
   const isHelpfulQuery = searchParams.get("is_helpful");
   const tags = searchParams.get("tags");
+  const childrenTags = searchParams.get("childrenTags");
 
   try {
     const conversations = await getConversations(
       botId,
       isEscalatedQuery,
       isHelpfulQuery,
-      tags ? tags.split(",") : null
+      tags ? tags.split(",") : null,
+      childrenTags ? childrenTags.split(",") : null
     );
 
     if (isEscalatedQuery) {
