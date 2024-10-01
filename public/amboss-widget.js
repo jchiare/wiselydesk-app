@@ -163,7 +163,8 @@ if (
   ALWAYS_ALLOW_WIDGET_URLS.some(allowedUrl => url.includes(allowedUrl)) ||
   isOutsideBusinessHours()
 ) {
-  const isEnglish = url.includes("en-us");
+  const isEnglish =
+    url.includes("en-us") || url.startsWith("https://amboss.com/us");
   createIFrame(isEnglish, wiselyDeskWidgetOpen);
   hideZendeskWidget("#zw-customLauncher");
   createSupportWidgetButton(wiselyDeskWidgetOpen);
