@@ -4,7 +4,7 @@ let wiselyDeskWidgetOpen = false;
 const nycBusinessHours = {
   start: 9,
   end: 17,
-  timeZone: "Europe/Berlin",
+  timeZone: "America/New_York",
   locale: "en"
 };
 
