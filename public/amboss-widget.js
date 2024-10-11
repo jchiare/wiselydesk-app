@@ -128,7 +128,7 @@ const ALWAYS_ALLOW_WIDGET_URLS = [
 
 function widgetOn() {
   const botId = url.includes("en-us") ? 3 : 4
-  const data = fetch(`/api/${botId}/business-hours`).then(res => res.json());
+  const data = fetch(`/api/bot/${botId}/business-hours`).then(res => res.json());
   return data.isOnline
 }
 
