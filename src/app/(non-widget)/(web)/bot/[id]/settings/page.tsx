@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma"; 
+"use client"
 import { BotSetting } from "@prisma/client"; 
 import { useState, useEffect } from "react";
 
