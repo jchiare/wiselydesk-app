@@ -127,11 +127,9 @@ const ALWAYS_ALLOW_WIDGET_URLS = [
 ];
 
 function widgetOn() {
-  const data = fetch("/api/business-hours").then(res => res.json());
-
-  return url.includes("en-us")
-    ? data.nycBusinessHours
-    : data.berlinBusinessHours;
+  const botId = url.includes("en-us") ? 3 : 4
+  const data = fetch(`/api/${botId}/business-hours`).then(res => res.json());
+  return data.isOnline
 }
 
 if (
