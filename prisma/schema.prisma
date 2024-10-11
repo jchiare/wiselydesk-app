@@ -23,13 +23,6 @@ model Bot {
   zendesk_account_id    String?   @db.VarChar(255)
   zendesk_subdomain     String?   @db.VarChar(255)
   zendesk_api_key       String?   @db.VarChar(255)
-  business_start_hour   Int       @default(9)
-  business_start_minute Int       @default(0)
-  business_end_hour     Int       @default(17)
-  business_end_minute   Int       @default(0)
-  days_on               String    @db.VarChar(255) @default("1,2,3,4,5")
-  time_zone             String    @db.VarChar(255) @default("America/New_York")
-
 
   @@map("bot")
 }
