@@ -30,7 +30,6 @@ model Bot {
 model BotSetting {
   id                  Int       @id @default(autoincrement())
   bot_id              Int
-  key                 String    @db.VarChar(255)
   widget_start_hour   Int       @default(9)
   widget_start_minute Int       @default(0)
   widget_end_hour     Int       @default(17)
@@ -43,7 +42,7 @@ model BotSetting {
   updated_at          DateTime  @updatedAt @db.DateTime(0)
   deleted_at          DateTime? @db.DateTime(0)
 
-  @@unique([bot_id, key])
+  @@unique([bot_id])
   @@map("bot_setting")
 }
 
