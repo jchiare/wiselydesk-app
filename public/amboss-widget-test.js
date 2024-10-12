@@ -1,39 +1,6 @@
 const url = window.location.href;
 let wiselyDeskWidgetOpen = false;
 
-const nycBusinessHours = {
-  start: 9,
-  end: 10,
-  timeZone: "Europe/Berlin",
-  locale: "en"
-};
-
-const berlinBusinessHours = {
-  start: 9,
-  end: 17,
-  timeZone: "Europe/Berlin",
-  locale: "de"
-};
-
-function isOutsideBusinessHours() {
-  const { start, end, timeZone } = url.includes("en-us")
-    ? nycBusinessHours
-    : berlinBusinessHours;
-
-  const now = new Date();
-  const localTime = new Date(now.toLocaleString("en-US", { timeZone }));
-
-  const localHours = localTime.getHours();
-  const dayOfWeek = localTime.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
-
-  return (
-    localHours < start ||
-    localHours >= end ||
-    dayOfWeek === 0 ||
-    dayOfWeek === 6
-  );
-}
-
 function hideZendeskWidget(selector) {
   let attempts = 0;
   const maxAttempts = 50; // 10 seconds / 0.2 seconds per attempt
@@ -159,9 +126,15 @@ const ALWAYS_ALLOW_WIDGET_URLS = [
   "Virtual-AMBOSS-Assistant-Beta"
 ];
 
+function widgetOn() {
+  const botId = url.includes("en-us") ? 3 : 4
+  const data = fetch(`/api/bot/${botId}/business-hours`).then(res => res.json());
+  return data.isOnline
+}
+
 if (
   ALWAYS_ALLOW_WIDGET_URLS.some(allowedUrl => url.includes(allowedUrl)) ||
-  isOutsideBusinessHours()
+  widgetOn()
 ) {
   const isEnglish =
     url.includes("en-us") || url.startsWith("https://amboss.com/us");

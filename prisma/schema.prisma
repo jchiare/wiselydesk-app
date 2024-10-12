@@ -12,20 +12,40 @@ datasource db {
 /// OUR MODELS
 
 model Bot {
-  id                   Int       @id @default(autoincrement())
-  created_at           DateTime  @default(now()) @db.DateTime(0)
-  updated_at           DateTime? @db.DateTime(0)
-  deleted_at           DateTime? @db.DateTime(0)
-  name                 String    @db.VarChar(255)
-  client_api_key       String    @db.VarChar(255)
-  organization_id      Int       @default(2)
-  zendesk_kba_endpoint String?   @db.VarChar(255)
-  zendesk_account_id   String?   @db.VarChar(255)
-  zendesk_subdomain    String?   @db.VarChar(255)
-  zendesk_api_key      String?   @db.VarChar(255)
+  id                    Int       @id @default(autoincrement())
+  created_at            DateTime  @default(now()) @db.DateTime(0)
+  updated_at            DateTime? @db.DateTime(0)
+  deleted_at            DateTime? @db.DateTime(0)
+  name                  String    @db.VarChar(255)
+  client_api_key        String    @db.VarChar(255)
+  organization_id       Int       @default(2)
+  zendesk_kba_endpoint  String?   @db.VarChar(255)
+  zendesk_account_id    String?   @db.VarChar(255)
+  zendesk_subdomain     String?   @db.VarChar(255)
+  zendesk_api_key       String?   @db.VarChar(255)
 
   @@map("bot")
 }
+
+model BotSetting {
+  id                  Int       @id @default(autoincrement())
+  bot_id              Int
+  widget_start_hour   Int       @default(9)
+  widget_start_minute Int       @default(0)
+  widget_end_hour     Int       @default(17)
+  widget_end_minute   Int       @default(0)
+  days_on             String    @db.VarChar(255) @default("1,2,3,4,5")
+  time_zone           String    @db.VarChar(255) @default("America/New_York")
+  is_active           String    @db.VarChar(255) @default("widget_hours") // widget_hours, always, never
+  is_active_expires   DateTime? @db.DateTime(0)
+  created_at          DateTime  @default(now()) @db.DateTime(0)
+  updated_at          DateTime  @updatedAt @db.DateTime(0)
+  deleted_at          DateTime? @db.DateTime(0)
+
+  @@unique([bot_id])
+  @@map("bot_setting")
+}
+
 
 model Conversation {
   id                 Int            @id @default(autoincrement())
