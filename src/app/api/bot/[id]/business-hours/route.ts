@@ -33,7 +33,7 @@ export async function GET(
     const isOnline = await checkBotOnlineStatus(botSetting);
 
     // Return full bot settings with online status
-    return NextResponse.json({ ...botSetting, isOnline });
+    return NextResponse.json({ isOnline });
   } catch (error) {
     console.error("Error checking bot status:", error);
     return NextResponse.json(
@@ -97,7 +97,7 @@ async function checkBotOnlineStatus(botSetting: BotSetting) {
   const zonedNow = toZonedTime(now, botSetting.time_zone);
 
   if (botSetting.visibility === "outside_business_hours") {
-    const currentDay = getDay(zonedNow) + 1; // getDay returns 0-6, we need 1-7
+    const currentDay = getDay(zonedNow);
     const activeDays = botSetting.days_on.split(",").map(Number);
     if (!activeDays.includes(currentDay)) {
       return false;
