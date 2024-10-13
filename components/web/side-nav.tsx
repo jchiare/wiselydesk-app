@@ -3,7 +3,14 @@ import BotSelection from "@/components/web/bot-selection";
 import { Session } from "next-auth";
 import { UserProfile } from "@/components/web/user-profile";
 import Navigation from "@/components/web/navigation";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  Bars3Icon,
+  XMarkIcon,
+  Cog6ToothIcon
+} from "@heroicons/react/24/outline";
+import { concatClassNames } from "@/lib/utils";
+import Link from "next/link";
+import useCustomQueryString from "@/lib/web/use-custom-query-string";
 
 import { type Bot } from "@prisma/client";
 import { useState } from "react";
@@ -14,6 +21,39 @@ function getUserInitials(name: string) {
     .map(part => part[0])
     .join("");
   return initials;
+}
+
+function SettingsNavigation() {
+  const { getBotId, pathname } = useCustomQueryString();
+  const botId = getBotId();
+
+  const settingsItem = {
+    name: "Settings",
+    icon: Cog6ToothIcon,
+    href: `/bot/${botId}/settings`
+  };
+
+  const isActive = pathname.includes(settingsItem.href);
+
+  return (
+    <div className="mt-6">
+      <div className="mb-4 border-t-2 border-gray-700" />
+      <div className="mt-1">
+        <Link
+          href={settingsItem.href}
+          className={concatClassNames(
+            isActive ? "bg-gray-700" : "hover:bg-gray-700",
+            "flex w-full items-center justify-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-400 sm:justify-normal"
+          )}>
+          <settingsItem.icon
+            className="h-5 w-5 shrink-0 text-gray-400 sm:h-6 sm:w-6"
+            aria-hidden="true"
+          />
+          {settingsItem.name}
+        </Link>
+      </div>
+    </div>
+  );
 }
 
 export default function SideNav({
@@ -27,7 +67,7 @@ export default function SideNav({
 
   return (
     <div className="flex flex-col">
-      <div className="flex w-full gap-y-5 border-r border-gray-200 bg-gray-800 sm:w-56 sm:flex-col sm:px-6 ">
+      <div className="flex w-full gap-y-5 border-r border-gray-200 bg-gray-800 sm:w-56 sm:flex-col sm:px-6">
         <BotSelection bots={bots} />
         <div
           aria-hidden="true"
@@ -40,7 +80,7 @@ export default function SideNav({
           {isMobileMenuOpen ? (
             <XMarkIcon className={`sh-6 w-6`} />
           ) : (
-            <Bars3Icon className={`sh-6 w-6 `} />
+            <Bars3Icon className={`sh-6 w-6`} />
           )}
           <span className="ml-2 font-medium text-white">
             {isMobileMenuOpen ? "Close" : "Menu"}
@@ -50,8 +90,11 @@ export default function SideNav({
       <div
         className={`${
           isMobileMenuOpen ? "flex sm:hidden" : "hidden sm:flex"
-        } w-full flex-col justify-between gap-y-5 border-r border-gray-200 bg-gray-800 sm:w-56 sm:flex-1 sm:px-6 `}>
-        <Navigation />
+        } w-full flex-col justify-between gap-y-5 border-r border-gray-200 bg-gray-800 sm:w-56 sm:flex-1 sm:px-6`}>
+        <div className="space-y-10">
+          <Navigation />
+          <SettingsNavigation />
+        </div>
         <div className="hidden sm:block">
           <hr className="-mx-6 border text-gray-400" />
           <div className="mx-auto flex items-center justify-center gap-x-2 py-3 text-sm font-semibold leading-6 text-gray-400">
