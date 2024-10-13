@@ -1,3 +1,4 @@
+// Start of Selection
 "use client";
 import { BotSetting } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
@@ -189,13 +190,13 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
           <div className="grid grid-cols-1 gap-6">
             <div>
               <label
-                htmlFor="is_active"
+                htmlFor="visibility"
                 className="block cursor-pointer text-lg font-medium text-gray-700">
                 Widget Visibility
               </label>
               <select
-                id="is_active"
-                name="is_active"
+                id="visibility"
+                name="visibility"
                 value={formData.visibility}
                 onChange={handleChange}
                 className={`mt-1 w-full rounded border border-gray-300 p-2 text-sm focus:border-blue-500 focus:ring-blue-500 ${
@@ -206,7 +207,9 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
                       : "bg-white"
                 }`}
                 required>
-                <option value="widget_hours">Outside Business Hours</option>
+                <option value="outside_business_hours">
+                  Outside Business Hours
+                </option>
                 <option value="always">Always</option>
                 <option value="never">Never</option>
               </select>

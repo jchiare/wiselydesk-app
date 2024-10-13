@@ -36,7 +36,7 @@ model BotSetting {
   business_end_minute   Int
   days_on               String    @default("1,2,3,4,5") @db.VarChar(255)
   time_zone             String    @default("America/New_York") @db.VarChar(255)
-  visibility            String    @default("outside_business_hours") @db.VarChar(255) // widget_hours, always, never
+  visibility            String    @default("outside_business_hours") @db.VarChar(255) // outside_business_hours, always, never
   created_at            DateTime  @default(now()) @db.DateTime(0)
   updated_at            DateTime  @updatedAt @db.DateTime(0)
   deleted_at            DateTime? @db.DateTime(0)
