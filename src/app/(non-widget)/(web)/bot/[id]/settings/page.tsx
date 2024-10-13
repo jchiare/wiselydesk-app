@@ -184,8 +184,6 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
           <span className="text-red-700">{submitError}</span>
         </div>
       )}
-
-      {/* Main Settings */}
       <div className="flex rounded-md bg-white p-4 shadow-md">
         <div className="w-full md:w-1/3">
           <div className="grid grid-cols-1 gap-6">
@@ -216,17 +214,18 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
           </div>
         </div>
       </div>
-
-      <div className={`border-b pb-6 ${isDisabled ? "bg-gray-100" : ""}`}>
+      <div className={`border-b p-4 pb-6 ${isDisabled ? "bg-gray-100" : ""}`}>
         <h2 className="mb-4 text-lg font-medium text-gray-800">
           Time Settings
         </h2>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div className={isDisabled ? "pointer-events-none opacity-50" : ""}>
-            <label className="block text-sm font-medium text-gray-700">
+        <div className="flex flex-col space-y-4 md:flex-row md:space-x-6 md:space-y-0">
+          {/* Business Hours Start */}
+          <div
+            className={`flex-1 ${isDisabled ? "pointer-events-none opacity-50" : ""}`}>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
               Business Hours Start
             </label>
-            <div className="mt-1 flex items-center space-x-2">
+            <div className="flex items-center space-x-2">
               <input
                 type="number"
                 name="widget_start_hour"
@@ -253,11 +252,12 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
             </div>
           </div>
 
-          <div className={isDisabled ? "pointer-events-none opacity-50" : ""}>
-            <label className="block text-sm font-medium text-gray-700">
+          <div
+            className={`flex-1 ${isDisabled ? "pointer-events-none opacity-50" : ""}`}>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
               Business Hours End
             </label>
-            <div className="mt-1 flex items-center space-x-2">
+            <div className="flex items-center space-x-2">
               <input
                 type="number"
                 name="widget_end_hour"
@@ -284,8 +284,9 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
             </div>
           </div>
 
-          <div className={isDisabled ? "pointer-events-none opacity-50" : ""}>
-            <label className="block text-sm font-medium text-gray-700">
+          <div
+            className={`flex-1 ${isDisabled ? "pointer-events-none opacity-50" : ""}`}>
+            <label className="mb-1 block text-sm font-medium text-gray-700">
               Time Zone
             </label>
             <select
@@ -305,9 +306,7 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
           </div>
         </div>
       </div>
-
-      {/* Days Active */}
-      <div className={`border-b pb-6 ${isDisabled ? "bg-gray-100" : ""}`}>
+      <div className={`border-b p-4 pb-6 ${isDisabled ? "bg-gray-100" : ""}`}>
         <h2 className="mb-4 text-lg font-medium text-gray-800">Days Active</h2>
         <div
           className={`flex flex-wrap gap-2 ${isDisabled ? "pointer-events-none opacity-50" : ""}`}>
@@ -318,9 +317,9 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
                 type="button"
                 key={option.value}
                 onClick={() => toggleDay(option.value)}
-                className={`rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                className={`rounded px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 ${
                   isSelected
-                    ? "border border-blue-600 bg-blue-600 text-white"
+                    ? "border border-blue-500 bg-blue-500 text-white"
                     : "border border-gray-300 bg-gray-200 text-gray-700 hover:bg-gray-300"
                 } transition`}>
                 {option.label}
@@ -332,7 +331,6 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
           Select the days the bot is active.
         </p>
       </div>
-
       {/* Submit Button */}
       <div className="flex justify-end">
         <button
