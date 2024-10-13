@@ -160,10 +160,11 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
     { label: "New York", value: "America/New_York" }
   ];
 
+  const isDisabled =
+    formData.is_active === "always" || formData.is_active === "never";
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col justify-center space-y-6">
+    <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
       {/* Error Message */}
       {submitError && (
         <div className="flex items-center space-x-2 rounded-md bg-red-100 p-3">
@@ -184,39 +185,46 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
         </div>
       )}
 
-      <div className="border-b pb-6">
-        <h2 className="mb-4 text-lg font-medium text-gray-800">
-          Main Settings
-        </h2>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Power
-            </label>
-            <select
-              name="is_active"
-              value={formData.is_active}
-              onChange={handleChange}
-              className="mt-1 w-full rounded border border-gray-300 bg-white p-2 text-sm focus:border-blue-500 focus:ring-blue-500"
-              required>
-              <option value="widget_hours">Widget Hours</option>
-              <option value="always">On</option>
-              <option value="never">Off</option>
-            </select>
+      {/* Main Settings */}
+      <div className="flex rounded-md bg-white p-4 shadow-md">
+        <div className="w-full md:w-1/3">
+          <div className="grid grid-cols-1 gap-6">
+            <div>
+              <label
+                htmlFor="is_active"
+                className="block cursor-pointer text-lg font-medium text-gray-700">
+                Widget Visibility
+              </label>
+              <select
+                id="is_active"
+                name="is_active"
+                value={formData.is_active}
+                onChange={handleChange}
+                className={`mt-1 w-full rounded border border-gray-300 p-2 text-sm focus:border-blue-500 focus:ring-blue-500 ${
+                  formData.is_active === "always"
+                    ? "bg-green-100"
+                    : formData.is_active === "never"
+                      ? "bg-red-100"
+                      : "bg-white"
+                }`}
+                required>
+                <option value="widget_hours">Outside Business Hours</option>
+                <option value="always">Always</option>
+                <option value="never">Never</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Time Settings */}
-      <div className="border-b pb-6">
+      <div className={`border-b pb-6 ${isDisabled ? "bg-gray-100" : ""}`}>
         <h2 className="mb-4 text-lg font-medium text-gray-800">
           Time Settings
         </h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {/* Widget Start Time */}
-          <div>
+          <div className={isDisabled ? "pointer-events-none opacity-50" : ""}>
             <label className="block text-sm font-medium text-gray-700">
-              Widget Start Time
+              Business Hours Start
             </label>
             <div className="mt-1 flex items-center space-x-2">
               <input
@@ -228,6 +236,7 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
                 min={0}
                 max={23}
                 required
+                disabled={isDisabled}
               />
               <span className="text-gray-600">:</span>
               <input
@@ -239,14 +248,14 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
                 min={0}
                 max={59}
                 required
+                disabled={isDisabled}
               />
             </div>
           </div>
 
-          {/* Widget End Time */}
-          <div>
+          <div className={isDisabled ? "pointer-events-none opacity-50" : ""}>
             <label className="block text-sm font-medium text-gray-700">
-              Widget End Time
+              Business Hours End
             </label>
             <div className="mt-1 flex items-center space-x-2">
               <input
@@ -258,6 +267,7 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
                 min={0}
                 max={23}
                 required
+                disabled={isDisabled}
               />
               <span className="text-gray-600">:</span>
               <input
@@ -269,12 +279,12 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
                 min={0}
                 max={59}
                 required
+                disabled={isDisabled}
               />
             </div>
           </div>
 
-          {/* Time Zone */}
-          <div>
+          <div className={isDisabled ? "pointer-events-none opacity-50" : ""}>
             <label className="block text-sm font-medium text-gray-700">
               Time Zone
             </label>
@@ -282,8 +292,9 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
               name="time_zone"
               value={formData.time_zone}
               onChange={handleChange}
-              className="mt-1 w-full rounded border border-gray-300 bg-white p-2 text-sm focus:border-blue-500 focus:ring-blue-500"
-              required>
+              className="mt-1 w-fit rounded border border-gray-300 bg-white p-2 text-sm focus:border-blue-500 focus:ring-blue-500"
+              required
+              disabled={isDisabled}>
               <option value="">Select Time Zone</option>
               {timeZoneOptions.map(option => (
                 <option key={option.value} value={option.value}>
@@ -296,9 +307,10 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
       </div>
 
       {/* Days Active */}
-      <div className="border-b pb-6">
+      <div className={`border-b pb-6 ${isDisabled ? "bg-gray-100" : ""}`}>
         <h2 className="mb-4 text-lg font-medium text-gray-800">Days Active</h2>
-        <div className="flex flex-wrap gap-2">
+        <div
+          className={`flex flex-wrap gap-2 ${isDisabled ? "pointer-events-none opacity-50" : ""}`}>
           {dayOptions.map(option => {
             const isSelected = formData.days_on.includes(option.value);
             return (
