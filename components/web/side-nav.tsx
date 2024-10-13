@@ -2,8 +2,15 @@
 import BotSelection from "@/components/web/bot-selection";
 import { Session } from "next-auth";
 import { UserProfile } from "@/components/web/user-profile";
-import Navigation from "@/components/web/navigation";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Navigation } from "@/components/web/navigation";
+import {
+  Bars3Icon,
+  XMarkIcon,
+  Cog6ToothIcon
+} from "@heroicons/react/24/outline";
+import { concatClassNames } from "@/lib/utils";
+import Link from "next/link";
+import useCustomQueryString from "@/lib/web/use-custom-query-string";
 
 import { type Bot } from "@prisma/client";
 import { useState } from "react";
@@ -27,7 +34,7 @@ export default function SideNav({
 
   return (
     <div className="flex flex-col">
-      <div className="flex w-full gap-y-5 border-r border-gray-200 bg-gray-800 sm:w-56 sm:flex-col sm:px-6 ">
+      <div className="flex w-full gap-y-5 border-r border-gray-200 bg-gray-800 sm:w-56 sm:flex-col sm:px-6">
         <BotSelection bots={bots} />
         <div
           aria-hidden="true"
@@ -40,7 +47,7 @@ export default function SideNav({
           {isMobileMenuOpen ? (
             <XMarkIcon className={`sh-6 w-6`} />
           ) : (
-            <Bars3Icon className={`sh-6 w-6 `} />
+            <Bars3Icon className={`sh-6 w-6`} />
           )}
           <span className="ml-2 font-medium text-white">
             {isMobileMenuOpen ? "Close" : "Menu"}
@@ -50,8 +57,9 @@ export default function SideNav({
       <div
         className={`${
           isMobileMenuOpen ? "flex sm:hidden" : "hidden sm:flex"
-        } w-full flex-col justify-between gap-y-5 border-r border-gray-200 bg-gray-800 sm:w-56 sm:flex-1 sm:px-6 `}>
+        } w-full flex-col justify-between gap-y-5 border-r border-gray-200 bg-gray-800 sm:w-56 sm:flex-1 sm:px-6`}>
         <Navigation />
+
         <div className="hidden sm:block">
           <hr className="-mx-6 border text-gray-400" />
           <div className="mx-auto flex items-center justify-center gap-x-2 py-3 text-sm font-semibold leading-6 text-gray-400">

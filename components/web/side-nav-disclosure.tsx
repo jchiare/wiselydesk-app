@@ -3,6 +3,7 @@ import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Disclosure, Transition } from "@headlessui/react";
 import { concatClassNames } from "@/lib/utils";
 import type { NavigationItem } from "@/components/web/navigation";
+import React from "react";
 
 export default function SideNavDisclosure({
   item,
