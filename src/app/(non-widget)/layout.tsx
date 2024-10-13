@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "WiselyDesk App",
@@ -20,12 +21,10 @@ export default function RootLayout({
           type="image/<generated>"
           sizes="<generated>"
         />
-        <script
-          defer
-          data-domain="wiselydesk.com"
-          src="https://plausible.io/js/script.js"></script>
       </head>
-      <body>{children}</body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
