@@ -33,7 +33,7 @@ export async function GET(
     const isOnline = await checkBotOnlineStatus(botSetting);
 
     // Return full bot settings with online status
-    return NextResponse.json({ isOnline });
+    return NextResponse.json({ ...botSetting, isOnline });
   } catch (error) {
     console.error("Error checking bot status:", error);
     return NextResponse.json(
