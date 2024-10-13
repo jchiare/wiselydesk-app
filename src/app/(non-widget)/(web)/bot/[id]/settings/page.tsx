@@ -1,9 +1,11 @@
+// Start of Selection
 "use client";
 import { BotSetting } from "@prisma/client";
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
-// Fetch bot settings (server-side)
-async function fetchBotSettings(botId: string) {
+// Fetch bot settings using TanStack Query
+async function fetchBotSettings(botId: string): Promise<BotSetting> {
   const res = await fetch(`/api/bot/${botId}/business-hours/`);
   if (!res.ok) {
     throw new Error("Failed to fetch bot settings");
@@ -16,25 +18,29 @@ export default function BotSettingsPage({
 }: {
   params: { id: string };
 }) {
-  const [botSettings, setBotSettings] = useState<BotSetting | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
   const botId = params.id;
 
-  useEffect(() => {
-    async function loadSettings() {
-      try {
-        const data = await fetchBotSettings(botId);
-        setBotSettings(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadSettings();
-  }, [botId]);
+  const {
+    data: botSettings,
+    isLoading,
+    error
+  } = useQuery<BotSetting, Error>({
+    queryKey: ["botSettings", botId],
+    queryFn: () => fetchBotSettings(botId),
+    enabled: !!botId
+  });
 
-  if (loading) return <div className="mt-8 text-center">Loading...</div>;
+  if (isLoading) {
+    return <div className="mt-8 text-center">Loading...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="mt-8 text-center text-red-500">
+        Error loading settings.
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-4xl rounded-md bg-white p-6 shadow-md">
