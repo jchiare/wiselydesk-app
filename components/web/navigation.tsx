@@ -3,7 +3,8 @@ import SideNavDisclosure from "@/components/web/side-nav-disclosure";
 import {
   ChatBubbleBottomCenterTextIcon,
   ChartBarSquareIcon,
-  TagIcon
+  TagIcon,
+  Cog6ToothIcon
 } from "@heroicons/react/24/outline";
 import { concatClassNames } from "@/lib/utils";
 import Link from "next/link";
@@ -50,7 +51,7 @@ const createNavigation = (botId: string) => [
   }
 ];
 
-export default function Navigation() {
+export function Navigation() {
   const { getBotId, pathname } = useCustomQueryString();
   const botId = getBotId();
   const navigation = createNavigation(botId);
@@ -67,8 +68,11 @@ export default function Navigation() {
     fourthPathSegment
   );
 
-  console.log("currentItem: ", currentItem);
-  console.log("res: ", currentItem?.href);
+  const settingsItem = {
+    name: "Settings",
+    icon: Cog6ToothIcon,
+    href: `/bot/${botId}/settings`
+  };
 
   return (
     <div className="flex w-full flex-col items-center space-y-1">
@@ -97,6 +101,23 @@ export default function Navigation() {
           />
         )
       )}
+      <div className="w-full pt-6">
+        <div className="mb-4 border-t-2 border-gray-700" />
+        <Link
+          href={settingsItem.href}
+          className={concatClassNames(
+            settingsItem.href === currentItem?.href
+              ? "bg-gray-700"
+              : "hover:bg-gray-700",
+            "flex w-full items-center justify-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-400 sm:justify-normal"
+          )}>
+          <settingsItem.icon
+            className="h-5 w-5 shrink-0 text-gray-400 sm:h-6 sm:w-6"
+            aria-hidden="true"
+          />
+          {settingsItem.name}
+        </Link>
+      </div>
     </div>
   );
 }
@@ -131,6 +152,9 @@ function findCurrentItem(
       fourthPathSegment === "ai" &&
       item.name === "AI Chat Tags"
     ) {
+      return item;
+    } else if (thirdPathSegment === "settings" && item.name === "Settings") {
+      console.log("settings: ", item, thirdPathSegment);
       return item;
     }
   }
