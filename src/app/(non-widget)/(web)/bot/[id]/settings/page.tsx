@@ -59,13 +59,13 @@ type BotSettingsFormProps = {
 
 function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
   const [formData, setFormData] = useState({
-    widget_start_hour: botSettings.widget_start_hour,
-    widget_start_minute: botSettings.widget_start_minute,
-    widget_end_hour: botSettings.widget_end_hour,
-    widget_end_minute: botSettings.widget_end_minute,
+    business_start_hour: botSettings.business_start_hour,
+    business_start_minute: botSettings.business_start_minute,
+    business_end_hour: botSettings.business_end_hour,
+    business_end_minute: botSettings.business_end_minute,
     days_on: botSettings.days_on.split(",").map(day => parseInt(day, 10)),
     time_zone: botSettings.time_zone,
-    is_active: botSettings.is_active
+    visibility: botSettings.visibility
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -86,10 +86,10 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
   ) {
     const { name, value } = e.target;
     if (
-      name === "widget_start_hour" ||
-      name === "widget_start_minute" ||
-      name === "widget_end_hour" ||
-      name === "widget_end_minute"
+      name === "business_start_hour" ||
+      name === "business_start_minute" ||
+      name === "business_end_hour" ||
+      name === "business_end_minute"
     ) {
       setFormData(prev => ({
         ...prev,
@@ -161,7 +161,7 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
   ];
 
   const isDisabled =
-    formData.is_active === "always" || formData.is_active === "never";
+    formData.visibility === "always" || formData.visibility === "never";
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col space-y-6">
@@ -196,12 +196,12 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
               <select
                 id="is_active"
                 name="is_active"
-                value={formData.is_active}
+                value={formData.visibility}
                 onChange={handleChange}
                 className={`mt-1 w-full rounded border border-gray-300 p-2 text-sm focus:border-blue-500 focus:ring-blue-500 ${
-                  formData.is_active === "always"
+                  formData.visibility === "always"
                     ? "bg-green-100"
-                    : formData.is_active === "never"
+                    : formData.visibility === "never"
                       ? "bg-red-100"
                       : "bg-white"
                 }`}
@@ -216,20 +216,19 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
       </div>
       <div className={`border-b p-4 pb-6 ${isDisabled ? "bg-gray-100" : ""}`}>
         <h2 className="mb-4 text-lg font-medium text-gray-800">
-          Time Settings
+          Business Hours
         </h2>
         <div className="flex flex-col space-y-4 md:flex-row md:space-x-6 md:space-y-0">
-          {/* Business Hours Start */}
           <div
             className={`flex-1 ${isDisabled ? "pointer-events-none opacity-50" : ""}`}>
             <label className="mb-1 block text-sm font-medium text-gray-700">
-              Business Hours Start
+              Start
             </label>
             <div className="flex items-center space-x-2">
               <input
                 type="number"
-                name="widget_start_hour"
-                value={formData.widget_start_hour}
+                name="business_start_hour"
+                value={formData.business_start_hour}
                 onChange={handleChange}
                 className="w-16 rounded border border-gray-300 p-2 focus:border-blue-500 focus:ring-blue-500"
                 min={0}
@@ -240,8 +239,8 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
               <span className="text-gray-600">:</span>
               <input
                 type="number"
-                name="widget_start_minute"
-                value={formData.widget_start_minute}
+                name="business_start_minute"
+                value={formData.business_start_minute}
                 onChange={handleChange}
                 className="w-16 rounded border border-gray-300 p-2 focus:border-blue-500 focus:ring-blue-500"
                 min={0}
@@ -255,13 +254,13 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
           <div
             className={`flex-1 ${isDisabled ? "pointer-events-none opacity-50" : ""}`}>
             <label className="mb-1 block text-sm font-medium text-gray-700">
-              Business Hours End
+              End
             </label>
             <div className="flex items-center space-x-2">
               <input
                 type="number"
-                name="widget_end_hour"
-                value={formData.widget_end_hour}
+                name="business_end_hour"
+                value={formData.business_end_hour}
                 onChange={handleChange}
                 className="w-16 rounded border border-gray-300 p-2 focus:border-blue-500 focus:ring-blue-500"
                 min={0}
@@ -272,8 +271,8 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
               <span className="text-gray-600">:</span>
               <input
                 type="number"
-                name="widget_end_minute"
-                value={formData.widget_end_minute}
+                name="business_end_minute"
+                value={formData.business_end_minute}
                 onChange={handleChange}
                 className="w-16 rounded border border-gray-300 p-2 focus:border-blue-500 focus:ring-blue-500"
                 min={0}
