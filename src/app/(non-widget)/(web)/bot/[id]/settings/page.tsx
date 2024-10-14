@@ -318,7 +318,9 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
       </div>
 
       <div className={`border-b p-4 pb-6 ${isDisabled ? "bg-gray-100" : ""}`}>
-        <h2 className="mb-4 text-lg font-medium text-gray-800">Days Active</h2>
+        <h2 className="mb-4 text-lg font-medium text-gray-800">
+          Business Days
+        </h2>
         <div
           className={`flex flex-wrap gap-2 ${isDisabled ? "pointer-events-none opacity-50" : ""}`}>
           {dayOptions.map(option => {
@@ -339,7 +341,7 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
           })}
         </div>
         <p className="mt-2 text-sm text-gray-500">
-          Select the days the bot is active.
+          Bot will be live outside of these days.
         </p>
       </div>
       {/* Submit Button */}
