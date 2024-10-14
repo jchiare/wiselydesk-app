@@ -129,7 +129,9 @@ const ALWAYS_ALLOW_WIDGET_URLS = [
 async function widgetOn() {
   const botId = url.includes("en-us") ? 3 : 4;
   try {
-    const response = await fetch(`/api/bot/${botId}/business-hours`);
+    const response = await fetch(
+      `https://apps.wiselydesk.com/api/bot/${botId}/business-hours`
+    );
     if (!response.ok) {
       console.error(`Failed to fetch business hours: ${response.statusText}`);
       return false;

@@ -341,7 +341,7 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
           })}
         </div>
         <p className="mt-2 text-sm text-gray-500">
-          Bot will be live outside of these days.
+          Bot will be visible on non-business days.
         </p>
       </div>
       {/* Submit Button */}
