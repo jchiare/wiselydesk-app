@@ -66,7 +66,8 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
     business_end_minute: botSettings.business_end_minute,
     days_on: botSettings.days_on.split(",").map(day => parseInt(day, 10)),
     time_zone: botSettings.time_zone,
-    visibility: botSettings.visibility
+    visibility: botSettings.visibility,
+    active_when_no_agents: botSettings.active_when_no_agents || false
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -85,8 +86,13 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) {
-    const { name, value } = e.target;
-    if (
+    const { name, value, type } = e.target;
+    if (type === "checkbox") {
+      setFormData(prev => ({
+        ...prev,
+        [name]: (e.target as HTMLInputElement).checked
+      }));
+    } else if (
       name === "business_start_hour" ||
       name === "business_start_minute" ||
       name === "business_end_hour" ||
@@ -228,29 +234,33 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
               Start
             </label>
             <div className="flex items-center space-x-2">
-              <input
-                type="number"
+              <select
                 name="business_start_hour"
                 value={formData.business_start_hour}
                 onChange={handleChange}
-                className="w-16 rounded border border-gray-300 p-2 focus:border-blue-500 focus:ring-blue-500"
-                min={0}
-                max={23}
+                className="w-20 rounded border border-gray-300 p-2 focus:border-blue-500 focus:ring-blue-500"
                 required
-                disabled={isDisabled}
-              />
+                disabled={isDisabled}>
+                {[...Array(24)].map((_, i) => (
+                  <option key={i} value={i}>
+                    {i.toString().padStart(2, "0")}
+                  </option>
+                ))}
+              </select>
               <span className="text-gray-600">:</span>
-              <input
-                type="number"
+              <select
                 name="business_start_minute"
                 value={formData.business_start_minute}
                 onChange={handleChange}
-                className="w-16 rounded border border-gray-300 p-2 focus:border-blue-500 focus:ring-blue-500"
-                min={0}
-                max={59}
+                className="w-20 rounded border border-gray-300 p-2 focus:border-blue-500 focus:ring-blue-500"
                 required
-                disabled={isDisabled}
-              />
+                disabled={isDisabled}>
+                {[...Array(12)].map((_, i) => (
+                  <option key={i} value={i * 5}>
+                    {(i * 5).toString().padStart(2, "0")}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -260,29 +270,33 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
               End
             </label>
             <div className="flex items-center space-x-2">
-              <input
-                type="number"
+              <select
                 name="business_end_hour"
                 value={formData.business_end_hour}
                 onChange={handleChange}
-                className="w-16 rounded border border-gray-300 p-2 focus:border-blue-500 focus:ring-blue-500"
-                min={0}
-                max={23}
+                className="w-20 rounded border border-gray-300 p-2 focus:border-blue-500 focus:ring-blue-500"
                 required
-                disabled={isDisabled}
-              />
+                disabled={isDisabled}>
+                {[...Array(24)].map((_, i) => (
+                  <option key={i} value={i}>
+                    {i.toString().padStart(2, "0")}
+                  </option>
+                ))}
+              </select>
               <span className="text-gray-600">:</span>
-              <input
-                type="number"
+              <select
                 name="business_end_minute"
                 value={formData.business_end_minute}
                 onChange={handleChange}
-                className="w-16 rounded border border-gray-300 p-2 focus:border-blue-500 focus:ring-blue-500"
-                min={0}
-                max={59}
+                className="w-20 rounded border border-gray-300 p-2 focus:border-blue-500 focus:ring-blue-500"
                 required
-                disabled={isDisabled}
-              />
+                disabled={isDisabled}>
+                {[...Array(12)].map((_, i) => (
+                  <option key={i} value={i * 5}>
+                    {(i * 5).toString().padStart(2, "0")}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -308,6 +322,7 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
           </div>
         </div>
       </div>
+
       <div className={`border-b p-4 pb-6 ${isDisabled ? "bg-gray-100" : ""}`}>
         <h2 className="mb-4 text-lg font-medium text-gray-800">Days Active</h2>
         <div
@@ -333,6 +348,27 @@ function BotSettingsForm({ botSettings }: BotSettingsFormProps) {
           Select the days the bot is active.
         </p>
       </div>
+
+      <div className="border-b p-4 pb-6">
+        <h2 className="mb-4 text-lg font-medium text-gray-800">Other</h2>
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="active_when_no_agents"
+            name="active_when_no_agents"
+            checked={formData.active_when_no_agents}
+            onChange={handleChange}
+            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          />
+          <label
+            htmlFor="active_when_no_agents"
+            className="ml-2 block text-sm text-gray-900 hover:cursor-pointer">
+            Widget visible during business hours when no Zendesk agents are
+            online
+          </label>
+        </div>
+      </div>
+
       {/* Submit Button */}
       <div className="flex justify-end">
         <button
