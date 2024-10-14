@@ -20,9 +20,8 @@
 
   "headers": [
     {
-      "source": "/api/bot/(.*)",
+      "source": "/api/bot/(.*)/business-hours",
       "headers": [
-        { "key": "Access-Control-Allow-Credentials", "value": "true" },
         {
           "key": "Access-Control-Allow-Origin",
           "value": "https://support.amboss.com"
