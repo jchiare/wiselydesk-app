@@ -20,7 +20,7 @@
 
   "headers": [
     {
-      "source": "/api/bot/[1-4]/business-hours",
+      "source": "/api/bot/(1|2|3|4)/business-hours",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
