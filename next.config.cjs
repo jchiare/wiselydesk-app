@@ -13,8 +13,9 @@ const nextConfig = {
     return [
       {
         // matching business-hours API route for any bot id
-        source: "/api/bot/:anyid/business-hours",
+        source: "/api/bot/:path*",
         headers: [
+          { key: "Access-Control-Allow-Credentials", value: "true" },
           {
             key: "Access-Control-Allow-Origin",
             value: "https://support.amboss.com"
