@@ -1,6 +1,39 @@
 const url = window.location.href;
 let wiselyDeskWidgetOpen = false;
 
+const nycBusinessHours = {
+  start: 9,
+  end: 17,
+  timeZone: "America/New_York",
+  locale: "en"
+};
+
+const berlinBusinessHours = {
+  start: 9,
+  end: 17,
+  timeZone: "Europe/Berlin",
+  locale: "de"
+};
+
+function isOutsideBusinessHours() {
+  const { start, end, timeZone } = url.includes("en-us")
+    ? nycBusinessHours
+    : berlinBusinessHours;
+
+  const now = new Date();
+  const localTime = new Date(now.toLocaleString("en-US", { timeZone }));
+
+  const localHours = localTime.getHours();
+  const dayOfWeek = localTime.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+
+  return (
+    localHours < start ||
+    localHours >= end ||
+    dayOfWeek === 0 ||
+    dayOfWeek === 6
+  );
+}
+
 function hideZendeskWidget(selector) {
   let attempts = 0;
   const maxAttempts = 50; // 10 seconds / 0.2 seconds per attempt
@@ -126,33 +159,13 @@ const ALWAYS_ALLOW_WIDGET_URLS = [
   "Virtual-AMBOSS-Assistant-Beta"
 ];
 
-async function widgetOn() {
-  const botId = url.includes("en-us") ? 3 : 4;
-  try {
-    const response = await fetch(`/api/bot/${botId}/business-hours`);
-    if (!response.ok) {
-      console.error(`Failed to fetch business hours: ${response.statusText}`);
-      return false;
-    }
-    const data = await response.json();
-    return data.isOnline;
-  } catch (error) {
-    console.error("Error in widgetOn:", error);
-    return false;
-  }
+if (
+  ALWAYS_ALLOW_WIDGET_URLS.some(allowedUrl => url.includes(allowedUrl)) ||
+  isOutsideBusinessHours()
+) {
+  const isEnglish =
+    url.includes("en-us") || url.startsWith("https://amboss.com/us");
+  createIFrame(isEnglish, wiselyDeskWidgetOpen);
+  hideZendeskWidget("#zw-customLauncher");
+  createSupportWidgetButton(wiselyDeskWidgetOpen);
 }
-
-(async function initializeWidget() {
-  const isWidgetAllowed = ALWAYS_ALLOW_WIDGET_URLS.some(allowedUrl =>
-    url.includes(allowedUrl)
-  );
-  const isWidgetOnline = await widgetOn();
-
-  if (isWidgetAllowed || isWidgetOnline) {
-    const isEnglish =
-      url.includes("en-us") || url.startsWith("https://amboss.com/us");
-    createIFrame(isEnglish, wiselyDeskWidgetOpen);
-    hideZendeskWidget("#zw-customLauncher");
-    createSupportWidgetButton(wiselyDeskWidgetOpen);
-  }
-})();
