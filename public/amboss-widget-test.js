@@ -126,19 +126,33 @@ const ALWAYS_ALLOW_WIDGET_URLS = [
   "Virtual-AMBOSS-Assistant-Beta"
 ];
 
-function widgetOn() {
-  const botId = url.includes("en-us") ? 3 : 4
-  const data = fetch(`/api/bot/${botId}/business-hours`).then(res => res.json());
-  return data.isOnline
+async function widgetOn() {
+  const botId = url.includes("en-us") ? 3 : 4;
+  try {
+    const response = await fetch(`/api/bot/${botId}/business-hours`);
+    if (!response.ok) {
+      console.error(`Failed to fetch business hours: ${response.statusText}`);
+      return false;
+    }
+    const data = await response.json();
+    return data.isOnline;
+  } catch (error) {
+    console.error("Error in widgetOn:", error);
+    return false;
+  }
 }
 
-if (
-  ALWAYS_ALLOW_WIDGET_URLS.some(allowedUrl => url.includes(allowedUrl)) ||
-  widgetOn()
-) {
-  const isEnglish =
-    url.includes("en-us") || url.startsWith("https://amboss.com/us");
-  createIFrame(isEnglish, wiselyDeskWidgetOpen);
-  hideZendeskWidget("#zw-customLauncher");
-  createSupportWidgetButton(wiselyDeskWidgetOpen);
-}
+(async function initializeWidget() {
+  const isWidgetAllowed = ALWAYS_ALLOW_WIDGET_URLS.some(allowedUrl =>
+    url.includes(allowedUrl)
+  );
+  const isWidgetOnline = await widgetOn();
+
+  if (isWidgetAllowed || isWidgetOnline) {
+    const isEnglish =
+      url.includes("en-us") || url.startsWith("https://amboss.com/us");
+    createIFrame(isEnglish, wiselyDeskWidgetOpen);
+    hideZendeskWidget("#zw-customLauncher");
+    createSupportWidgetButton(wiselyDeskWidgetOpen);
+  }
+})();
