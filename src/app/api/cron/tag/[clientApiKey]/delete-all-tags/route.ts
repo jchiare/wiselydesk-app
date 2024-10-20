@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
 
   if (!bot) return new Response("Missing", { status: 404 });
 
-  const deleteResult = await prisma.conversation.deleteMany({
+  const deleteResult = await prisma.chatTagging.deleteMany({
     where: {
       bot_id: bot.id
     }
