@@ -18,15 +18,15 @@
     },
     {
       "path": "/api/cron/tag/2JcUUnHpgW5PAObuSmSGCsCRgW3Hhqg5yiznEZnAzzY/delete-all-tags",
-      "schedule": "0 0 31 2 *"
+      "schedule": "0 0 25 2 *"
     },
     {
       "path": "/api/cron/tag/hYn1picbsJfRm6vNUMOKv1ANYFSD4mZNTgsiw7LdHnE/delete-all-tags",
-      "schedule": "0 0 31 2 *"
+      "schedule": "0 0 25 2 *"
     },
     {
       "path": "/api/cron/tag/qGmNXgVcRRwVpL6i2bIDDYvPc8lJcSvndKE7DUZzq5M/delete-all-tags",
-      "schedule": "0 0 31 2 *"
+      "schedule": "0 0 25 2 *"
     }
   ],
 
