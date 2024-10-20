@@ -18,34 +18,64 @@ const AMBOSS_CATEGORIES = [
   {
     name: "billing",
     children: [
-      "qbank_cancellation",
-      "library_membership_cancellation",
-      "all_membership_cancellation",
-      "refund_request"
+      "subscription_cancellation",
+      "refund_request",
+      "unauthorized_charges",
+      "payment_issues"
     ]
   },
-  { name: "search", children: [] },
-  { name: "question_bank", children: ["functionality"] },
-  { name: "article", children: ["article_content", "functionality"] },
   {
-    name: "membership",
+    name: "technical_support",
+    children: ["login_issues", "access_issues", "app_not_working", "bug_report"]
+  },
+  {
+    name: "product_support",
     children: [
-      "free_access_due_to_financial_hardship",
-      "access_redemption_issue",
-      "group_discount",
-      "b2b_sales_request"
+      "question_bank",
+      "articles",
+      "study_plan",
+      "search",
+      "feature_request",
+      "functionality_issues"
     ]
   },
-  { name: "study_plan", children: [] },
-  { name: "support", children: ["request_for_agent", "bug_report", "contact"] },
-  { name: "NEJM", children: ["nejm_integration"] },
-  { name: "medical_question", children: [] },
-  { name: "account_settings", children: ["log_out_of_devices"] },
-  { name: "mobile_apps", children: ["log_out_of_devices"] },
-  { name: "uncategorized", children: [] }
+  {
+    name: "account_management",
+    children: ["delete_account", "logout_issues", "account_settings"]
+  },
+  {
+    name: "sales_and_promotions",
+    children: [
+      "group_discount",
+      "institutional_access",
+      "student_package",
+      "free_access_requests"
+    ]
+  },
+  {
+    name: "integrations",
+    children: ["anki", "nejm_integration"]
+  },
+  {
+    name: "medical_inquiries",
+    children: []
+  },
+  { name: "request_for_agent", children: [] },
+  {
+    name: "general_inquiries",
+    children: []
+  },
+  {
+    name: "uncategorized",
+    children: []
+  }
 ];
 
+const CONTACT_SUPPORT_EXCLUSION_TAG =
+  "You should care more about the users message and not the AI bot's reply. If the bot says something like 'You can contact support by clicking the button at the bottom right' - then don't assume they contacted support.";
+
 export const TAG_AMBOSS_CHATS = `Please analyze the following customer service chat and categorize it using the most appropriate tags based on the chat's content and the customer's inquiry. The chat messages are indexed, with odd numbers representing messages from the AI and even numbers representing messages from the customer.
+${CONTACT_SUPPORT_EXCLUSION_TAG}
 
 Your task is to provide two sets of tags:
 
@@ -61,4 +91,4 @@ Example:
 - "tags": {"name": "billing", "children": ["qbank_cancellation"]}
 - "aiGeneratedTags": {"name": "billing", "children": ["subscription_cancellation"]}
 
-Analyze the chat carefully to ensure accurate categorization.`;
+Think step by step to analyze the chat carefully, ensuring accurate categorization.`;

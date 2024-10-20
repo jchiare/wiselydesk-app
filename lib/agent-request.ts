@@ -7,7 +7,9 @@ export class AgentRequest {
     "live chat",
     "connect me to an agent",
     "talk to support",
-    "support"
+    "support",
+    "speak to human",
+    "speak to agent"
   ];
 
   constructor({ botId }: { botId: number }) {
