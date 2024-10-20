@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
     }
   });
 
-  console.log(`Deleted ${deleteResult.count} chats`);
+  console.log(`Deleted ${deleteResult.count} chat tags`);
 
   return Response.json({
     deletedChatsCount: deleteResult.count
