@@ -100,7 +100,7 @@ async function checkBotOnlineStatus(botSetting: BotSetting) {
     const currentDay = getDay(zonedNow);
     const activeDays = botSetting.days_on.split(",").map(Number);
     if (!activeDays.includes(currentDay)) {
-      return false;
+      return true;
     }
 
     const startTime = set(zonedNow, {
