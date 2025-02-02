@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 
-import openai from "@/lib/shared/services/openai";
+import OpenAI from "openai";
 import { TAG_AMBOSS_CHATS } from "@/lib/chat/prompts/tag-category";
 import {
   inputCostWithTokens,
@@ -36,6 +36,7 @@ const TagChatEvent = z
   .merge(AiResponseEvent);
 
 type TagChatResponse = z.infer<typeof TagChatEvent>;
+const openai = new OpenAI({ maxRetries: 2, timeout: 15 * 1000 });
 
 async function tagChats(
   chats: MessagesGroupedByConversation,

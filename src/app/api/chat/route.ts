@@ -1,4 +1,3 @@
-import openai from "@/lib/shared/services/openai";
 import {
   parsePayload,
   parseBotId
