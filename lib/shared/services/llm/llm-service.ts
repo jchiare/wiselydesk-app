@@ -5,7 +5,11 @@ export class LLMService {
   private fallbackLLM: BaseLLM;
   private maxRetries: number;
 
-  constructor(primaryLLM: BaseLLM, fallbackLLM: BaseLLM, maxRetries: number = 2) {
+  constructor(
+    primaryLLM: BaseLLM,
+    fallbackLLM: BaseLLM,
+    maxRetries: number = 2
+  ) {
     this.primaryLLM = primaryLLM;
     this.fallbackLLM = fallbackLLM;
     this.maxRetries = maxRetries;
@@ -34,6 +38,7 @@ export class LLMService {
         lastError = error;
         attempts++;
         console.error(`Primary LLM attempt ${attempts} failed:`, error);
+        await new Promise(resolve => setTimeout(resolve, 500));
       }
     }
 
@@ -44,7 +49,7 @@ export class LLMService {
         const response = await this.fallbackLLM.stream(
           systemPrompt,
           messages,
-          options
+          {} // don't use default options for fallback LLM
         );
         return {
           response,
@@ -54,6 +59,7 @@ export class LLMService {
         lastError = error;
         attempts++;
         console.error(`Fallback LLM attempt ${attempts} failed:`, error);
+        await new Promise(resolve => setTimeout(resolve, 500));
       }
     }
 

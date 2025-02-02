@@ -2,10 +2,12 @@ import OpenAI from "openai";
 import { BaseLLM } from "./base-llm";
 import { StreamResponse } from "./types";
 
+const openai = new OpenAI({ maxRetries: 2, timeout: 15 * 1000 });
+
 export class OpenAILLM extends BaseLLM {
   private client: OpenAI;
 
-  constructor(client: OpenAI) {
+  constructor(client: OpenAI = openai) {
     super();
     this.client = client;
   }
@@ -15,8 +17,7 @@ export class OpenAILLM extends BaseLLM {
     messages: any[],
     options: { model?: string; temperature?: number } = {}
   ): Promise<StreamResponse> {
-    const { model = "gpt-4", temperature = 0 } = options;
-
+    const { model = "gpt-4o", temperature = 0 } = options;
     const response = await this.client.chat.completions.create({
       model,
       messages: [{ role: "system", content: systemPrompt }, ...messages],

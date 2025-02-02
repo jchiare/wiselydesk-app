@@ -21,7 +21,6 @@ export const dynamic = "force-dynamic";
 export async function POST(req: Request) {
   const startTime = Date.now();
 
-  // Parse the incoming request
   const payload = await req.json();
   const {
     model,
@@ -29,17 +28,14 @@ export async function POST(req: Request) {
     userInput,
     clientApiKey,
     clientSentConversationId,
-    chatty,
-    location
+    chatty
   } = parsePayload(payload);
 
   const botId = parseBotId(clientApiKey);
 
-  // Initialize conversation service
   const conversationService = new ConversationService(prisma, userInput, botId);
   const updatedUserInput = conversationService.getUpdatedUserInput();
 
-  // Create or get conversation
   await conversationService.getOrCreateConversation(
     updatedUserInput,
     clientSentConversationId
@@ -47,14 +43,12 @@ export async function POST(req: Request) {
 
   const conversationId = conversationService.getConversationId();
 
-  // Create initial user message
   const message = await conversationService.createMessage({
     text: updatedUserInput,
     index: messages.length,
     finished: true
   });
 
-  // Get relevant articles using KBA search
   const kbaSearchClient = new KbaSearch(botId, prisma);
   const topMatchingArticles =
     await kbaSearchClient.getTopKArticlesObject(updatedUserInput);
@@ -65,7 +59,6 @@ export async function POST(req: Request) {
       4
     );
 
-  // Prepare messages for LLM
   const systemMessage = getSystemMessagePrompt(botId, content, true, chatty);
   const userAndAgentMessages = trimMessageUnder8KTokens(messages);
 
@@ -78,7 +71,6 @@ export async function POST(req: Request) {
 
   const inputAiCost = inputCost(formattedMessages, model);
 
-  // Create AI response message (empty initially)
   const aiResponseMessage = await conversationService.createMessage({
     text: "",
     index: messages.length + 1,
@@ -86,8 +78,7 @@ export async function POST(req: Request) {
     apiResponseCost: inputAiCost
   });
 
-  // Initialize LLM services
-  const openAiLLM = new OpenAILLM(openai);
+  const openAiLLM = new OpenAILLM();
   const anthropicLLM = new AnthropicLLM();
 
   const llmService = new LLMService(
@@ -95,18 +86,15 @@ export async function POST(req: Request) {
     model === "claude3.5" ? openAiLLM : anthropicLLM
   );
 
-  // Initialize streaming service
   const streamingService = new StreamingService();
 
   try {
-    // Get LLM response with fallback
     const { response, llm } = await llmService.streamWithFallback(
       systemMessage,
       userAndAgentMessages,
       { model }
     );
 
-    // Prepare metadata for streaming
     const streamMetadata = {
       conversationId,
       messageId: message.id,
@@ -116,7 +104,6 @@ export async function POST(req: Request) {
       inputAiCost
     };
 
-    // Create stream iterator
     const iterator = streamingService.createStreamIterator(
       response,
       llm,
@@ -126,10 +113,8 @@ export async function POST(req: Request) {
       formattedMessages
     );
 
-    // Create readable stream
     const responseStream = streamingService.createReadableStream(iterator);
 
-    // Return streaming response
     return new Response(responseStream, {
       headers: {
         "Content-Type": "text/event-stream",

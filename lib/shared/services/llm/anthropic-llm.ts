@@ -16,7 +16,7 @@ export class AnthropicLLM extends BaseLLM {
     options: { model?: string; temperature?: number; maxTokens?: number } = {}
   ): Promise<StreamResponse> {
     const {
-      model = "claude-3-5-sonnet-20240620",
+      model = "claude-3-5-sonnet-20241022",
       temperature = 0,
       maxTokens = 2000
     } = options;
@@ -52,7 +52,7 @@ export class AnthropicLLM extends BaseLLM {
   }
 
   getModelVersion(): string {
-    return "claude-3-5-sonnet-20240620";
+    return "claude-3-5-sonnet-20241022";
   }
 
   shouldSkipChunk(chunk: Anthropic.Messages.RawMessageStreamEvent): boolean {
