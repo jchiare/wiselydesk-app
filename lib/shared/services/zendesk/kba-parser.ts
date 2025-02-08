@@ -81,6 +81,10 @@ export class ZendeskKbaParser {
       this.encodingModel
     );
 
+    // hacky
+    // at some point, get this from the bot config on initialization
+    const versionNumber = botId === "4" ? 2 : 1;
+
     return {
       client_article_id: article.id.toString(),
       title: article.title,
@@ -90,7 +94,8 @@ export class ZendeskKbaParser {
       content_embedding: "[" + contentEmbedding.join(",") + "]",
       total_token_count: totalTokens,
       html_url: article.htmlUrl,
-      updated_at: new Date()
+      updated_at: new Date(),
+      version: versionNumber
     };
   }
 }
