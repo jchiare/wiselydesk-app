@@ -83,7 +83,8 @@ export class ZendeskKbaParser {
 
     // hacky
     // at some point, get this from the bot config on initialization
-    const versionNumber = botId === "4" ? 2 : 1;
+    // at some point, change version to 2 for bot 4
+    const versionNumber = botId === "4" ? 1 : 1;
 
     return {
       client_article_id: article.id.toString(),
