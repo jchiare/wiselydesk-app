@@ -87,6 +87,7 @@ model KnowledgeBaseArticle {
   client_last_updated DateTime  @db.DateTime(0)
   client_article_id   String?   @db.VarChar(255)
   html_url            String    @db.VarChar(255)
+  version             Int       @default(1)
 
   @@index([bot_id], map: "bot_id_index")
   @@index([client_article_id], map: "idx_knowledge_base_article_on_client_article_id")
