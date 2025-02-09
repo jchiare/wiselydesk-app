@@ -1,9 +1,8 @@
 import { JSDOM } from "jsdom";
 import {
-  ExternalZendeskArticle,
+  InternalZendeskArticle,
   KnowledgeBaseArticle,
-  type Category,
-  type Section
+  type FolderEnhancement
 } from "@/lib/shared/services/zendesk/dto";
 import { numTokensFromString } from "@/lib/shared/services/openai/utils";
 import {
@@ -54,25 +53,10 @@ export class ZendeskKbaParser {
   }
 
   async enhanceArticleWithEmbedding(
-    article: ExternalZendeskArticle,
+    article: InternalZendeskArticle,
     botId: string,
-    categories?: Category[],
-    sections?: Section[]
+    folderEnhancement?: FolderEnhancement
   ): Promise<KnowledgeBaseArticle> {
-    // if (categories && sections) { in case this is needed in future
-    //   categories = ZendeskKbaParser.mapCategoryIdToName(categories);
-    //   const sectionsToCategories =
-    //     ZendeskKbaParser.mapSectionIdToCategoryId(sections);
-    //   const category = sectionsToCategories.find(
-    //     section => section.sectionId === article.sectionId
-    //   )?.categoryId;
-    //   const categoryName = categories.find(cat => cat.categoryId === category)
-    //     ?.name;
-    //   const sectionName = ZendeskKbaParser.getSectionName(
-    //     article.sectionId,
-    //     sections
-    //   );
-    // }
     const cleanedArticleBody = ZendeskKbaParser.cleanArticleBody(article.body);
     const contentEmbedding =
       await this.openAIEmbedder.createEmbedding(cleanedArticleBody);
@@ -84,15 +68,23 @@ export class ZendeskKbaParser {
     // hacky
     // at some point, get this from the bot config on initialization
     // at some point, change version to 2 for bot 4
-    const versionNumber = botId === "4" ? 1 : 1;
+    const versionNumber = botId === "4" ? 2 : 1;
+
+    const content = [
+      `Article title: ${article.title}.`,
+      folderEnhancement
+        ? `Category: ${folderEnhancement.categoryTitle}. Section: ${folderEnhancement.sectionTitle}.`
+        : "",
+      `Text: ${cleanedArticleBody}.`
+    ].join(" ");
 
     return {
       client_article_id: article.id.toString(),
       title: article.title,
-      content: `Article title: ${article.title}. Text: ${cleanedArticleBody}. `,
+      content,
       client_last_updated: article.updatedAt,
       bot_id: parseInt(botId, 10),
-      content_embedding: "[" + contentEmbedding.join(",") + "]",
+      content_embedding: JSON.stringify(contentEmbedding),
       total_token_count: totalTokens,
       html_url: article.htmlUrl,
       updated_at: new Date(),

@@ -25,11 +25,19 @@ export class KbaSearch {
   private botId: number;
   private prisma: PrismaClient;
   private openAiEmbedder: OpenAIEmbedder;
+  kbaVersionMap: Map<string, number>;
 
   constructor(botId: number, prisma: PrismaClient) {
     this.botId = botId;
     this.prisma = prisma;
     this.openAiEmbedder = new OpenAIEmbedder();
+    // should be saved in the db or bot object
+    this.kbaVersionMap = new Map<string, number>([
+      ["4", 2],
+      ["3", 1],
+      ["2", 1],
+      ["1", 1]
+    ]);
   }
 
   async getTopKArticlesObject(userInput: string): Promise<any[]> {
@@ -93,8 +101,9 @@ export class KbaSearch {
   }
 
   private async getDbArticles(): Promise<ExtendedKnowledgeBaseArticle[]> {
+    const version = this.kbaVersionMap.get(this.botId.toString()) ?? 1;
     const articles = await this.prisma.knowledgeBaseArticle.findMany({
-      where: { bot_id: this.botId }
+      where: { bot_id: this.botId, version: version }
     });
 
     if (articles.length === 0) {

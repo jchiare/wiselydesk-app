@@ -2,6 +2,11 @@ import type { KnowledgeBaseArticle as PrismaKnowledgeBaseArticle } from "@prisma
 
 type OptionalFields = "id" | "deleted_at" | "created_at" | "updated_at";
 
+export type FolderEnhancement = {
+  categoryTitle: string;
+  sectionTitle: string;
+};
+
 export type KnowledgeBaseArticle = Omit<
   PrismaKnowledgeBaseArticle,
   OptionalFields
@@ -58,8 +63,35 @@ export type Section = {
   parent_section_id: number;
   theme_template: string;
 };
+export type ExternalZendeskArticle = {
+  id: number;
+  url: string;
+  html_url: string;
+  author_id: number;
+  comments_disabled: boolean;
+  draft: boolean;
+  promoted: boolean;
+  position: number;
+  vote_sum: number;
+  vote_count: number;
+  section_id: number;
+  created_at: Date;
+  updated_at: Date;
+  name: string;
+  title: string;
+  source_locale: string;
+  locale: string;
+  outdated: boolean;
+  outdated_locales: string[];
+  edited_at: string;
+  user_segment_id?: number;
+  permission_group_id: number;
+  content_tag_ids: (number | string)[];
+  label_names: string[];
+  body: string;
+};
 
-export class ExternalZendeskArticle {
+export type InternalZendeskArticle = {
   id: number;
   url: string;
   htmlUrl: string;
@@ -85,58 +117,60 @@ export class ExternalZendeskArticle {
   contentTagIds: (number | string)[];
   labelNames: string[];
   body: string;
+};
 
-  constructor(data: {
-    id?: number;
-    url?: string;
-    html_url?: string;
-    author_id?: number;
-    comments_disabled?: boolean;
-    draft?: boolean;
-    promoted?: boolean;
-    position?: number;
-    vote_sum?: number;
-    vote_count?: number;
-    section_id?: number;
-    created_at?: Date;
-    updated_at?: Date;
-    name?: string;
-    title?: string;
-    source_locale?: string;
-    locale?: string;
-    outdated?: boolean;
-    outdated_locales?: string[];
-    edited_at?: string;
-    user_segment_id?: number;
-    permission_group_id?: number;
-    content_tag_ids?: (number | string)[];
-    label_names?: string[];
-    body?: string;
-  }) {
-    this.id = data.id!;
-    this.url = data.url!;
-    this.htmlUrl = data.html_url!;
-    this.authorId = data.author_id!;
-    this.commentsDisabled = data.comments_disabled!;
-    this.draft = data.draft!;
-    this.promoted = data.promoted!;
-    this.position = data.position!;
-    this.voteSum = data.vote_sum!;
-    this.voteCount = data.vote_count!;
-    this.sectionId = data.section_id!;
-    this.createdAt = data.created_at!;
-    this.updatedAt = data.updated_at!;
-    this.name = data.name!;
-    this.title = data.title!;
-    this.sourceLocale = data.source_locale!;
-    this.locale = data.locale!;
-    this.outdated = data.outdated!;
-    this.outdatedLocales = data.outdated_locales!;
-    this.editedAt = data.edited_at!;
-    this.userSegmentId = data.user_segment_id;
-    this.permissionGroupId = data.permission_group_id!;
-    this.contentTagIds = data.content_tag_ids!;
-    this.labelNames = data.label_names!;
-    this.body = data.body!;
-  }
+export function createInternalZendeskArticle(data: {
+  id?: number;
+  url?: string;
+  html_url?: string;
+  author_id?: number;
+  comments_disabled?: boolean;
+  draft?: boolean;
+  promoted?: boolean;
+  position?: number;
+  vote_sum?: number;
+  vote_count?: number;
+  section_id?: number;
+  created_at?: Date;
+  updated_at?: Date;
+  name?: string;
+  title?: string;
+  source_locale?: string;
+  locale?: string;
+  outdated?: boolean;
+  outdated_locales?: string[];
+  edited_at?: string;
+  user_segment_id?: number;
+  permission_group_id?: number;
+  content_tag_ids?: (number | string)[];
+  label_names?: string[];
+  body?: string;
+}): InternalZendeskArticle {
+  return {
+    id: data.id!,
+    url: data.url!,
+    htmlUrl: data.html_url!,
+    authorId: data.author_id!,
+    commentsDisabled: data.comments_disabled!,
+    draft: data.draft!,
+    promoted: data.promoted!,
+    position: data.position!,
+    voteSum: data.vote_sum!,
+    voteCount: data.vote_count!,
+    sectionId: data.section_id!,
+    createdAt: data.created_at!,
+    updatedAt: data.updated_at!,
+    name: data.name!,
+    title: data.title!,
+    sourceLocale: data.source_locale!,
+    locale: data.locale!,
+    outdated: data.outdated!,
+    outdatedLocales: data.outdated_locales!,
+    editedAt: data.edited_at!,
+    userSegmentId: data.user_segment_id,
+    permissionGroupId: data.permission_group_id!,
+    contentTagIds: data.content_tag_ids!,
+    labelNames: data.label_names!,
+    body: data.body!
+  };
 }
