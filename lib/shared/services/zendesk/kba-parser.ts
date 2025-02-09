@@ -55,11 +55,7 @@ export class ZendeskKbaParser {
   async enhanceArticleWithEmbedding(
     article: ExternalZendeskArticle,
     botId: string,
-    options?: {
-      categoryTitle?: string | undefined;
-      sectionTitle?: string | undefined;
-      version: number;
-    }
+    folderEnhancement?: FolderEnhancement
   ): Promise<KnowledgeBaseArticle> {
     const cleanedArticleBody = ZendeskKbaParser.cleanArticleBody(article.body);
     const contentEmbedding =
@@ -68,12 +64,16 @@ export class ZendeskKbaParser {
       cleanedArticleBody,
       this.encodingModel
     );
-    const { categoryTitle, sectionTitle, version } = options ?? {};
+
+    // hacky
+    // at some point, get this from the bot config on initialization
+    // at some point, change version to 2 for bot 4
+    const versionNumber = botId === "4" ? 2 : 1;
 
     const content = [
       `Article title: ${article.title}.`,
-      categoryTitle && sectionTitle
-        ? `Category: ${categoryTitle}. Section: ${sectionTitle}.`
+      folderEnhancement
+        ? `Category: ${folderEnhancement.categoryTitle}. Section: ${folderEnhancement.sectionTitle}.`
         : "",
       `Text: ${cleanedArticleBody}.`
     ].join(" ");
@@ -88,7 +88,7 @@ export class ZendeskKbaParser {
       total_token_count: totalTokens,
       html_url: article.htmlUrl,
       updated_at: new Date(),
-      version: version ?? 1 // default to v 1
+      version: versionNumber
     };
   }
 }
