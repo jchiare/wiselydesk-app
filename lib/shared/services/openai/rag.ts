@@ -31,6 +31,7 @@ export class KbaSearch {
     this.botId = botId;
     this.prisma = prisma;
     this.openAiEmbedder = new OpenAIEmbedder();
+    // should be saved in the db or bot object
     this.kbaVersionMap = new Map<string, number>([
       ["4", 2],
       ["3", 1],
