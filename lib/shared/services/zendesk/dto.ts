@@ -2,6 +2,11 @@ import type { KnowledgeBaseArticle as PrismaKnowledgeBaseArticle } from "@prisma
 
 type OptionalFields = "id" | "deleted_at" | "created_at" | "updated_at";
 
+export type FolderEnhancement = {
+  categoryTitle: string;
+  sectionTitle: string;
+};
+
 export type KnowledgeBaseArticle = Omit<
   PrismaKnowledgeBaseArticle,
   OptionalFields

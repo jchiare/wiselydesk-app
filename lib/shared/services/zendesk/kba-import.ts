@@ -5,7 +5,9 @@ import {
   type ExternalZendeskArticlesResponse,
   type ExternalZendeskArticleResponse,
   type Category,
-  type Section
+  type Section,
+  type FolderEnhancement,
+  type ExpandedExternalZendeskArticle
 } from "@/lib/shared/services/zendesk/dto";
 import type { PrismaClient } from "@prisma/client";
 
@@ -25,11 +27,13 @@ export class ZendeskKbaImporter {
   botId: string;
   zendeskKbaParser: ZendeskKbaParser;
   private prisma: PrismaClient;
+  private articleEnhancementMap: Map<number, FolderEnhancement>;
 
   constructor(botId: string, zendeskKbaParser?: ZendeskKbaParser) {
     this.botId = botId;
     this.zendeskKbaParser = zendeskKbaParser ?? new ZendeskKbaParser();
     this.prisma = prisma;
+    this.articleEnhancementMap = new Map<number, FolderEnhancement>();
   }
 
   async importAllKbas(): Promise<void> {
@@ -41,13 +45,26 @@ export class ZendeskKbaImporter {
       const data = (await response.json()) as ExternalZendeskArticlesResponse;
       zendeskHelpCentreUrl = data.next_page;
 
+      // create the categories only once
+      if (this.shouldAddCategories()) {
+        this.createArticleEnhancementMap(
+          data.categories,
+          data.sections,
+          data.articles
+        );
+      }
+
       for (const kbaData of data.articles) {
         const kba = new ExternalZendeskArticle(kbaData);
         const shouldExcludeKb = excludeKbWithTags(this.botId, kba);
 
         console.log("Processing KBA: ", kba.id);
         if (!shouldExcludeKb && (await this.checkIfKbaNeedsUpdate(kba))) {
-          await this.updateKba(kba);
+          if (this.shouldAddCategories()) {
+            await this.updateKba(kba, this.articleEnhancementMap.get(kba.id));
+          } else {
+            await this.updateKba(kba);
+          }
           console.log("Updated KBA: ", kba.id);
           counter++;
         }
@@ -143,7 +160,7 @@ export class ZendeskKbaImporter {
     const zendeskHelpCentreUrl = await this.getSingleKbaUrl(kbaId);
 
     const response = await fetch(zendeskHelpCentreUrl);
-    const data = (await response.json()) as ExternalZendeskArticleResponse;
+    const data = (await response.json()) as ExpandedExternalZendeskArticle;
 
     if (!data.article) {
       console.error(
@@ -153,19 +170,23 @@ export class ZendeskKbaImporter {
     }
 
     const kba = new ExternalZendeskArticle(data.article);
-    await this.updateKba(kba);
+    const folderEnhancement = {
+      categoryTitle: data.categories?.[0]?.name || "",
+      sectionTitle: data.sections?.[0]?.name || ""
+    };
+    await this.updateKba(kba, folderEnhancement);
   }
 
   private async updateKba(
     kba: ExternalZendeskArticle,
-    category?: Category,
-    section?: Section
+    folderEnhancement?: FolderEnhancement
   ): Promise<void> {
     // Assuming enhanceArticleWithEmbedding returns an object suitable for Prisma operations
     const formattedKba =
       await this.zendeskKbaParser.enhanceArticleWithEmbedding(
         kba,
-        this.botId.toString()
+        this.botId.toString(),
+        folderEnhancement
       );
 
     // Check if the article exists and upsert accordingly
@@ -185,5 +206,36 @@ export class ZendeskKbaImporter {
       update: formattedKba,
       create: formattedKba
     });
+  }
+
+  // should move outside this service at some point
+  // only add for amboss German for now
+  private shouldAddCategories(): boolean {
+    return ["4"].includes(this.botId);
+  }
+
+  private createArticleEnhancementMap(
+    categories: Category[] | undefined,
+    sections: Section[] | undefined,
+    articles: ExternalZendeskArticle[]
+  ): void {
+    if (!categories || !sections || !articles) {
+      return;
+    }
+
+    this.articleEnhancementMap = new Map<number, FolderEnhancement>();
+
+    for (const article of articles) {
+      const section = sections.find(s => s.id === article.sectionId);
+      if (section) {
+        const category = categories.find(c => c.id === section.category_id);
+        if (category) {
+          this.articleEnhancementMap.set(article.id, {
+            categoryTitle: category.name,
+            sectionTitle: section.name
+          });
+        }
+      }
+    }
   }
 }
