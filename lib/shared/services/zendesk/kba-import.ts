@@ -29,12 +29,19 @@ export class ZendeskKbaImporter {
   zendeskKbaParser: ZendeskKbaParser;
   private prisma: PrismaClient;
   private articleEnhancementMap: Map<number, FolderEnhancement>;
+  kbaVersionMap: Map<string, number>;
 
   constructor(botId: string, zendeskKbaParser?: ZendeskKbaParser) {
     this.botId = botId;
     this.zendeskKbaParser = zendeskKbaParser ?? new ZendeskKbaParser();
     this.prisma = prisma;
     this.articleEnhancementMap = new Map<number, FolderEnhancement>();
+    this.kbaVersionMap = new Map<string, number>([
+      ["4", 2],
+      ["3", 1],
+      ["2", 1],
+      ["1", 1]
+    ]);
   }
 
   async importAllKbas(): Promise<void> {
@@ -59,16 +66,23 @@ export class ZendeskKbaImporter {
         const shouldExcludeKb = excludeKbWithTags(this.botId, kba);
 
         console.log("Processing KBA: ", kba.id);
-        if (!shouldExcludeKb && (await this.checkIfKbaNeedsUpdate(kba))) {
+        const version = this.kbaVersionMap.get(this.botId) ?? 1;
+        if (
+          !shouldExcludeKb &&
+          (await this.checkIfKbaNeedsUpdate(kba, version))
+        ) {
           if (this.shouldAddCategories()) {
-            await this.updateKba(kba, this.articleEnhancementMap.get(kba.id));
+            await this.updateKba(
+              kba,
+              version,
+              this.articleEnhancementMap.get(kba.id)
+            );
           } else {
-            await this.updateKba(kba);
+            await this.updateKba(kba, version);
           }
           console.log("Updated KBA: ", kba.id);
           counter++;
         }
-        break;
       }
     }
 
@@ -139,10 +153,11 @@ export class ZendeskKbaImporter {
     }
   }
   private async checkIfKbaNeedsUpdate(
-    kba: InternalZendeskArticle
+    kba: InternalZendeskArticle,
+    version: number
   ): Promise<boolean> {
     const existingArticle = await this.prisma.knowledgeBaseArticle.findFirst({
-      where: { client_article_id: kba.id.toString() }
+      where: { client_article_id: kba.id.toString(), version: version }
     });
 
     if (!existingArticle) {
@@ -175,11 +190,13 @@ export class ZendeskKbaImporter {
       categoryTitle: data.categories?.[0]?.name || "",
       sectionTitle: data.sections?.[0]?.name || ""
     };
-    await this.updateKba(kba, folderEnhancement);
+    const version = this.kbaVersionMap.get(this.botId) ?? 1;
+    await this.updateKba(kba, version, folderEnhancement);
   }
 
   private async updateKba(
     kba: InternalZendeskArticle,
+    version: number,
     folderEnhancement?: FolderEnhancement
   ): Promise<void> {
     // Assuming enhanceArticleWithEmbedding returns an object suitable for Prisma operations
@@ -192,7 +209,7 @@ export class ZendeskKbaImporter {
 
     // Check if the article exists and upsert accordingly
     const existingArticleId = await this.prisma.knowledgeBaseArticle.findFirst({
-      where: { client_article_id: kba.id.toString() },
+      where: { client_article_id: kba.id.toString(), version: version },
       select: { id: true } // Only select the id for efficiency
     });
 
