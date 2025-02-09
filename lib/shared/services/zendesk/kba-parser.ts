@@ -1,6 +1,6 @@
 import { JSDOM } from "jsdom";
 import {
-  ExternalZendeskArticle,
+  InternalZendeskArticle,
   KnowledgeBaseArticle,
   type FolderEnhancement
 } from "@/lib/shared/services/zendesk/dto";
@@ -53,7 +53,7 @@ export class ZendeskKbaParser {
   }
 
   async enhanceArticleWithEmbedding(
-    article: ExternalZendeskArticle,
+    article: InternalZendeskArticle,
     botId: string,
     folderEnhancement?: FolderEnhancement
   ): Promise<KnowledgeBaseArticle> {

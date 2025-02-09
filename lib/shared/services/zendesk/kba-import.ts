@@ -2,23 +2,24 @@ import { ZendeskKbaParser } from "@/lib/shared/services/zendesk/kba-parser";
 import prisma from "@/lib/prisma";
 import {
   ExternalZendeskArticle,
+  createInternalZendeskArticle,
   type ExternalZendeskArticlesResponse,
-  type ExternalZendeskArticleResponse,
   type Category,
   type Section,
   type FolderEnhancement,
-  type ExpandedExternalZendeskArticle
+  type ExpandedExternalZendeskArticle,
+  type InternalZendeskArticle
 } from "@/lib/shared/services/zendesk/dto";
 import type { PrismaClient } from "@prisma/client";
 
 function excludeKbWithTags(
   botId: string,
-  kb: ExternalZendeskArticle,
+  kb: InternalZendeskArticle,
   tags: string[] = ["ios-whitelist", "android-whitelist"]
 ): boolean {
   return (
     ["3", "4"].includes(botId) &&
-    kb.labelNames.some(label => tags.includes(label.toLowerCase()))
+    kb.labelNames.some((label: string) => tags.includes(label.toLowerCase()))
   );
 }
 
@@ -53,9 +54,8 @@ export class ZendeskKbaImporter {
           data.articles
         );
       }
-
       for (const kbaData of data.articles) {
-        const kba = new ExternalZendeskArticle(kbaData);
+        const kba = createInternalZendeskArticle(kbaData);
         const shouldExcludeKb = excludeKbWithTags(this.botId, kba);
 
         console.log("Processing KBA: ", kba.id);
@@ -68,6 +68,7 @@ export class ZendeskKbaImporter {
           console.log("Updated KBA: ", kba.id);
           counter++;
         }
+        break;
       }
     }
 
@@ -138,7 +139,7 @@ export class ZendeskKbaImporter {
     }
   }
   private async checkIfKbaNeedsUpdate(
-    kba: ExternalZendeskArticle
+    kba: InternalZendeskArticle
   ): Promise<boolean> {
     const existingArticle = await this.prisma.knowledgeBaseArticle.findFirst({
       where: { client_article_id: kba.id.toString() }
@@ -169,7 +170,7 @@ export class ZendeskKbaImporter {
       return;
     }
 
-    const kba = new ExternalZendeskArticle(data.article);
+    const kba = createInternalZendeskArticle(data.article);
     const folderEnhancement = {
       categoryTitle: data.categories?.[0]?.name || "",
       sectionTitle: data.sections?.[0]?.name || ""
@@ -178,7 +179,7 @@ export class ZendeskKbaImporter {
   }
 
   private async updateKba(
-    kba: ExternalZendeskArticle,
+    kba: InternalZendeskArticle,
     folderEnhancement?: FolderEnhancement
   ): Promise<void> {
     // Assuming enhanceArticleWithEmbedding returns an object suitable for Prisma operations
@@ -226,7 +227,7 @@ export class ZendeskKbaImporter {
     this.articleEnhancementMap = new Map<number, FolderEnhancement>();
 
     for (const article of articles) {
-      const section = sections.find(s => s.id === article.sectionId);
+      const section = sections.find(s => s.id === article.section_id);
       if (section) {
         const category = categories.find(c => c.id === section.category_id);
         if (category) {
