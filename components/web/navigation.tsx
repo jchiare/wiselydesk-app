@@ -1,4 +1,5 @@
 "use client";
+
 import SideNavDisclosure from "@/components/web/side-nav-disclosure";
 import {
   ChatBubbleBottomCenterTextIcon,
@@ -9,13 +10,37 @@ import {
 import { concatClassNames } from "@/lib/utils";
 import Link from "next/link";
 import useCustomQueryString from "@/lib/web/use-custom-query-string";
+import { ComponentType } from "react";
 
 export type NavigationItem = {
   name: string;
-  icon: any;
+  icon: ComponentType<{ className?: string }>;
   href?: string;
   children?: NavigationItem[];
 };
+
+type NavigationLinkProps = {
+  item: NavigationItem;
+  isActive: boolean;
+};
+
+function NavigationLink({ item, isActive }: NavigationLinkProps) {
+  return (
+    <Link
+      href={item.href!}
+      className={concatClassNames(
+        isActive ? "bg-gray-700" : "hover:bg-gray-700",
+        "flex w-full items-center justify-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-400 transition-colors sm:justify-normal"
+      )}
+      aria-current={isActive ? "page" : undefined}>
+      <item.icon
+        className="h-5 w-5 shrink-0 text-gray-400 sm:h-6 sm:w-6"
+        aria-hidden="true"
+      />
+      <span>{item.name}</span>
+    </Link>
+  );
+}
 
 function createNavigation(botId: string): NavigationItem[] {
   return [
@@ -58,7 +83,7 @@ export function Navigation() {
   const botId = getBotId();
   const navigation = createNavigation(botId);
 
-  const settingsItem = {
+  const settingsItem: NavigationItem = {
     name: "Settings",
     icon: Cog6ToothIcon,
     href: `/bot/${botId}/settings`
@@ -67,24 +92,16 @@ export function Navigation() {
   const currentItem = findCurrentItem([...navigation, settingsItem], pathname);
 
   return (
-    <div className="flex w-full flex-col items-center space-y-1">
+    <nav
+      className="flex w-full flex-col items-center space-y-1"
+      aria-label="Main navigation">
       {navigation.map(item =>
         !item?.children ? (
-          <Link
+          <NavigationLink
             key={item.href!}
-            href={item.href!}
-            className={concatClassNames(
-              item.href === currentItem?.href
-                ? "bg-gray-700"
-                : "hover:bg-gray-700",
-              "flex w-full items-center justify-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-400 sm:justify-normal"
-            )}>
-            <item.icon
-              className="h-5 w-5 shrink-0 text-gray-400 sm:h-6 sm:w-6"
-              aria-hidden="true"
-            />
-            {item.name}
-          </Link>
+            item={item}
+            isActive={item.href === currentItem?.href}
+          />
         ) : (
           <SideNavDisclosure
             key={item.name}
@@ -95,23 +112,12 @@ export function Navigation() {
       )}
       <div className="w-full pt-6">
         <div className="mb-4 border-t-2 border-gray-700" />
-        <Link
-          key={settingsItem.href!}
-          href={settingsItem.href!}
-          className={concatClassNames(
-            settingsItem.href === currentItem?.href
-              ? "bg-gray-700"
-              : "hover:bg-gray-700",
-            "flex w-full items-center justify-center gap-x-3 rounded-md p-2 text-left text-sm font-semibold leading-6 text-gray-400 sm:justify-normal"
-          )}>
-          <settingsItem.icon
-            className="h-5 w-5 shrink-0 text-gray-400 sm:h-6 sm:w-6"
-            aria-hidden="true"
-          />
-          {settingsItem.name}
-        </Link>
+        <NavigationLink
+          item={settingsItem}
+          isActive={settingsItem.href === currentItem?.href}
+        />
       </div>
-    </div>
+    </nav>
   );
 }
 
