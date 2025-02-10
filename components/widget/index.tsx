@@ -22,7 +22,10 @@ export function Widget({
   return (
     <div>
       {botId && widgetOpen && widgetOpen === "true" && (
-        <div className="transform-origin[bottom_right] pointer-events-auto fixed bottom-[100px] right-0 z-10 h-[calc(100%-104px)] min-h-[80px] w-full overflow-scroll rounded-lg opacity-100 shadow-lg transition-all duration-200 ease-in-out sm:h-[min(704px,calc(100%-104px))] sm:w-[600px]">
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="pointer-events-auto fixed bottom-[100px] right-0 z-10 h-[calc(100%-104px)] min-h-[80px] w-full origin-bottom-right overflow-scroll rounded-lg opacity-100 shadow-lg transition-all duration-200 ease-in-out sm:h-[min(704px,calc(100%-104px))] sm:w-[600px]">
           <Chat
             chatTheme={chatTheme}
             clientApiKey={clientApiKey}

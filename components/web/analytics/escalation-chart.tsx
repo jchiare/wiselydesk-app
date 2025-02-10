@@ -22,6 +22,11 @@ ChartJS.register(
 import type { FrequencyType } from "@/components/web/analytics";
 import type { EscalationAnalyticsData } from "@/lib/web/analytics";
 
+type EscalationChartProps = {
+  frequency: FrequencyType;
+  escalations: EscalationAnalyticsData[];
+};
+
 export default function EscalationChart({
   frequency,
   escalations
