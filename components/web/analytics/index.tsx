@@ -15,6 +15,9 @@ async function fetchAnalyticsData(
     `${NEXTJS_BACKEND_URL}/api/bot/${botId}/analytics/${filter}?frequency=${frequency}`,
     { cache: "no-cache" }
   );
+  if (!res.ok) {
+    throw new Error(`Failed to fetch analytics data: ${res.statusText}`);
+  }
   return (await res.json()) as AnalyticsData;
 }
 
@@ -27,18 +30,23 @@ export default async function Analytics({
   botId: number;
   filter: FilterType;
 }) {
-  const { data } = await fetchAnalyticsData(botId, frequency, filter);
-  if (data.escalations) {
-    return (
-      <EscalationChart frequency={frequency} escalations={data.escalations} />
-    );
-  } else if (data.conversations) {
-    return (
-      <ConversationCountChart
-        frequency={frequency}
-        conversationCounts={data.conversations}
-      />
-    );
+  try {
+    const { data } = await fetchAnalyticsData(botId, frequency, filter);
+    if (data.escalations) {
+      return (
+        <EscalationChart frequency={frequency} escalations={data.escalations} />
+      );
+    } else if (data.conversations) {
+      return (
+        <ConversationCountChart
+          frequency={frequency}
+          conversationCounts={data.conversations}
+        />
+      );
+    }
+    return <div>Error: Data format is incorrect.</div>;
+  } catch (error: any) {
+    console.error(error);
+    return <div>Error: {error.message}</div>;
   }
-  return <div> Error data not correct</div>;
 }

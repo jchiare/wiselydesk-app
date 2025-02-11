@@ -3,15 +3,18 @@ import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Disclosure, Transition } from "@headlessui/react";
 import { concatClassNames } from "@/lib/utils";
 import type { NavigationItem } from "@/components/web/navigation";
+import Link from "next/link";
 import React from "react";
+
+type SideNavDisclosureProps = {
+  item: NavigationItem;
+  currentItem: NavigationItem;
+};
 
 export default function SideNavDisclosure({
   item,
   currentItem
-}: {
-  item: NavigationItem;
-  currentItem: NavigationItem;
-}): JSX.Element {
+}: SideNavDisclosureProps): JSX.Element {
   const isChildSelected = item.children?.some(
     (child: NavigationItem) => child.href === currentItem?.href
   );
@@ -19,7 +22,7 @@ export default function SideNavDisclosure({
   return (
     <Disclosure
       as="div"
-      className="w-full justify-center"
+      className="w-full"
       defaultOpen={isChildSelected}
       key={currentItem?.href}>
       {({ open }) => (
@@ -29,8 +32,10 @@ export default function SideNavDisclosure({
               item.href === currentItem?.href
                 ? "bg-gray-700"
                 : "hover:bg-gray-700",
-              "flex w-full items-center justify-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 sm:justify-normal"
-            )}>
+              "flex w-full items-center justify-center gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-400 transition-colors sm:justify-normal"
+            )}
+            aria-expanded={open}
+            aria-controls={`${item.name}-panel`}>
             <item.icon
               className="h-5 w-5 shrink-0 text-gray-400 sm:h-6 sm:w-6"
               aria-hidden="true"
@@ -39,7 +44,7 @@ export default function SideNavDisclosure({
             <ChevronRightIcon
               className={concatClassNames(
                 open ? "rotate-90 text-gray-500" : "text-gray-400",
-                "h-5 w-5 shrink-0 sm:ml-auto"
+                "h-5 w-5 shrink-0 transition-transform duration-200 sm:ml-auto"
               )}
               aria-hidden="true"
             />
@@ -52,24 +57,29 @@ export default function SideNavDisclosure({
             leaveFrom="transform scale-100 opacity-100"
             leaveTo="transform scale-95 opacity-0">
             <Disclosure.Panel
+              id={`${item.name}-panel`}
               as="div"
               unmount={false}
-              className="flex flex-col space-y-1">
+              className="mt-1 flex flex-col space-y-1 pl-2">
               {item.children?.map((subItem: NavigationItem) => (
-                <p key={subItem.name}>
-                  {/* 44px */}
-                  <Disclosure.Button
-                    as="a"
-                    href={subItem.href}
-                    className={concatClassNames(
-                      subItem.href === currentItem?.href
-                        ? "bg-gray-700"
-                        : "hover:bg-gray-700",
-                      "flex justify-center rounded-md p-1 text-sm leading-6 text-gray-400 sm:justify-start sm:pl-3"
-                    )}>
-                    {subItem.name}
-                  </Disclosure.Button>
-                </p>
+                <Link
+                  key={subItem.name}
+                  href={subItem.href!}
+                  className={concatClassNames(
+                    subItem.href === currentItem?.href
+                      ? "bg-gray-700"
+                      : "hover:bg-gray-700",
+                    "flex items-center rounded-md p-2 text-sm leading-6 text-gray-400 transition-colors"
+                  )}
+                  aria-current={
+                    subItem.href === currentItem?.href ? "page" : undefined
+                  }>
+                  <subItem.icon
+                    className="mr-3 h-5 w-5 shrink-0 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  {subItem.name}
+                </Link>
               ))}
             </Disclosure.Panel>
           </Transition>
