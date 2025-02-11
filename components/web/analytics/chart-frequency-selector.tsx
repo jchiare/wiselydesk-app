@@ -40,13 +40,13 @@ export default function ChartFrequencySelector({
         <div className="relative mt-2">
           <Listbox.Button
             className={cn(
-              "relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300",
+              "relative w-[110px] cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300",
               "hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-600",
               "disabled:cursor-not-allowed disabled:opacity-50",
               "sm:text-sm sm:leading-6"
             )}
             aria-label="Select frequency">
-            <span className={cn("block truncate", isLoading && "blur-sm")}>
+            <span className={isLoading ? "blur-sm" : ""}>
               {frequency.charAt(0).toUpperCase() + frequency.slice(1)}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
