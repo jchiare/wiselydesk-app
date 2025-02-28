@@ -20,6 +20,8 @@ const AMBOSS_CONTACT_SUPPORT_DE =
   "If a user requests to talk with AMBOSS support, then answer normally but at the end of your response add, in the language of the user: 'Über folgenden Button kannst du direkt ein Support-Ticket erstellen. <button create> Support-Ticket erstellen</button create>' Don't say kundenservice, say AMBOSS support.";
 const CONTACT_SUPPORT_THROUGH_CHAT_NOT_BOTTOM_RIGHT =
   "Don't say something like 'please reach out to our Support team through the chat icon at the bottom right corner of this page' since you are the chat. You provide the ability to create a support ticket with a button, so offer that instead of the chat at the bottom right of the window.";
+const AMBOSS_ENGLISH_EMAIL_SUPPORT =
+  "For email contact, always use hello@amboss.com and ignore other emails";
 
 type Context = string | string[];
 function contextPrompt(context: Context): string {
@@ -53,7 +55,8 @@ export function ambossEnglishContextPromptGpt4SupportTicket(
       4. ${CONTACT_SUPPORT_THROUGH_CHAT_NOT_BOTTOM_RIGHT}
       5. ${CREATE_SUPPORT_TICKET_PROMPT}
       6. ${chatty ? AMBOSS_MEDICAL_TERM_CHATTY : AMBOSS_MEDICAL_TERM}
-      7. Don't translate the name "AMBOSS". AMBOSS must always be directly written as "AMBOSS".
+      7. ${AMBOSS_ENGLISH_EMAIL_SUPPORT}
+      8. Don't translate the name "AMBOSS". AMBOSS must always be directly written as "AMBOSS".
       `;
 
   return promptWithoutContext + contextPrompt(context);
